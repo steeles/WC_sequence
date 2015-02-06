@@ -1,0 +1,29 @@
+# and_then.ode
+# starting with the "and" behavior- 
+
+par tOff=.30, eps=.001, SOA=.100
+
+#EPSC = (tanh(t-0)/eps * tanh(tOff-t)/eps)/2 +1
+
+Istim = heav(tOff-t)
+aux ie = f_exc(Istim)
+
+f_exc(x) = 1/(1+exp(-(x-the)/ke)) - 1/(1+exp(the/ke))
+
+par ke=.1, the=.2
+par tauE=.010 
+par wStim=1, wLat=.05, gLat=100
+
+#par gam=.5, Inp_i=0, ie=.6, ei=.5
+
+par tauS=.100
+
+S' = -S/tauS + (1-S) * gLat * f_exc(Istim)
+E' = 1/tauE * (-E + f_exc(wStim*Istim + wLat*S))
+
+
+
+done
+
+
+

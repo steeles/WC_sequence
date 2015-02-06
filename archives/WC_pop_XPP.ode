@@ -1,0 +1,19 @@
+# WC_pop for XPP
+
+#eq's
+
+E'=(-E+func(ee*E-ei*I+Inp_e))/tau_E
+I'=(-I+func(ie*E-ii*I+Inp_i))/tau_I
+
+# function
+func(x)=1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
+
+# init
+init E=0, I=0
+
+#parameters
+par tau_E=.01, tau_I=.500, Inp_e=0, Inp_i=0, ee=.7, ei=.7, ie=.9, ii=.0, k=.1, theta=.2
+
+# options
+@ nplot = 2, XP2 = E, YP2 = I, total = 10, dt = .01, meth = qualrk, 
+done
