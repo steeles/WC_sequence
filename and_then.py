@@ -4,7 +4,7 @@ from numpy import *
 from matplotlib.mlab import *
 
 def f_exc(x, k = .1, theta = .2):
-	return 1/(1+exp(-(x-theta)/k)) #- 1/(1+exp(theta/k))
+	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
 
 def f_S(x,k=.1,theta=.8):
 	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
@@ -33,11 +33,11 @@ tau_r = 10
 
 gee = .56
 G = .641
-gNMDA = .03
+gNMDA = 0#.03
 gExc = .02
 gInp1 = .07
 for i in xrange(1):
-	#gNMDA /=1.1
+	gNMDA /=1.1
 	gExc /=1.
 	for t in xrange(t_tot-1):
  
@@ -58,7 +58,7 @@ for i in xrange(1):
 	plot(tax,Isyn,'c')
 	plot(tax,E2,'b')
 	plot(tax,Iext,'g')
-	plot(tax,gInp1*Inp1,'g')
+	plot(tax,gInp1*Inp1,'y')
 	plot(tax,E1,'m')
 
 	plot(tax,S_NMDA_1,'k')
