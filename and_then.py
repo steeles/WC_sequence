@@ -6,7 +6,7 @@ from matplotlib.mlab import *
 def f_exc(x, k = .1, theta = .2):
 	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
 
-def f_S(x,k=.1,theta=.2): # .8):
+def f_S(x,k=.1,theta=.8):
 	return 1/(1+exp(-(x-theta)/k)) # - 1/(1+exp(theta/k))
 
 t_in_ms = 500
@@ -32,10 +32,10 @@ tau_NMDA = 100
 tau_r = 10
 
 gee = .56
-G = .641
+G = .0641
 gNMDA = .03
 gExc = .02
-gInp1 = .02#.07
+gInp1 = .07
 
 bPlot = 1
 
@@ -81,17 +81,21 @@ if bPlot & bNull:
 	plot(xax,zline,'k')
 	show(block=False)
 
-	dSdown = -xax/tau_NMDA
-	dSUp = (1-xax) * G * f_S(0)
-	dS = dSdown + dSUp
-	figure()
-	plot(xax,dSdown,'r')
-	plot(xax,dSUp,'g')
-	plot(xax,dS,'b')
-	plot(xax,zline,'k')
-	xlabel('S')
-	ylabel('dS [E1 = 0]')
-	show(block=False)
+dSdown = -xax/tau_NMDA
+dSUp = (1-xax) * G * f_S(0)
+dSUp2 = (1-xax) * G * f_S(1)
+dS0 = dSdown + dSUp
+dS1 = dSdown + dSUp2
+figure()
+plot(xax,dSdown,'r')
+plot(xax,dSUp,'g')
+plot(xax,dSUp2,'y')
+plot(xax,dS0,'b')
+plot(xax,dS1,'c')
+plot(xax,zline,'k')
+xlabel('S')
+ylabel('dS [E1 = 0]')
+show(block=False)
 
 
 
