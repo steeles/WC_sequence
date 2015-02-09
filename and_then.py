@@ -6,8 +6,8 @@ from matplotlib.mlab import *
 def f_exc(x, k = .1, theta = .2):
 	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
 
-def f_S(x,k=.1,theta=.8):
-	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
+def f_S(x,k=.1,theta=.2): # .8):
+	return 1/(1+exp(-(x-theta)/k)) # - 1/(1+exp(theta/k))
 
 t_in_ms = 500
 dt = 1
@@ -33,9 +33,12 @@ tau_r = 10
 
 gee = .56
 G = .641
-gNMDA = 0#.03
+gNMDA = .03
 gExc = .02
-gInp1 = .07
+gInp1 = .02#.07
+
+bPlot = 1
+
 for i in xrange(1):
 	gNMDA /=1.1
 	gExc /=1.
@@ -53,13 +56,45 @@ for i in xrange(1):
 		E2[t+1] = E2[t] + \
 			(-E2[t] + f_exc(Isyn[t+1] + Iext[t+1] + gee*E2[t]))*dt/tau_r 
 
-	figure()
-	title(str(gNMDA) + '; max(Isyn)=' + str(Isyn.max()))
-	plot(tax,Isyn,'c')
-	plot(tax,E2,'b')
-	plot(tax,Iext,'g')
-	plot(tax,gInp1*Inp1,'y')
-	plot(tax,E1,'m')
+	if bPlot:
 
-	plot(tax,S_NMDA_1,'k')
+		figure()
+		title(str(gNMDA) + '; max(Isyn)=' + str(Isyn.max()))
+		plot(tax,Isyn,'c')
+		plot(tax,E2,'b')
+		plot(tax,Iext,'g')
+		plot(tax,gInp1*Inp1,'y')
+		plot(tax,E1,'m')
+
+		plot(tax,S_NMDA_1,'k')
+		show(block=False)
+bNull = 1 # carry out an analysis of the nullclines?
+if bPlot & bNull:
+	minInp = min(gInp1*Inp1)
+	maxInp = max(Isyn+Iext)
+	def dE(E,iapp):    return (-E + f_exc(iapp + gee*E))/tau_r
+	xax=arange(0,1,.01)
+	zline = zeros(len(xax))
+	figure()
+	plot(xax,dE(xax,maxInp),'r')
+	plot(xax,dE(xax,minInp),'b')
+	plot(xax,zline,'k')
 	show(block=False)
+
+	dSdown = -xax/tau_NMDA
+	dSUp = (1-xax) * G * f_S(0)
+	dS = dSdown + dSUp
+	figure()
+	plot(xax,dSdown,'r')
+	plot(xax,dSUp,'g')
+	plot(xax,dS,'b')
+	plot(xax,zline,'k')
+	xlabel('S')
+	ylabel('dS [E1 = 0]')
+	show(block=False)
+
+
+
+
+
+
