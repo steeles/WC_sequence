@@ -33,11 +33,11 @@ tau_r = 10
 
 gee = .56
 G = .641
-gNMDA = 0#.03
-gExc = .02
+gNMDA = .02
+gExc = .0#2
 gInp1 = .07
 for i in xrange(1):
-	gNMDA /=1.1
+	gNMDA /=1.
 	gExc /=1.
 	for t in xrange(t_tot-1):
  
