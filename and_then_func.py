@@ -3,49 +3,44 @@ from pylab import *
 from numpy import *
 from matplotlib.mlab import *
 
-def f_exc(x, k = .1, theta = .2):
-	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
+def and_then(ke=.1,the=.2,kS=.1,thS=.8,
+	G=.1,gee=.56,gNMDA=.02,gExc=.03,gInp1=.07):
 
-def f_S(x,k=.1,theta=.8):
-	return 1/(1+exp(-(x-theta)/k)) # - 1/(1+exp(theta/k))
+	def f_exc(x, k=ke, theta=the,):
+		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
 
-t_in_ms = 500
-dt = 1
-t_tot = int(t_in_ms/dt)
-tax = linspace(dt,t_in_ms,t_tot)
+	def f_S(x,k=kS,th=thS):
+		return 1/(1+exp(-(x-th)/k)) # - 1/(1+exp(theta/k))
 
-E1 = zeros(t_tot) # excitatory unit receiving the first input
-E2 = zeros(t_tot) # excitatory unit receiving second input
-Isyn = zeros(t_tot)
-Iext = zeros(t_tot)
-S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
+	pars = {'ke':ke,'the':the,'kS':kS,'thS':thS,'G':G,'gee':gee,
+	'gNMDA':gNMDA,'gExc':gExc,'gInp1':gInp1}
 
-stim_length = 30 # ms
-stim_strength = 1
-SOA = 100
-Inp1 = zeros(t_tot)
-Inp1[:stim_length/dt] = stim_strength
-Inp2 = zeros(t_tot)
-Inp2[SOA:SOA+stim_length] = stim_strength
+	t_in_ms = 500
+	dt = 1
+	t_tot = int(t_in_ms/dt)
+	tax = linspace(dt,t_in_ms,t_tot)
 
-tau_NMDA = 100
-tau_r = 10
+	E1 = zeros(t_tot) # excitatory unit receiving the first input
+	E2 = zeros(t_tot) # excitatory unit receiving second input
+	Isyn = zeros(t_tot)
+	Iext = zeros(t_tot)
+	S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
 
-gee = .56
-G = .1
-gNMDA = .02
-gExc = .03
-gInp1 = .07
+	stim_length = 30 # ms
+	stim_strength = 1
+	SOA = 100
+	Inp1 = zeros(t_tot)
+	Inp1[:stim_length/dt] = stim_strength
+	Inp2 = zeros(t_tot)
+	Inp2[SOA:SOA+stim_length] = stim_strength
 
-# Let's set S_NMDA_1 to its E1=0 steady state
-P = G*tau_NMDA*f_S(0)
-S_NMDA_1[0] = P/(1+P)
+	tau_NMDA = 100
+	tau_r = 10
 
-bPlot = 1
+	# Let's set S_NMDA_1 to its E1=0 steady state
+	P = G*tau_NMDA*f_S(0)
+	S_NMDA_1[0] = P/(1+P)
 
-for i in xrange(1):
-	gNMDA /=1.
-	gExc /=1.
 	for t in xrange(t_tot-1):
  
 
@@ -60,52 +55,6 @@ for i in xrange(1):
 		E2[t+1] = E2[t] + \
 			(-E2[t] + f_exc(Isyn[t+1] + Iext[t+1] + gee*E2[t]))*dt/tau_r 
 
-	if bPlot:
-
-		figure()
-		title(str(gNMDA) + '; max(Isyn)=' + str(Isyn.max()))
-		plot(tax,Isyn,'c')
-		plot(tax,E2,'b')
-		plot(tax,Iext,'g')
-		plot(tax,gInp1*Inp1,'y')
-		plot(tax,E1,'m')
-
-		plot(tax,S_NMDA_1,'k')
-		show(block=False)
-bNull = 1 # carry out an analysis of the nullclines?
-if bPlot & bNull:
-	minInp = min(gInp1*Inp1)
-	maxInp = max(Isyn+Iext)
-	def dE(E,iapp):    return (-E + f_exc(iapp + gee*E))/tau_r
-	xax=arange(0,1,.01)
-	zline = zeros(len(xax))
-	figure()
-	plot(xax,dE(xax,maxInp),'r')
-	plot(xax,dE(xax,minInp),'b')
-	plot(xax,zline,'k')
-	show(block=False)
-
-if 0:
-	xax=arange(0,1,.01)
-	zline = zeros(len(xax))
-	dSdown = -xax/tau_NMDA
-	dSUp = (1-xax) * G * f_S(0)
-	dSUp2 = (1-xax) * G * f_S(1)
-	dS0 = dSdown + dSUp
-	dS1 = dSdown + dSUp2
-	figure()
-	#plot(xax,dSdown,'r')
-	#plot(xax,dSUp,'g')
-	#plot(xax,dSUp2,'y')
-	plot(xax,dS0,'b')
-	plot(xax,dS1,'c')
-	plot(xax,zline,'k')
-	xlabel('S')
-	ylabel('dS [E1 = 0,1]')
-	show(block=False)
-
-
-
-
-
+	return {'E1':E1, 'E2':E2, 'Isyn':Isyn, 
+		'Iext':Iext, 'S_NMDA_1':S_NMDA_1, 'tax':tax, 'pars':pars}
 
