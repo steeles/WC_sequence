@@ -32,11 +32,9 @@ tau_NMDA = 100
 tau_r = 10
 
 gee = .56
-
 G = .1
 gNMDA = .02
 gExc = .03
-
 gInp1 = .07
 
 # Let's set S_NMDA_1 to its E1=0 steady state
