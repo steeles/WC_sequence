@@ -14,12 +14,18 @@ class WC_unit:
 				tau=100.,dt=.1,r=0.,Iapp=1.), **kwargs)
 		WC_unit.nUnits +=1
 
-	def update(self):
+	def update(self,t=0):
 		def f(x,k=self.ke,th=self.the):
 			return 1/(1+np.exp(-(x-th)/k))
 		x = self.Iapp + self.gee * self.r
-		self.r += self.dt/self.tau * (-self.r + f(x))
+		self.dr = self.dt/self.tau * (-self.r + f(x))
+		self.r += self.dr
+
+	def update(self,t=0):		
+		self.r += self.calc_dr(t)
 	
-	# @class_method
-	# def integrator(func,dt,T):
-	# 	tax=
+
+
+	@staticmethod
+	def integrator(func,dt,T):
+	 	tax=np.arange(dt,T,dt)
