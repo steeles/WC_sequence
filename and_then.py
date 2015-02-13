@@ -85,7 +85,7 @@ if bPlot & bNull:
 	plot(xax,dE(xax,maxInp),'r')
 	plot(xax,dE(xax,minInp),'b')
 	plot(xax,zline,'k')
-	show(block=False)
+	show()
 
 if 0:
 	xax=arange(0,1,.01)

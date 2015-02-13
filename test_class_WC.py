@@ -1,12 +1,22 @@
-import numpy as np
+
 import WC_class
 reload(WC_class)
+import numpy as np
+import matplotlib.pyplot as plt
+#from numpy import exp
 
 from WC_class import WC_unit
 
 E1 = WC_unit(Iapp=100)
-E1.update()
+E1.updateR()
 print E1.r
+
+
+E1.integrator()
+
+plt.plot(E1.tax,E1.rRecord)
+plt.show()
+
 
 # if bPlot:
 
