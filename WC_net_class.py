@@ -39,7 +39,6 @@ class WC_unit(object):
 
 
 	@staticmethod
-
 	# integrator just runs the integration for a specified T and dt, 
 	# recording the trace. it also has to initialize the trace vect.
 	def integrator(dt=1.,T=500.):

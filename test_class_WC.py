@@ -7,16 +7,20 @@ import matplotlib.pyplot as plt
 
 from WC_class import WC_unit
 
-E1 = WC_unit(Iapp=100)
+E1 = WC_unit(Iapp=.1)
 E1.updateR()
 print E1.r
 
 
 E1.integrator()
 
-plt.plot(E1.tax,E1.rRecord)
-plt.show()
+E2pars = dict(Iapp=.5,tau=20,the=.5)
+E2 = WC_unit(**E2pars)
+E2.integrator(T=100)
 
+plt.plot(E1.tax,E1.rRecord,'b')
+plt.plot(E2.tax,E2.rRecord,'r')
+plt.show()
 
 # if bPlot:
 
