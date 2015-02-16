@@ -17,8 +17,6 @@ class WC_unit(object):
 	""" Creates a basic WC unit. To assign pars from a dictionary, 
 	use WC_unit(**parsDict) """
 
-	_registry = []
-
 	def __init__(self,**kwargs):
 		#if !type(**kwargs)==dict:
 		self.__dict__.update(defaultPars, **kwargs)
@@ -37,24 +35,17 @@ class WC_unit(object):
 		
 		self.r += dr
 
-
-	@staticmethod
-	# integrator just runs the integration for a specified T and dt, 
-	# recording the trace. it also has to initialize the trace vect.
-	def integrator(dt=1.,T=500.):
+	def integrator(self,dt=1.,T=500.):
 		
 	 	tax=np.arange(dt,T,dt)
 	 	ttot=len(tax)
-	 	for unit in WC_unit._registry:
-	 		unit.rRecord=np.zeros(ttot)
-	 		unit.tax=tax
+	 		self.rRecord=np.zeros(ttot)
+	 		self.tax=tax
 
 	 	for t in xrange(ttot):
-	 		for unit in WC_unit._registry:
-	 			unit.updateR(dt)
-	 			unit.rRecord[t]=unit.r
+	 		self.updateR(dt)
+	 		self.rRecord[t]=unit.r
 
-	 	#return rRecord,tax
 
 
 

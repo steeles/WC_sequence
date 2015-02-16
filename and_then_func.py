@@ -58,3 +58,6 @@ def and_then(ke=.1,the=.2,kS=.1,thS=.8,
 	return {'E1':E1, 'E2':E2, 'Isyn':Isyn, 
 		'Iext':Iext, 'S_NMDA_1':S_NMDA_1, 'tax':tax, 'pars':pars}
 
+if __name__=="__main__":
+	and_then()
+

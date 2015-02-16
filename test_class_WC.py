@@ -1,4 +1,4 @@
-
+''' freelance script to run some WC_class stuff and see what happens'''
 import WC_class
 reload(WC_class)
 import numpy as np
@@ -12,10 +12,11 @@ E1.updateR()
 print E1.r
 
 
-E1.integrator()
+#E1.integrator()
 
 E2pars = dict(Iapp=.5,tau=20,the=.5)
 E2 = WC_unit(**E2pars)
+
 E2.integrator(T=100)
 
 plt.plot(E1.tax,E1.rRecord,'b')
