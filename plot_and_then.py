@@ -5,7 +5,7 @@ from matplotlib.mlab import *
 
 def plot_and_then(tax=[],Isyn=[],E2=[],Iext=[],E1=[],
 	S_NMDA_1=[],gInp1=[],gee=[],G=[],f_exc=[],tau_r=[],
-	f_S=[],bNull=0,bPlot=0):
+	f_S=[],bNull=1,bPlot=1,Inp1=[],**kwargs):
 	
 	#print(type(results))
 	print(type(tax))

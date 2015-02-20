@@ -17,7 +17,7 @@ errCount=0
 if max(default_run['E2'])>thresh:
 	print 'E2 goes off'
 else: 
-	print "E2 doesn't fire"; errCount +=1; plot_and_then(default_run)
+	print "E2 doesn't fire"; errCount +=1; plot_and_then(**default_run)
 
 
 no_synapse=and_then(gNMDA=0)
@@ -25,7 +25,7 @@ no_synapse=and_then(gNMDA=0)
 if max(no_synapse['E2'])>thresh:
 	print '...without NMDA current'
 	errCount +=1
-	plot_and_then(no_synapse)
+	plot_and_then(**no_synapse)
 
 no_stim=and_then(gInp2=0)
 
@@ -35,7 +35,7 @@ if max(no_stim['E2'])>thresh:
 if errCount==0: print ' the logic checks out'
 
 
-plot_and_then(**default_run,**pars)
+plot_and_then(**default_run)
 
 
 

@@ -3,8 +3,12 @@ from pylab import *
 from numpy import *
 from matplotlib.mlab import *
 
+
+
 def and_then(ke=.1,the=.2,kS=.1,thS=.8,
-	G=.1,gee=.56,gNMDA=.02,gExc=.03,gInp1=.07):
+	G=.1,gee=.56,gNMDA=.02,gInp2=.03,gInp1=.07,
+	tau_NMDA=100,tau_r=10):
+
 
 	def f_exc(x, k=ke, theta=the,):
 		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
@@ -13,18 +17,12 @@ def and_then(ke=.1,the=.2,kS=.1,thS=.8,
 		return 1/(1+exp(-(x-th)/k)) # - 1/(1+exp(theta/k))
 
 	pars = {'ke':ke,'the':the,'kS':kS,'thS':thS,'G':G,'gee':gee,
-	'gNMDA':gNMDA,'gExc':gExc,'gInp1':gInp1}
+	'gNMDA':gNMDA,'gInp2':gInp2,'gInp1':gInp1}
 
 	t_in_ms = 500
 	dt = 1
 	t_tot = int(t_in_ms/dt)
 	tax = linspace(dt,t_in_ms,t_tot)
-
-	E1 = zeros(t_tot) # excitatory unit receiving the first input
-	E2 = zeros(t_tot) # excitatory unit receiving second input
-	Isyn = zeros(t_tot)
-	Iext = zeros(t_tot)
-	S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
 
 	stim_length = 30 # ms
 	stim_strength = 1
@@ -38,8 +36,18 @@ def and_then(ke=.1,the=.2,kS=.1,thS=.8,
 	tau_r = 10
 
 	# Let's set S_NMDA_1 to its E1=0 steady state
+
+
+	E1 = zeros(t_tot) # excitatory unit receiving the first input
+	E2 = zeros(t_tot) # excitatory unit receiving second input
+	Isyn = zeros(t_tot)
+	Iext = zeros(t_tot)
+	S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
+	
 	P = G*tau_NMDA*f_S(0)
 	S_NMDA_1[0] = P/(1+P)
+
+
 
 	for t in xrange(t_tot-1):
  
@@ -50,13 +58,12 @@ def and_then(ke=.1,the=.2,kS=.1,thS=.8,
 			(-S_NMDA_1[t]/tau_NMDA + (1-S_NMDA_1[t]) *G* f_S(E1[t+1]))*dt # NMDA gating for FF input
 
 		Isyn[t+1] = gNMDA*S_NMDA_1[t+1]
-		Iext[t+1] = gExc*Inp2[t+1]
+		Iext[t+1] = gInp2*Inp2[t+1]
 
 		E2[t+1] = E2[t] + \
 			(-E2[t] + f_exc(Isyn[t+1] + Iext[t+1] + gee*E2[t]))*dt/tau_r 
 
-	return {'E1':E1, 'E2':E2, 'Isyn':Isyn, 
-		'Iext':Iext, 'S_NMDA_1':S_NMDA_1, 'tax':tax, 'pars':pars}
+	return locals()
 
 if __name__=="__main__":
 	and_then()
