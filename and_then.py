@@ -16,6 +16,7 @@ tax = linspace(dt,t_in_ms,t_tot)
 
 E1 = zeros(t_tot) # excitatory unit receiving the first input
 E2 = zeros(t_tot) # excitatory unit receiving second input
+Ipop = zeros(t_tot)
 Isyn = zeros(t_tot)
 Iext = zeros(t_tot)
 S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
