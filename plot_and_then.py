@@ -3,8 +3,8 @@ from numpy import *
 from matplotlib.mlab import *
 
 
-def plot_and_then(tax=[],Isyn=[],E2=[],Iext=[],E1=[],
-	S_NMDA_1=[],gInp1=[],gee=[],G=[],f_exc=[],tau_r=[],
+def plot_and_then(tax=[],Isyn=[],E2=[],Inp2=[],E1=[],
+	S_NMDA_1=[],gInp1=[],gInp2=[],gee=[],G=[],f_exc=[],tau_r=[],
 	f_S=[],bNull=1,bPlot=1,Inp1=[],**kwargs):
 	
 	#print(type(results))
@@ -12,14 +12,17 @@ def plot_and_then(tax=[],Isyn=[],E2=[],Iext=[],E1=[],
 	figure()
 	plot(tax,Isyn,'c')
 	plot(tax,E2,'b')
-	plot(tax,Iext,'g')
+	plot(tax,gInp2*Inp2,'g')
 	plot(tax,gInp1*Inp1,'y')
 	plot(tax,E1,'m')
 
 	plot(tax,S_NMDA_1,'k')
 	show(block=False)
 	bNull = 1 # carry out an analysis of the nullclines?
+
+
 	if bPlot & bNull:
+		Iext = gInp2 * Inp2
 		minInp = min(gInp1*Inp1)
 		maxInp = max(Isyn+Iext)
 		def dE(E,iapp):    return (-E + f_exc(iapp + gee*E))/tau_r

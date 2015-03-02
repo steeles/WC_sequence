@@ -8,6 +8,7 @@ from matplotlib.mlab import *
 
 from and_then_func import and_then
 from plot_and_then import plot_and_then
+import pdb
 
 thresh = .5
 
@@ -35,7 +36,8 @@ if max(no_stim['E2'])>thresh:
 if errCount==0: print ' the logic checks out'
 
 
-plot_and_then(**default_run)
+#plot_and_then(**default_run)
+
 
 
 

@@ -3,6 +3,7 @@
 #from numpy import exp
 #print "exp loaded"
 import numpy as np
+import pdb
 
 
 '''if i need to make changes to the default parameters,
@@ -10,7 +11,7 @@ i should do it here'''
 defaultPars=dict(		
 				gee = .6,				
 				ke=.1,the=.2,			
-				tau=10.,r=0.,Iapp=1.)
+				tau=10.,r=[0.],Iapp=1.)
 #import numpy as np
 class WC_unit(object):
 
@@ -35,7 +36,7 @@ class WC_unit(object):
 			return 1/(1+np.exp(-(x-th)/k))
 		dr = dt/self.tau * (-self.r + f(self.currents()))
 		
-		self.r += dr
+		self.r[0] += dr
 
 
 	@staticmethod

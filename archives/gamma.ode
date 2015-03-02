@@ -1,0 +1,14 @@
+# Firing rate model: ping
+#  Sept 2014
+# rho = tau/taus.  time in units of tau - recruitment time scale of inhib network
+p thv=0.3 kv=0.1 ths=0.4 ks=0.1 tha=0.4 ka=0.1
+p rhoa=0.8 rhos=0.8 b=1 g=1 I=0
+f(v)=1/(1+exp((thv-v)/kv))
+sinf(v)=1/(1+exp((ths-v)/ks))
+ainf(v)=1/(1+exp((tha-v)/ka))
+dr/dt = -r+f(I-b*s-g*a)
+da/dt= (-a+ainf(r))*rhoa
+ds/dt= (-s+sinf(r))*rhos
+init r=0.1 a=0.1 s=0.1
+@ total= nout=10 dt=0.01
+done
