@@ -15,7 +15,7 @@ i should do it here'''
 defaultPars=dict(		
 				ke=.1,the=.2,  # IO params
 				kS=.1,thS=.5,
-				r0=0., a0=0.,S0=0.,stim=.6, # time varying values
+				r0=0., a0=0.,S0=0.,stim0=1., # time varying values
 				gee=.57,
 				gStim=1,
 				gSFA=0,
@@ -43,7 +43,7 @@ class WC_net_unit(object):
 		self.r=[self.r0]
 		self.a=[self.a0]
 		self.S=[self.S0]
-		self.stim=[self.stim]
+		self.stim=[self.stim0]
 
 
 		self.init_intrinsicCurrents()
@@ -75,17 +75,19 @@ class WC_net_unit(object):
 		if name in self.currents:
 			del self.currents[name]
 
+	#@profile
 	def currentValues(self):
-		ind = self.currents.keys()
-		cvals = np.zeros(len(ind))
+		#ind = self.currents.keys()
+		cvals = np.zeros(len(self.currents))
 		counter=0
 		for c in self.currents.itervalues():
 			#print c.source
 			val= c.source[0] * c.weight
 			cvals[counter]=val
 			counter+=1
+		self.cvals = cvals
 
-		self.cvals = pd.Series(cvals,index=ind)
+		#self.cvals = pd.Series(cvals,index=ind)
 
 	def stimFeed(self,stimSource):
 
@@ -120,10 +122,11 @@ class WC_net_unit(object):
 
 	# wanna do this in some sort of way that lets me record all the currents too
 	@staticmethod
-	def integrator(dt=1.,T=500.,stimSource=None):
+	#@profile
+	def integrator(dt=1.,T=500.,stimSource=None,restart=True):
 		
 	 	tax=np.arange(dt,T+dt,dt)
-	 	ttot=len(tax)+1
+	 	ttot=len(tax)
 
 # here I'm going to want a data.frame # UPDATE- GOT IT!
 
@@ -132,10 +135,20 @@ class WC_net_unit(object):
 	 		unit.aTrace=np.zeros(ttot)
 	 		unit.Strace=np.zeros(ttot)
 
+	 		if restart:
+
+		 		unit.r[0]=unit.r0
+				unit.a[0]=unit.a0
+				unit.S[0]=unit.S0
+				unit.stim[0]=unit.stim0
+
+
+
 	 		unit.tax=tax
 	 		unit.currentValues()
-	 		unit.currentTrace = pd.DataFrame(index=unit.tax,columns=unit.cvals.index)
-	 		unit.currentTrace.fillna(0)
+	 		unit.currentTrace = np.zeros((ttot,len(unit.currents)))
+	 		#pd.DataFrame(index=unit.tax,columns=unit.currents.keys())
+	 		#unit.currentTrace.fillna(0)
 
 	 	for t in xrange(ttot):
 	 		counter=0
@@ -143,13 +156,13 @@ class WC_net_unit(object):
 
 	 			''' lets me put vectorized stim in there '''
 	 			if stimSource is not None:
-	 				unit.stim[0]=stimSource[counter,t] 
+	 				unit.stim[0]=stimSource[counter,t]
 
 	 			unit.rTrace[t]=unit.r[0]
 	 			unit.aTrace[t]=unit.a[0]
 	 			unit.Strace[t]=unit.S[0]
 
-	 			unit.currentTrace.loc[t]=unit.cvals
+	 			unit.currentTrace[t,:]=unit.cvals
 	 			unit.updateR(dt)
 	 			unit.updateA(dt)
 	 			unit.updateS(dt)
@@ -158,19 +171,23 @@ class WC_net_unit(object):
 	 		df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, \
 	 			S=unit.Strace))
 
-	 		unit.records = pd.concat([df,unit.currentTrace],1)
+	 		df2 = pd.DataFrame(unit.currentTrace,index=unit.tax,columns=unit.currents.keys())
 
-	 		unit.currentTrace = unit.currentTrace.drop( \
-	 			unit.currentTrace.tail(1).index)
+	 		unit.records = pd.concat([df,df2],1)
+
+	 		unit.records = unit.records.drop( \
+	 			unit.records.tail(1).index)
 
 
 
 
 
 if __name__ == "__main__":
+
+
 	
-	foo=WC_net_unit(gSFA=.7,gee=0,r0=0.5,the=0., stim=0.6)
-	bar=WC_net_unit(gSFA=.7,gee=0, the=0., stim=0.6)
+	foo=WC_net_unit(gSFA=.7,gee=0,r0=0.5,the=0., gStim=0.6)
+	bar=WC_net_unit(gSFA=.7,gee=0, the=0., gStim=0.6)
 
 	foo.addNewCurrent(bar.r,-1,"bar_inh_foo")
 
@@ -195,10 +212,13 @@ if 1:
 
 	for ind in xrange(nUnits):
 		unit=WC_net_unit._registry[ind]
-		plt.legend(loc='right')
-		unit.records.plot(ax=axes[ind])
-		plt.title(netnames[ind])
-		plt.legend(loc='right')
+
+		ax=axes[ind]
+#		plt.legend(loc='right')
+		#plt.title(netnames[ind])
+		unit.records.plot(ax=ax)
+		ax.set_title(netnames[ind])
+		ax.legend(loc='right')
 
 		#title(str(ind+1)) 
 	# plot(tax,E,'b')
