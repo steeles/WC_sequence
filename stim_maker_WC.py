@@ -9,7 +9,7 @@ import pdb
 
 def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
 
-	tone_length = 030
+	tone_length = 30
 	#exc_gain = 300
 	tax = arange(0,T,dt) # ms 
 	fq_axis = 440 * (2.**(1/12.))**arange(-12,13)
@@ -20,6 +20,7 @@ def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
 	TRT = ITI/dt
 	stim = np.zeros((nUnits,len(tax)))
 
+	pdb.set_trace()
 
 	A_ind = 12; B_ind = A_ind - df
 
@@ -34,3 +35,6 @@ def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
 	# trip_activation[2*ITI:2*ITI+tone_length] = tuning_curve[A_ind]
 
 	return stim
+
+if __name__ == "__main__":
+	foo = stim_maker_WC()

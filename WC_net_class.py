@@ -17,7 +17,7 @@ defaultPars=dict(
 				kS=.1,thS=.5,
 				r0=0., a0=0.,S0=0.,stim0=1., # time varying values
 				gee=.57,
-				gStim=1,
+				gStim=1.,
 				gSFA=0,
 
 				tau=10.,tauNMDA=100., tauA=200., G=.64)
@@ -122,7 +122,6 @@ class WC_net_unit(object):
 
 	# wanna do this in some sort of way that lets me record all the currents too
 	@staticmethod
-	#@profile
 	def integrator(dt=1.,T=500.,stimSource=None,restart=True):
 		
 	 	tax=np.arange(dt,T+dt,dt)
@@ -173,19 +172,38 @@ class WC_net_unit(object):
 
 	 		df2 = pd.DataFrame(unit.currentTrace,index=unit.tax,columns=unit.currents.keys())
 
+	 		# this concatenation apparently takes forever
 	 		unit.records = pd.concat([df,df2],1)
 
 	 		unit.records = unit.records.drop( \
 	 			unit.records.tail(1).index)
 
+	 @staticmethod
+	 def plot_timecourses(netnames):
 
+	 	nUnits = len(WC_net_unit._registry)
 
+		fig, axes = plt.subplots(nrows=nUnits)
+
+		for ind in xrange(nUnits):
+			unit=WC_net_unit._registry[ind]
+
+			ax=axes[ind]
+	#		plt.legend(loc='right')
+			#plt.title(netnames[ind])
+			unit.records.plot(ax=ax)
+			ax.set_title(netnames[ind])
+			ax.legend(loc='right')
+
+			#title(str(ind+1)) 
+		# plot(tax,E,'b')
+		# plot(tax,I,'r')
+		# plot(tax,Inp_e,'g')
+		plt.show(block=False)
 
 
 if __name__ == "__main__":
 
-
-	
 	foo=WC_net_unit(gSFA=.7,gee=0,r0=0.5,the=0., gStim=0.6)
 	bar=WC_net_unit(gSFA=.7,gee=0, the=0., gStim=0.6)
 
@@ -195,10 +213,9 @@ if __name__ == "__main__":
 
 	netnames=["foo","bar"]
 
-
 	WC_net_unit.integrator(T=5000)
 
-if 1:
+	if 1:
 	#fig = plt.figure()
 	#tmp = plt.gca()
 	#plt.title('foo-bar')
@@ -206,29 +223,29 @@ if 1:
 	#tmp.axes.get_yaxis().set_ticks([])
 	#plt.xlabel('time')
 
-	nUnits = len(WC_net_unit._registry)
+		nUnits = len(WC_net_unit._registry)
 
-	fig, axes = plt.subplots(nrows=nUnits)
+		fig, axes = plt.subplots(nrows=nUnits)
 
-	for ind in xrange(nUnits):
-		unit=WC_net_unit._registry[ind]
+		for ind in xrange(nUnits):
+			unit=WC_net_unit._registry[ind]
 
-		ax=axes[ind]
-#		plt.legend(loc='right')
-		#plt.title(netnames[ind])
-		unit.records.plot(ax=ax)
-		ax.set_title(netnames[ind])
-		ax.legend(loc='right')
+			ax=axes[ind]
+	#		plt.legend(loc='right')
+			#plt.title(netnames[ind])
+			unit.records.plot(ax=ax)
+			ax.set_title(netnames[ind])
+			ax.legend(loc='right')
 
-		#title(str(ind+1)) 
-	# plot(tax,E,'b')
-	# plot(tax,I,'r')
-	# plot(tax,Inp_e,'g')
-	plt.show(block=False)
+			#title(str(ind+1)) 
+		# plot(tax,E,'b')
+		# plot(tax,I,'r')
+		# plot(tax,Inp_e,'g')
+		plt.show(block=False)
 
-	#return tax,E,a,Isyn,stim
-
-
+		#return tax,E,a,Isyn,stim
 
 
-	
+
+
+		
