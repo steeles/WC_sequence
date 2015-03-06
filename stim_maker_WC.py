@@ -7,7 +7,7 @@ import pdb
 
 #global stim_maker_WC
 
-def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
+def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=0):
 
 	tone_length = 30
 	#exc_gain = 300
@@ -20,7 +20,7 @@ def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
 	TRT = ITI/dt
 	stim = np.zeros((nUnits,len(tax)))
 
-	pdb.set_trace()
+	#pdb.set_trace()
 
 	A_ind = 12; B_ind = A_ind - df
 

@@ -8,44 +8,76 @@ import pandas as pd
 import WC_net_class as WC
 import stim_maker_WC as sm 
 
+T=500
+stim = np.zeros((4,T))
+
+tmp = sm.stim_maker_WC(T=T)
+tmp = tmp[0:2,:]
+# add pooled inhibition and feedback (no stim) entry
+stim[:2,:] = tmp
+stim[2,:] = sum(stim[:2,:])
+
+#stim = stim[(1,0,2,3),:]
+
 # empty out the registry so we get a new network
 WC.WC_net_unit._registry=[]
 
-foo=WC.WC_net_unit(gSFA=.7,gee=0,r0=0.5,the=0., gStim=0.6)
-bar=WC.WC_net_unit(gSFA=.7,gee=0, the=0., gStim=0.6)
+excParsDict = dict(ke=0.1, the=0.5, kS=0.1, thS=0.8, gee = 0.8, 
+	gSFA = .3, tauA = 20)
+# low threshold to increase FR, high threshold to activate NMDARs, sensitive to stim
+excParsDict.update(gStim=.15)
 
-foo.addNewCurrent(bar.r,-1,"bar_inh_foo")
+U1=WC.WC_net_unit(**excParsDict)
 
-bar.addNewCurrent(foo.r,-1,"foo_inh_bar")
+excParsDict.update(gStim=.08)
 
-netnames=["foo","bar"]
+U2=WC.WC_net_unit(**excParsDict)
 
-WC.WC_net_unit.integrator(T=5000)
+slowInh = WC.WC_net_unit(tau=50)
+fastInh = WC.WC_net_unit(tau=5, the = .5)
 
-if 1:
-#fig = plt.figure()
-#tmp = plt.gca()
-#plt.title('foo-bar')
-#tmp.axes.get_xaxis().set_ticks([]) # turn off those nasty ticks
-#tmp.axes.get_yaxis().set_ticks([])
-#plt.xlabel('time')
+fastInh.addNewCurrent(source=U1.r,weight=1,name="FB_exc_1")
+fastInh.addNewCurrent(source=U2.r,weight=1,name="FB_exc_2")
 
-	nUnits = len(WC.WC_net_unit._registry)
+slowInh.addNewCurrent(source=fastInh.r,weight=-1,name="FB_inh")
 
-	fig, axes = plt.subplots(nrows=nUnits)
+U2.addNewCurrent(source=U1.S,weight=.05,name="NMDA_12")
+U1.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
+U2.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
 
-	for ind in xrange(nUnits):
-		unit=WC.WC_net_unit._registry[ind]
 
-		ax=axes[ind]
-#		plt.legend(loc='right')
-		#plt.title(netnames[ind])
-		unit.records.plot(ax=ax)
-		ax.set_title(netnames[ind])
-		ax.legend(loc='right')
+netnames=["E1","E2","FF inhibitor","FB disinhibitor"]
 
-		#title(str(ind+1)) 
-	# plot(tax,E,'b')
-	# plot(tax,I,'r')
-	# plot(tax,Inp_e,'g')
-	plt.show(block=False)
+WC.WC_net_unit.integrator(stimSource=stim)
+
+WC.WC_net_unit.plot_timecourses(netnames)
+
+U2.plot_derivatives("each")
+
+# if 1:
+# #fig = plt.figure()
+# #tmp = plt.gca()
+# #plt.title('foo-bar')
+# #tmp.axes.get_xaxis().set_ticks([]) # turn off those nasty ticks
+# #tmp.axes.get_yaxis().set_ticks([])
+# #plt.xlabel('time')
+
+# 	nUnits = len(WC.WC_net_unit._registry)
+
+# 	fig, axes = plt.subplots(nrows=nUnits)
+
+# 	for ind in xrange(nUnits):
+# 		unit=WC.WC_net_unit._registry[ind]
+
+# 		ax=axes[ind]
+# #		plt.legend(loc='right')
+# 		#plt.title(netnames[ind])
+# 		unit.records.plot(ax=ax)
+# 		ax.set_title(netnames[ind])
+# 		ax.legend(loc='right')
+
+# 		#title(str(ind+1)) 
+# 	# plot(tax,E,'b')
+# 	# plot(tax,I,'r')
+# 	# plot(tax,Inp_e,'g')
+# 	plt.show(block=False)

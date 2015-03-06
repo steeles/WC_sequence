@@ -14,7 +14,7 @@ from numpy import *
 from matplotlib.mlab import *
 
 from disinhAndThen_func import disinhAndThen
-from plotUnits import plotUnits, plotNullclines # this is going to need to be reworked
+import plot_and_then_mod as pat 
 
 thresh = .5
 
@@ -42,22 +42,22 @@ else:
 
 
 
-Inp2_only=and_then(gInp1=0)
+Inp2_only=disinhAndThen(gInp1=0)
 'Delivering only the second input'
 
-if max(inp2_only['slowInh'])>thresh:
+if max(Inp2_only['slowInh'])>thresh:
 	print 'Slow feedforward inhibition kicks in'
 else:
 	print 'WARNING: no feedback inhibition'
 
-if max(inp2_only['E2'])<thresh:
+if max(Inp2_only['E2'])<thresh:
 	print 'Unit 2 does not fire'
 else:
 	'Unit 2 goes off without synaptic input from unit 1!'
 	errCount +=1
-	plot_and_then(**inp2_only)
+	pat.plot_FR_timecourses(**inp2_only)
 
-no_stim=and_then(gInp2=0)
+no_stim=disinhAndThen(gInp2=0)
 
 if max(no_stim['E2'])>thresh:
 	print 'Unit 2 fires ...without input 2'
@@ -65,7 +65,7 @@ if max(no_stim['E2'])>thresh:
 if errCount==0: print ' the logic checks out'
 
 
-plot_and_then(**default_run)
+pat.plot_FR_timecourses(**default_run)
 
 
 

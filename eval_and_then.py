@@ -32,11 +32,12 @@ no_stim=and_then(gInp2=0)
 
 if max(no_stim['E2'])>thresh:
 	print '...without input 2'
+	plot_and_then(**no_stim)
 	errCount +=1
 if errCount==0: print ' the logic checks out'
 
 
-#plot_and_then(**default_run)
+plot_and_then(**default_run)
 
 
 

@@ -19,7 +19,6 @@ defaultPars=dict(
 				gee=.57,
 				gStim=1.,
 				gSFA=0,
-
 				tau=10.,tauNMDA=100., tauA=200., G=.64)
 
 
@@ -87,8 +86,6 @@ class WC_net_unit(object):
 			counter+=1
 		self.cvals = cvals
 
-		#self.cvals = pd.Series(cvals,index=ind)
-
 	def stimFeed(self,stimSource):
 
 		self.stim[0]=stimSource
@@ -97,15 +94,13 @@ class WC_net_unit(object):
 		th=self.the
 		k=self.ke
 
-		return 1/(1+np.exp(-(x-th)/k))
+		return 1/(1+np.exp(-(x-th)/k)) - 1/(1+np.exp(th/k))
 
 	def f_S(self,x):
 		th=self.thS
 		k=self.kS
 		return 1/(1+np.exp(-(x-th)/k))
-#	= [c.value for c.value in self.currents]
-# update the this-unit dependent gating variable for its synapses; presyn
-# maybe there's a way to make this optional? so only if it makes a cxn?
+
 	def updateS(self,dt=1):
 		dS = (-self.S[0]/self.tauNMDA + (1-self.S[0]) *self.G* self.f_S(self.r[0]))*dt
 		self.S[0] += dS 
@@ -127,8 +122,6 @@ class WC_net_unit(object):
 	 	tax=np.arange(dt,T+dt,dt)
 	 	ttot=len(tax)
 
-# here I'm going to want a data.frame # UPDATE- GOT IT!
-
 	 	for unit in WC_net_unit._registry:
 	 		unit.rTrace=np.zeros(ttot)
 	 		unit.aTrace=np.zeros(ttot)
@@ -141,19 +134,15 @@ class WC_net_unit(object):
 				unit.S[0]=unit.S0
 				unit.stim[0]=unit.stim0
 
-
-
 	 		unit.tax=tax
 	 		unit.currentValues()
 	 		unit.currentTrace = np.zeros((ttot,len(unit.currents)))
-	 		#pd.DataFrame(index=unit.tax,columns=unit.currents.keys())
-	 		#unit.currentTrace.fillna(0)
 
 	 	for t in xrange(ttot):
 	 		counter=0
 	 		for unit in WC_net_unit._registry:
 
-	 			''' lets me put vectorized stim in there '''
+	 			''' lets me put vectorized stim in there (?)'''
 	 			if stimSource is not None:
 	 				unit.stim[0]=stimSource[counter,t]
 
@@ -167,38 +156,77 @@ class WC_net_unit(object):
 	 			unit.updateS(dt)
 	 			counter += 1
 	 	for unit in WC_net_unit._registry:
-	 		df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, \
+	 		df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, 
 	 			S=unit.Strace))
 
-	 		df2 = pd.DataFrame(unit.currentTrace,index=unit.tax,columns=unit.currents.keys())
+	 		df2 = pd.DataFrame(unit.currentTrace, 
+	 			index=unit.tax,columns=unit.currents.keys())
+	 		unit.currentTrace = df2 # slap some labels on those currents!
 
 	 		# this concatenation apparently takes forever
 	 		unit.records = pd.concat([df,df2],1)
 
-	 		unit.records = unit.records.drop( \
+	 		unit.records = unit.records.drop( 
 	 			unit.records.tail(1).index)
 
-	 @staticmethod
-	 def plot_timecourses(netnames):
+	@staticmethod
+	def plot_timecourses(netnames=None):
 
-	 	nUnits = len(WC_net_unit._registry)
-
-		fig, axes = plt.subplots(nrows=nUnits)
+		nUnits = len(WC_net_unit._registry)
+		fig, axes = plt.subplots(nrows=nUnits,figsize=(12.,9.))
 
 		for ind in xrange(nUnits):
 			unit=WC_net_unit._registry[ind]
 
 			ax=axes[ind]
-	#		plt.legend(loc='right')
+		#		plt.legend(loc='right')
 			#plt.title(netnames[ind])
 			unit.records.plot(ax=ax)
-			ax.set_title(netnames[ind])
-			ax.legend(loc='right')
+			if netnames is not None:
+				ax.set_title(netnames[ind])
+
+			ax.legend(loc='right',prop={'size':9})
 
 			#title(str(ind+1)) 
 		# plot(tax,E,'b')
 		# plot(tax,I,'r')
 		# plot(tax,Inp_e,'g')
+		plt.show(block=False)
+
+	def plot_derivatives(self,iapp=0):
+		# possible values of E:
+		# vectorize all currents... and combinations of currents...
+
+		E_ax = np.arange(-0.2,1.2,.01)
+		# column vector it up
+		xax = E_ax[np.newaxis].T
+
+		if 'self_excitation' in self.currentTrace.columns:
+			x = self.currentTrace.drop('self_excitation',1)
+		else:
+			x = self.currentTrace
+
+		# plot dR for all R's with each current at its most extreme value
+		if iapp == "each":
+			extremeCvals = np.where(np.max(abs(x),0) == abs(np.min(x,0)), \
+				np.min(x,0), np.max(x,0))
+			iapp = np.tile(extremeCvals,(len(E_ax),1))
+			E_ax = np.tile(xax,(1,len(extremeCvals)))
+
+
+		dE = (-E_ax + self.f_r(iapp + self.gee*E_ax))
+
+		dEdf = pd.DataFrame(dE,columns=x.columns,index=xax)
+		#pdb.set_trace()
+		zline = np.zeros(len(xax))
+		plt.figure()
+		#plot(xax,dE(xax,minInp),'b')
+		#ax = plt.gca()
+		tmp = dEdf.plot()
+		#pdb.set_trace()
+		tmp.hlines(0,tmp.get_xlim()[0],tmp.get_xlim()[1])
+		#print "plotted zline"
+
 		plt.show(block=False)
 
 
