@@ -17,31 +17,31 @@ tmp = tmp[0:2,:]
 stim[:2,:] = tmp
 stim[2,:] = sum(stim[:2,:])
 
-#stim = stim[(1,0,2,3),:]
+stim_rev = stim[(1,0,2,3),:]
 
 # empty out the registry so we get a new network
 WC.WC_net_unit._registry=[]
 
 excParsDict = dict(ke=0.1, the=0.5, kS=0.1, thS=0.8, gee = 0.8, 
-	gSFA = .3, tauA = 20)
+	gSFA = .5, tauA = 20)
 # low threshold to increase FR, high threshold to activate NMDARs, sensitive to stim
-excParsDict.update(gStim=.15)
+excParsDict.update(gStim=.5)
 
 U1=WC.WC_net_unit(**excParsDict)
 
-excParsDict.update(gStim=.08)
+excParsDict.update(gStim=.25)
 
 U2=WC.WC_net_unit(**excParsDict)
 
 slowInh = WC.WC_net_unit(tau=50)
 fastInh = WC.WC_net_unit(tau=5, the = .5)
 
-fastInh.addNewCurrent(source=U1.r,weight=1,name="FB_exc_1")
+fastInh.addNewCurrent(source=U1.S,weight=1,name="FB_exc_1")
 fastInh.addNewCurrent(source=U2.r,weight=1,name="FB_exc_2")
 
 slowInh.addNewCurrent(source=fastInh.r,weight=-1,name="FB_inh")
 
-U2.addNewCurrent(source=U1.S,weight=.05,name="NMDA_12")
+U2.addNewCurrent(source=U1.S,weight=.3,name="NMDA_12")
 U1.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
 U2.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
 
@@ -51,6 +51,13 @@ netnames=["E1","E2","FF inhibitor","FB disinhibitor"]
 WC.WC_net_unit.integrator(stimSource=stim)
 
 WC.WC_net_unit.plot_timecourses(netnames)
+
+U2.plot_derivatives("each")
+
+WC.WC_net_unit.integrator(stimSource=stim_rev)
+
+WC.WC_net_unit.plot_timecourses(netnames)
+plt.title("reverse")
 
 U2.plot_derivatives("each")
 

@@ -185,7 +185,7 @@ class WC_net_unit(object):
 			if netnames is not None:
 				ax.set_title(netnames[ind])
 
-			ax.legend(loc='right',prop={'size':9})
+			ax.legend(loc='right',prop={'size':11})
 
 			#title(str(ind+1)) 
 		# plot(tax,E,'b')
@@ -206,26 +206,33 @@ class WC_net_unit(object):
 		else:
 			x = self.currentTrace
 
+
+
 		# plot dR for all R's with each current at its most extreme value
 		if iapp == "each":
 			extremeCvals = np.where(np.max(abs(x),0) == abs(np.min(x,0)), \
 				np.min(x,0), np.max(x,0))
 			iapp = np.tile(extremeCvals,(len(E_ax),1))
 			E_ax = np.tile(xax,(1,len(extremeCvals)))
+			
+
 
 
 		dE = (-E_ax + self.f_r(iapp + self.gee*E_ax))
 
 		dEdf = pd.DataFrame(dE,columns=x.columns,index=xax)
 		#pdb.set_trace()
-		zline = np.zeros(len(xax))
-		plt.figure()
+		#zline = np.zeros(len(xax))
+		#plt.figure()
 		#plot(xax,dE(xax,minInp),'b')
 		#ax = plt.gca()
+		#plt.figure()
 		tmp = dEdf.plot()
 		#pdb.set_trace()
 		tmp.hlines(0,tmp.get_xlim()[0],tmp.get_xlim()[1])
+		plt.title("extreme values")
 		#print "plotted zline"
+		#plt.title("extreme values")
 
 		plt.show(block=False)
 
