@@ -161,7 +161,7 @@ class WC_net_unit(object):
 
 	 		df2 = pd.DataFrame(unit.currentTrace, 
 	 			index=unit.tax,columns=unit.currents.keys())
-	 		unit.currentTrace = df2.copy() # slap some labels on those currents!
+	 		unit.currentTrace = df2 # slap some labels on those currents!
 
 	 		# this concatenation apparently takes forever
 	 		unit.records = df2.copy()

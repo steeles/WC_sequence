@@ -9,15 +9,15 @@ import WC_net_class as WC
 import stim_maker_WC as sm 
 
 T=500
-stim = np.zeros((4,T))
+stim = np.zeros((5,T))
 
 tmp = sm.stim_maker_WC(T=T)
-tmp = tmp[0:2,:]
+#tmp = tmp[0:2,:]
 # add pooled inhibition and feedback (no stim) entry
-stim[:2,:] = tmp
-stim[2,:] = sum(stim[:2,:])
+stim[:3,:] = tmp
+stim[3,:] = sum(stim[:3,:])
 
-stim_rev = stim[(1,0,2,3),:]
+stim_rev = stim[(1,0,2,3,4),:]
 
 # empty out the registry so we get a new network
 WC.WC_net_unit._registry=[]
@@ -33,20 +33,25 @@ excParsDict.update(gStim=.25)
 
 U2=WC.WC_net_unit(**excParsDict)
 
+U3=WC.WC_net_unit(**excParsDict)
+
 slowInh = WC.WC_net_unit(tau=50)
 fastInh = WC.WC_net_unit(tau=5, the = .5, gSFA = 0.5, gee = 0.2, tauA = 50)
 
 fastInh.addNewCurrent(source=U1.S,weight=1,name="FB_exc_1")
 fastInh.addNewCurrent(source=U2.r,weight=1,name="FB_exc_2")
+fastInh.addNewCurrent(source=U2.r,weight=1,name="FB_exc_3")
 
 slowInh.addNewCurrent(source=fastInh.r,weight=-1,name="FB_inh")
 
 U2.addNewCurrent(source=U1.S,weight=.3,name="NMDA_12")
 U1.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
 U2.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
+U3.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
+U3.addNewCurrent(source=U2.S,weight=.3,name="NMDA_23")
 
 
-netnames=["E1","E2","FF inhibitor","FB disinhibitor"]
+netnames=["E1","E2","E3","FF inhibitor","FB disinhibitor"]
 
 # forward
 WC.WC_net_unit.integrator(stimSource=stim)
@@ -54,10 +59,10 @@ WC.WC_net_unit.plot_timecourses(netnames)
 U2.plot_derivatives("each")
 
 # reverse
-#WC.WC_net_unit.integrator(stimSource=stim_rev)
-#WC.WC_net_unit.plot_timecourses(netnames)
-#plt.title("reverse")
-#U2.plot_derivatives("each")
+WC.WC_net_unit.integrator(stimSource=stim_rev)
+WC.WC_net_unit.plot_timecourses(netnames)
+plt.title("reverse")
+U2.plot_derivatives("each")
 
 # if 1:
 # #fig = plt.figure()
