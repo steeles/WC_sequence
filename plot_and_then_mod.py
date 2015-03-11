@@ -29,7 +29,7 @@ def plot_FR_timecourses(tax=[],Isyn=[],E2=[],Inp2=[],E1=[],
 def plot_dE_vs_E(gInp2=[],Inp2=[],Isyn=[],tau_r=[],f_exc=[],
 		gInp1=[],Inp1=[],gee=[],**kwargs):
 	Iext=gInp2 * Inp2
-	pdb.set_trace()
+	#pdb.set_trace()
 	minInp = min(gInp1*Inp1)
 	maxInp = max(Isyn+Iext)
 	def dE(E,iapp):    return (-E + f_exc(iapp + gee*E))/tau_r

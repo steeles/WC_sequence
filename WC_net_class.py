@@ -156,15 +156,17 @@ class WC_net_unit(object):
 	 			unit.updateS(dt)
 	 			counter += 1
 	 	for unit in WC_net_unit._registry:
-	 		df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, 
-	 			S=unit.Strace))
+	 		#df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, 
+	 		#	S=unit.Strace))
 
 	 		df2 = pd.DataFrame(unit.currentTrace, 
 	 			index=unit.tax,columns=unit.currents.keys())
-	 		unit.currentTrace = df2 # slap some labels on those currents!
+	 		unit.currentTrace = df2.copy() # slap some labels on those currents!
 
 	 		# this concatenation apparently takes forever
-	 		unit.records = pd.concat([df,df2],1)
+	 		unit.records = df2.copy()
+	 		unit.records['FR'] = pd.Series(unit.rTrace, index = df2.index)
+	 		#pd.concat([df,df2],1)
 
 	 		unit.records = unit.records.drop( 
 	 			unit.records.tail(1).index)
@@ -186,11 +188,15 @@ class WC_net_unit(object):
 				ax.set_title(netnames[ind])
 
 			ax.legend(loc='right',prop={'size':11})
+			ax.set_ylim([-1.1,1.1])
+			ax.set_ylabel('FR, current')
 
 			#title(str(ind+1)) 
 		# plot(tax,E,'b')
 		# plot(tax,I,'r')
 		# plot(tax,Inp_e,'g')
+		axes[-1].set_xlabel('time (ms)',fontsize=16)
+		fig.tight_layout()
 		plt.show(block=False)
 
 	def plot_derivatives(self,iapp=0):
@@ -250,33 +256,7 @@ if __name__ == "__main__":
 
 	WC_net_unit.integrator(T=5000)
 
-	if 1:
-	#fig = plt.figure()
-	#tmp = plt.gca()
-	#plt.title('foo-bar')
-	#tmp.axes.get_xaxis().set_ticks([]) # turn off those nasty ticks
-	#tmp.axes.get_yaxis().set_ticks([])
-	#plt.xlabel('time')
-
-		nUnits = len(WC_net_unit._registry)
-
-		fig, axes = plt.subplots(nrows=nUnits)
-
-		for ind in xrange(nUnits):
-			unit=WC_net_unit._registry[ind]
-
-			ax=axes[ind]
-	#		plt.legend(loc='right')
-			#plt.title(netnames[ind])
-			unit.records.plot(ax=ax)
-			ax.set_title(netnames[ind])
-			ax.legend(loc='right')
-
-			#title(str(ind+1)) 
-		# plot(tax,E,'b')
-		# plot(tax,I,'r')
-		# plot(tax,Inp_e,'g')
-		plt.show(block=False)
+	WC_net_unit.plot_timecourses(netnames)
 
 		#return tax,E,a,Isyn,stim
 
