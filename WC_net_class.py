@@ -34,7 +34,9 @@ class WC_net_unit(object):
 	def __init__(self,**kwargs):
 		self.__dict__.update(defaultPars, **kwargs)
 		# update the registry; this 
-		print self
+		#print self
+		
+		self.params = self.__dict__.copy()
 		self._registry.append(self) 
 
 		self.currents = dict()
@@ -59,6 +61,10 @@ class WC_net_unit(object):
 
 	def getCxParams(self):
 		return self.cxParams
+
+	def getParams(self):
+		self.params.update(self.cxParams)
+		return self.params
 
 # wanna be able to do with one or many
 	def setCxParams(self,new_connections_dict):
@@ -165,7 +171,8 @@ class WC_net_unit(object):
 
 	 		# this concatenation apparently takes forever
 	 		unit.records = df2.copy()
-	 		unit.records['FR'] = pd.Series(unit.rTrace, index = df2.index)
+	 		unit.records.insert(0,'FR',pd.Series(unit.rTrace,index=df2.index))
+	 		#unit.records['FR'] = pd.Series(unit.rTrace, index = df2.index)
 	 		#pd.concat([df,df2],1)
 
 	 		unit.records = unit.records.drop( 

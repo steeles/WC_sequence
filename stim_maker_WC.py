@@ -7,7 +7,7 @@ import pdb
 
 #global stim_maker_WC
 
-def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=0):
+def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):
 
 	tone_length = 30
 	#exc_gain = 300
