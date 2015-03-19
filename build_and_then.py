@@ -11,7 +11,7 @@ import stim_maker_WC as sm
 T=500
 stim = np.zeros((5,T))
 
-tmp = sm.stim_maker_WC(T=T, ITI=50)
+tmp = sm.stim_maker_WC(T=T, ITI=100, df=0)
 # add pooled inhibition and feedback (no stim) entry
 stim[:3,:] = tmp
 stim[3,:] = sum(stim[:3,:])
@@ -38,10 +38,10 @@ U2=WC.WC_net_unit(**excParsDict)
 U3=WC.WC_net_unit(**excParsDict)
 
 slowInh = WC.WC_net_unit(tau=50)
-fastInh = WC.WC_net_unit(tau=5, the = .5, gSFA = 0.5, gee = 0.2, tauA = 50)
+fastInh = WC.WC_net_unit(tau=5, the = .5, gSFA = 0.3, gee = 0.8, tauA = 50)
 
 gFB_exc = 1
-gFB_ie = -.1
+gFB_ie = -.2
 gFB_ii = -1
 gFF_ie = -.1 
 
@@ -50,6 +50,10 @@ fastInh.addNewCurrent(source=U2.r,weight=gFB_exc,name="FB_exc_2")
 fastInh.addNewCurrent(source=U3.r,weight=gFB_exc,name="FB_exc_3")
 
 slowInh.addNewCurrent(source=fastInh.r,weight=gFB_ii,name="FB_inh")
+U1.addNewCurrent(source=fastInh.r,weight = gFB_ie, name="FB_inh")
+U2.addNewCurrent(source=fastInh.r,weight = gFB_ie, name="FB_inh")
+U3.addNewCurrent(source=fastInh.r,weight = gFB_ie, name="FB_inh")
+
 
 U2.addNewCurrent(source=U1.S,weight=.3,name="NMDA_12")
 U1.addNewCurrent(source=slowInh.r,weight=-.1,name="FF_inh")
@@ -61,9 +65,9 @@ U3.addNewCurrent(source=U2.S,weight=.3,name="NMDA_23")
 netnames=["E1","E2","E3","FF inhibitor","FB disinhibitor"]
 
 # forward
-WC.WC_net_unit.integrator(stimSource=stim)
+WC.WC_net_unit.integrator(stimSource=stim, T=T)
 WC.WC_net_unit.plot_timecourses(netnames)
-U2.plot_derivatives("each")
+#U2.plot_derivatives("each")
 
 # reverse
 WC.WC_net_unit.integrator(stimSource=stim_rev)

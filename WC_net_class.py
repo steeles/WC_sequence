@@ -162,8 +162,6 @@ class WC_net_unit(object):
 	 			unit.updateS(dt)
 	 			counter += 1
 	 	for unit in WC_net_unit._registry:
-	 		#df = pd.DataFrame(dict(r=unit.rTrace, a=unit.aTrace, 
-	 		#	S=unit.Strace))
 
 	 		df2 = pd.DataFrame(unit.currentTrace, 
 	 			index=unit.tax,columns=unit.currents.keys())
@@ -172,39 +170,65 @@ class WC_net_unit(object):
 	 		# this concatenation apparently takes forever
 	 		unit.records = df2.copy()
 	 		unit.records.insert(0,'FR',pd.Series(unit.rTrace,index=df2.index))
-	 		#unit.records['FR'] = pd.Series(unit.rTrace, index = df2.index)
-	 		#pd.concat([df,df2],1)
 
 	 		unit.records = unit.records.drop( 
 	 			unit.records.tail(1).index)
 
+	'''one issue with this one is it doesn't let me do isolated plots.
+	I also want to do fixed line types '''
+
 	@staticmethod
 	def plot_timecourses(netnames=None):
-
 		nUnits = len(WC_net_unit._registry)
 		fig, axes = plt.subplots(nrows=nUnits,figsize=(12.,9.))
+ 		fixedNames = ['FR', 'stim_current', 'self_excitation', 'SFA']
+
+# line pars for each entry in the list of fixedNames
+		fixedPars = [dict(color='b',linewidth=1.5), # FR
+				dict(color='k'), # stim_current
+				dict(color='g'), # self_excitation
+				dict(color='r')]
+
+		nLeftoverColors = 7
+		cm = plt.get_cmap('gnuplot')
+		palette = [cm(1.*i/nLeftoverColors) for i in range(nLeftoverColors)]
+
+		#plt.rc('axes', color_cycle=) #hopefully cycle through
 
 		for ind in xrange(nUnits):
 			unit=WC_net_unit._registry[ind]
 
 			ax=axes[ind]
-		#		plt.legend(loc='right')
-			#plt.title(netnames[ind])
-			unit.records.plot(ax=ax)
+			df = unit.records
+			cols = df.columns
+			leftovers = [x for x in cols if x not in fixedNames]
+			#pdb.set_trace()
+			# first plot the fixed guys as they show up
+			for nInd in xrange(len(fixedNames)):
+				name = fixedNames[nInd]
+				if name in cols:
+					ax.plot(df.index,df[name],label=name, **fixedPars[nInd])
+
+			for nInd in xrange(len(leftovers)):
+				name = leftovers[nInd]
+				if name in cols:
+					ax.plot(df.index,df[name],label=name,color=palette[nInd+2])
+			
+#			unit.records.plot(ax=ax)
 			if netnames is not None:
 				ax.set_title(netnames[ind])
 
+			ax.spines['top'].set_visible(False)
+			ax.spines['right'].set_visible(False)
 			ax.legend(loc='right',prop={'size':11})
 			ax.set_ylim([-1.1,1.1])
 			ax.set_ylabel('FR, current')
 
-			#title(str(ind+1)) 
-		# plot(tax,E,'b')
-		# plot(tax,I,'r')
-		# plot(tax,Inp_e,'g')
+			
 		axes[-1].set_xlabel('time (ms)',fontsize=16)
 		fig.tight_layout()
 		plt.show(block=False)
+
 
 	def plot_derivatives(self,iapp=0):
 		# possible values of E:
