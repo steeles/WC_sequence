@@ -7,14 +7,14 @@ import pdb
 
 #global stim_maker_WC
 
-#T = 5
-#dt = .001
-#nUnits = 3
-#ITI = .5
-#df = 7
+T = 2.5
+dt = .001
+nUnits = 3
+ITI = .05
+df = 3
 #bPlot = 1
 
-def rpt_stim_maker(T,dt,nUnits,ITI,df,bPlot=False):
+def rpt_stim_maker(T=T,dt=dt,nUnits=nUnits,ITI=ITI,df=df,bPlot=False):
 
 	tone_length = .030
 	#exc_gain = 300
@@ -23,9 +23,9 @@ def rpt_stim_maker(T,dt,nUnits,ITI,df,bPlot=False):
 	fq_axis = 440 * (2.**(1/12.))**arange(-12,13)
 	tuning_curve = normpdf(linspace(-7,7,len(fq_axis)),0,3)
 	tuning_curve/= max(tuning_curve) # rescale to equal 1
-	tone_length = tone_length/dt
+	tone_length = int(tone_length/dt)
 	#df = 5
-	TRT = ITI/dt
+	TRT = int(ITI/dt)
 	stim = zeros((nUnits,stim_length))
 
 
@@ -36,10 +36,10 @@ def rpt_stim_maker(T,dt,nUnits,ITI,df,bPlot=False):
 	stim[2,2*TRT:2*TRT+tone_length] = tuning_curve[A_ind]
 
 	period = 4 * TRT
-	ncycles = ceil(stim_length/period)
+	ncycles = int(ceil(stim_length/period))
 	triplet = stim[:,:period]
 	tmp = tile(triplet,[1,ncycles])
-	stim = tmp[:,:stim_length]
+	stim[:, :tmp.shape[1]] = tmp
 
 	if bPlot:
 			fig = figure()

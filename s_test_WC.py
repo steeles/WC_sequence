@@ -1,7 +1,7 @@
 # test_WC 1/23/2015 reappropriating tester code for the WC translated
 # ML synfire model- for what parameters is the sequence detected?
 
-from pylab import *
+# from pylab import *
 from numpy import *
 from matplotlib.mlab import *
 import pdb
@@ -73,6 +73,7 @@ xticks(arange(len(test_ITIs)),xt*1000)
 yticks(arange(len(test_dfs)),yt)#,test_ITIs)
 #yticks(test_dfs)
 show(block=False)
+
 
 
 # figure()
