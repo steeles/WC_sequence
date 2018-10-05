@@ -9,12 +9,12 @@ import pdb
 execfile('SFA_WC_pop_func.py')
 execfile('stim_maker_WC.py')
 
-test_dfs = linspace(3,12,12)
+test_dfs = linspace(3,12,4)
 #test_Phis = logspace(.001,.02,5)
 #test_Phis = test_Phis[1:]
 #test_Phis = array([.0021])#, .0022])
 
-test_ITIs = linspace(.030,.130,12)
+test_ITIs = linspace(.030,.130,4)
 
 detect_map = zeros((len(test_dfs),len(test_ITIs)))
 #suppress_map = zeros((len(test_dfs),len(test_ITIs)))
@@ -31,8 +31,8 @@ for dind in xrange(len(test_dfs)):
 		# i think this can be simplified for now
 
 		[tax,E,I,Isyn,stim] = SFA_pop(
-			test_dfs[dind], # let's flip that df axis so low dfs at bottom
-			test_ITIs[ind])
+			int(test_dfs[dind]), # let's flip that df axis so low dfs at bottom
+			test_ITIs[ind], bPlot=True)
 			#test_ITIs[-ind-1],test_dfs[dind]) # working down from hi to lo iti
 			
 		# I would like an easy way to test that changing phis doesn't
