@@ -16,6 +16,31 @@ df = 3
 
 # bPlot = 1
 
+def habituator(tau_h, T, dt, bPlot=True):
+    tax = arange(0, T, dt)  # s
+    habituation = 1. - exp(-tax/tau_h)
+
+    if bPlot:
+        fig = figure()
+        foo = gca() # pylab , matplotlib.pyplot
+        title(r'ITI attenuation $\tau$ = ' + str(tau_h))
+        foo.axes.get_xaxis().set_ticks([0,1,2])  # turn off those nasty ticks
+        foo.axes.get_yaxis().set_ticks([0,1])
+        xlabel('time')
+
+        # for ind in xrange(nUnits):
+        ax = fig.add_subplot(1, 1, 1)
+        ylabel('p2/p1')
+        ylim(-.2, 1.1)
+            #	ax.plot(tax,E[ind,:],'b');
+            #	ax.plot(tax,a[ind,:],'r');
+        ax.plot(tax, habituation, 'g')
+        #	ax.plot(tax,Isyn[ind,:],'c')
+        # title(str(ind+1))
+        # plot(tax,E,'b')
+        # plot(tax,I,'r')
+        # plot(tax,Inp_e,'g')
+        show(block=False)
 
 def rpt_stim_maker(T=T, dt=dt, nUnits=nUnits, ITI=ITI, df=df, bPlot=False):
     tone_length = .030
@@ -44,7 +69,7 @@ def rpt_stim_maker(T=T, dt=dt, nUnits=nUnits, ITI=ITI, df=df, bPlot=False):
     stim[:, :tmp.shape[1]] = tmp
 
     if bPlot:
-        fig = figure()
+        fig = figure() # pylab figure
         foo = gca()
         title('ITI = ' + str(ITI * 1000) + ' ms, df = ' + str(df))
         foo.axes.get_xaxis().set_ticks([])  # turn off those nasty ticks

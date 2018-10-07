@@ -24,6 +24,8 @@ the whole sensitivity to \delta f comes from B stimulus being attenuated-
 this only happens because we assume they are getting less inputs from B. 
 Which means we're looking at neurons with a best frequency at A.
 
+We will get ITI sensitivity by applying a gate on the inputs based on ITI, ie \cite{Wehr2005} figure 1a
+
 branch 'modularizing':
 Author: Sara Steele <sara.steele14@gmail.com>
 Date:   Thu Mar 19 12:54:00 2015 -0400
