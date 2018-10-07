@@ -1,5 +1,28 @@
 # WC_sequence
-my new FR sequence detector
+
+_A python framework for building recurrently connected Wilson-Cowan neuronal populations,
+synaptic weights/ footprints, and basic stimulus features, as well as running simulations 
+and visualizing._
+
+
+Getting started:
+Install requirements:
+- open a terminal / shell, 
+- navigate to this directory 
+(i. e., `cd ~/WC_Sequence/` and 
+- run 
+`pip install -r requirements.txt` )
+
+
+my new FR (firing rate?) sequence detector
+
+__________________________
+### Development notes: 
+New branch: a_units_same_stim
+
+the whole sensitivity to \delta f comes from B stimulus being attenuated- 
+this only happens because we assume they are getting less inputs from B. 
+Which means we're looking at neurons with a best frequency at A.
 
 branch 'modularizing':
 Author: Sara Steele <sara.steele14@gmail.com>
