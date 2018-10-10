@@ -26,6 +26,13 @@ Which means we're looking at neurons with a best frequency at A.
 
 We will get ITI sensitivity by applying a gate on the inputs based on ITI, ie \cite{Wehr2005} figure 1a
 
+Got the habituator to work! we're going to scale all the a1 inputs by a 
+habituation function (it kicks in as soon as stim offsets... maybe it should be activity dependent but 
+we can model that later, this equation is basically just the recover from adaptation for SFA I think)
+It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
+onset and a slow decay for the ITI gating long lasting inhibitory current I think...
+
+
 branch 'modularizing':
 Author: Sara Steele <sara.steele14@gmail.com>
 Date:   Thu Mar 19 12:54:00 2015 -0400
