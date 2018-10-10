@@ -4,7 +4,7 @@ from pylab import *
 from numpy import *
 from matplotlib.mlab import *
 import pdb
-
+# a lot of things are in matplotlib.pyplot i think...
 #global stim_maker_WC
 
 def stim_maker_WC(T=500,dt=1,nUnits=3,ITI=100,df=5):

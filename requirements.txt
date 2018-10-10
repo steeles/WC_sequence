@@ -4,3 +4,6 @@ scipy
 matplotlib
 pandas
 jupyter
+pytest
+melopy
+seaborn

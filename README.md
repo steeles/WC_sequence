@@ -32,6 +32,33 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
+[ us 2]
+For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
+
+[us 1]
+I could make an input A guy take all the inputs and NMDA-inhibit _itself_
+
+[us 3]
+Which means stim should have an absolute reference, even if it's an index
+
+now we have habituated inputs and a baby new network
+[tests]
+
+[us 4]
+and we can write arbitrary feature-selective networks
+
+[us 5]
+with feature based synaptic footprints
+
+
+
+been having trouble getting packages installed in my virtualenv...
+workaround has been to install with pip from python console...
+pip.main(['install','-flags', 'package'])
+# NOPE! 
+it comes down to this terminal being shit. just use git bash,
+`source activate alternating_renewal_process`
+and pip whatever you want and it'll show up in python console yay
 
 branch 'modularizing':
 Author: Sara Steele <sara.steele14@gmail.com>
