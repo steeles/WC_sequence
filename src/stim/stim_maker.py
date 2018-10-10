@@ -54,9 +54,13 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf):
     # create fq_axis - ordered dict, ['A']:440, fqs is fq_axis.values
 
     # get lower and upper bounds
+# iti=.05
+# a_semitone=49
+# b_semitone=None
+# tone_length=0.30
+# dt=.001
 
-
-def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_length=0.30, dt=.001):
+def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_length=0.030, dt=.001):
     """
     basic function to create an ABA stimulus with a particular time granularity.
     Option to either identify an A tone and a df interval in semitones, or specify two absolute tones.
@@ -76,15 +80,22 @@ def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_
     # map out the tone repetition rate to convert to simulation timesteps
     trt = int(iti / dt)
     period = 4 * trt
+    tone_time = int(tone_length / dt)
 
     triplet = np.zeros((3, period))
     if df:
         b_semitone = a_semitone - df
-    triplet[0, :tone_length] = tuning_curve[a_semitone]
-    triplet[1, trt:trt + tone_length] = tuning_curve[b_semitone]
-    triplet[2, 2*trt:2*trt + tone_length] = tuning_curve[a_semitone]
+    triplet[0, :tone_time] = tuning_curve[a_semitone]
+    triplet[1, trt:trt + tone_time] = tuning_curve[b_semitone]
+    triplet[2, 2*trt:2*trt + tone_time] = tuning_curve[a_semitone]
 
+    all_vals = triplet.sum(0)
+    out = np.zeros((3, period))
+    for ind in xrange(out.shape[0]):
+        out[ind, :] = all_vals
 
+    # TODO: if bPlot
+    return out
 
     # stim[0, :tone_length] = tuning_curve[A_ind]
     # stim[1, trt:trt + tone_length] = tuning_curve[B_ind]

@@ -29,7 +29,7 @@ def generic_plot(x,y,**kwargs):
     return fig
 
 
-def plot_triplet_stimuli(tax, stim, title=None, labels=None):
+def plot_triplet_stimuli(tax, stim, title=None, labels=[None, None]):
     """
     Pre-fab function to plot stimuli
     Args:
