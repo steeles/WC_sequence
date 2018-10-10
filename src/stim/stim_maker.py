@@ -90,12 +90,12 @@ def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_
     triplet[2, 2*trt:2*trt + tone_time] = tuning_curve[a_semitone]
 
     all_vals = triplet.sum(0)
-    out = np.zeros((3, period))
-    for ind in xrange(out.shape[0]):
-        out[ind, :] = all_vals
+    # out = np.zeros((3, period))
+    # for ind in xrange(out.shape[0]):
+    #     out[ind, :] = all_vals
 
     # TODO: if bPlot
-    return out
+    return all_vals
 
     # stim[0, :tone_length] = tuning_curve[A_ind]
     # stim[1, trt:trt + tone_length] = tuning_curve[B_ind]
