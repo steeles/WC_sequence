@@ -1,35 +1,21 @@
 from collections import OrderedDict
+
+import numpy as np
+from scipy.stats import norm
 import melopy.utility as music
 from src.stim.stim_maker import fq_tuning_curve
 
+
 def test_fq_tuning_curve():
     actual = fq_tuning_curve()
-    assert actual == OrderedDict(
-        [
-            (37.0, 0.00033546262790251185),
-            (38.0, 0.0012038599948282038),
-            (39.0, 0.003865920139472804),
-            (40.0, 0.011108996538242306),
-            (41.0, 0.028565500784550377),
-            (42.0, 0.06572852861653043),
-            (43.0, 0.1353352832366127),
-            (44.0, 0.24935220877729614),
-            (45.0, 0.41111229050718745),
-            (46.0, 0.6065306597126333),
-            (47.0, 0.8007374029168081),
-            (48.0, 0.9459594689067655),
-            (49.0, 1.0),
-            (50.0, 0.9459594689067655),
-            (51.0, 0.8007374029168081),
-            (52.0, 0.6065306597126333),
-            (53.0, 0.41111229050718745),
-            (54.0, 0.24935220877729614),
-            (55.0, 0.1353352832366127),
-            (56.0, 0.06572852861653043),
-            (57.0, 0.028565500784550377),
-            (58.0, 0.011108996538242306),
-            (59.0, 0.003865920139472804),
-            (60.0, 0.0012038599948282038)
-        ]
-    )
+    assert actual[49] == 1
     assert music.key_to_frequency(49) == 440
+
+
+def test_fq_tuning_actual_normal():
+    actual = fq_tuning_curve(6, 'A', 2.5)
+    equivalent_xax = np.linspace(-3,2,len(actual))
+    yvals = norm.pdf(equivalent_xax, 0, 2.5)
+    assert list(yvals/np.max(yvals)) == actual.values()
+
+
