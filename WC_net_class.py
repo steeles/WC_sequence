@@ -82,6 +82,10 @@ class WC_net_unit(object):
 
 	#@profile
 	def currentValues(self):
+		"""
+		current is a named tuple with source and weight (types?)
+		source is
+		"""
 		#ind = self.currents.keys()
 		cvals = np.zeros(len(self.currents))
 		counter=0
@@ -107,17 +111,18 @@ class WC_net_unit(object):
 		k=self.kS
 		return 1/(1+np.exp(-(x-th)/k))
 
-	def updateS(self,dt=1):
+	def updateS(self, dt=1):
+		# is this just a straight current?
 		dS = (-self.S[0]/self.tauNMDA + (1-self.S[0]) *self.G* self.f_S(self.r[0]))*dt
 		self.S[0] += dS 
 
-	def updateA(self,dt=1):
+	def updateA(self, dt=1):
 		da = dt/self.tauA * (-self.a[0] + self.r[0])
 		self.a[0] += da
 
 	def updateR(self,dt=1):
 		self.currentValues()
-		
+		# this looks like the input to the firing rate; sum of currents
 		dr = dt/self.tau * (-self.r[0] + self.f_r(sum(self.cvals)))		
 		self.r[0] += dr
 

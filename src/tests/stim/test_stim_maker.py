@@ -12,6 +12,13 @@ def test_fq_tuning_curve():
     assert music.key_to_frequency(49) == 440
 
 
+def test_weird_fq_tuning_curve():
+    # note: it always goes to the nearest semitone
+    actual = fq_tuning_curve(num_tones=10, center=442.42)
+    assert actual[49] == 1
+    assert music.key_to_frequency(49) == 440
+
+
 def test_fq_tuning_actual_normal():
     actual = fq_tuning_curve(6, 'A', 2.5)
     equivalent_xax = np.linspace(-3, 2, len(actual))

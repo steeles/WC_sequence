@@ -10,8 +10,10 @@ from numbers import Number
 from collections import OrderedDict
 import melopy.utility as music
 
+from src.sim_plots.known_figures import generic_plot, plot_triplet_stimuli
 
-def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf):
+
+def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=False):
     """
     Function to produce the proper raw inputs for frequency-selective neuronal populations.
     We will have tones in terms of frequency, and spread in terms of semitones.
@@ -20,6 +22,7 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf):
         center (int, float, str): if number, the fq; if str, the note name; melopy.utilities.note_to_frequency
         spread (int, float): inverse of selectivity, in terms of semitones to standard deviations
         func (callable): we're using normpdf; we'll expect center and spread to be obvious
+        bPlot (bool): whether or not to plot
     Returns:
 
     """
@@ -45,6 +48,9 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf):
 
     max_val = np.max(tuning_curve.values())
     tuning_curve.update((x, y / max_val) for x, y in tuning_curve.items())
+    if bPlot:
+        fig = generic_plot(tuning_curve.keys(), tuning_curve.values())
+        fig.show()
     return tuning_curve
 
     # fq_axis = 440 * (2. ** (1 / 12.)) ** arange(-12, 13)
@@ -103,8 +109,9 @@ def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_
 
     # measure how long the tone , dt, scale
 
+# def repeating_triplets():
+#     pass
 
-#
 # def rpt_stim_maker(T=T, dt=dt, nUnits=nUnits, ITI=ITI, df=df, bPlot=False):
 #     tone_length = .030
 #     # exc_gain = 300
@@ -161,27 +168,9 @@ def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_
 #     return stim
 
 def habituator(tau_h, T, dt, bPlot=True):
-    tax = arange(0, T, dt)  # s
-    habituation = 1. - exp(-tax / tau_h)
+    tax = np.arange(0, T, dt)  # s
+    habituation = 1. - np.exp(-tax / tau_h)
 
     if bPlot:
-        fig = figure()
-        foo = gca()  # pylab , matplotlib.pyplot
-        title(r'ITI attenuation $\tau$ = ' + str(tau_h))
-        # foo.axes.get_xaxis().set_ticks([0,1,2])  # turn off those nasty ticks
-        # foo.axes.get_yaxis().set_ticks([0,1])
-        xlabel('time')
-
-        # for ind in xrange(nUnits):
-        ax = fig.add_subplot(1, 1, 1)
-        ylabel('p2/p1')
-        ylim(-.2, 1.1)
-        #	ax.plot(tax,E[ind,:],'b');
-        #	ax.plot(tax,a[ind,:],'r');
-        ax.plot(tax, habituation, 'g')
-        #	ax.plot(tax,Isyn[ind,:],'c')
-        # title(str(ind+1))
-        # plot(tax,E,'b')
-        # plot(tax,I,'r')
-        # plot(tax,Inp_e,'g')
-        show(block=False)
+        fig = generic_plot(tax, habituation)
+        fig.show()

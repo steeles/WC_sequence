@@ -32,14 +32,21 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
+[us 7]
+WC superclass
+
+[us 8]
+where did all the NMDA go...?
+i _think_ the S is just sitting around,
+waiting to be a source for someone else's current...
+but I don't know what NMDA current eq is
+
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
 [us 1]
 I could make an input A guy take all the inputs and NMDA-inhibit _itself_
 
-[us 3]
-Which means stim should have an absolute reference, even if it's an index
 
 now we have habituated inputs and a baby new network
 [tests]
@@ -50,6 +57,14 @@ and we can write arbitrary feature-selective networks
 [us 5]
 with feature based synaptic footprints
 
+[us 6]
+stimuli superclass
+
+
+____
+#### Completed
+[us 3]
+Which means stim should have an absolute reference, even if it's an index
 
 
 been having trouble getting packages installed in my virtualenv...
