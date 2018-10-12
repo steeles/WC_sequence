@@ -1,5 +1,6 @@
-
-from src.wilson_cowan.wc_unit import WCUnit, Simulation, Synapse
+import numpy as np
+from src.a_wilson_cowan.wc_unit \
+    import WCUnit, Simulation, Current, StimCurrent
 
 
 def test_wc_unit_init():
@@ -10,6 +11,7 @@ def test_wc_unit_init():
     assert wc2.foo == "bar"
     assert wc2.tauNMDA == 100
 
+
 def test_simulation_init():
     eps = .000001
     sim = Simulation()
@@ -18,7 +20,21 @@ def test_simulation_init():
     tax = sim2.tax
     assert tax[-1]-tax[-2]-.05 < eps
 
-def test_synapse_init():
-    syn = Synapse(foobar=42)
-    assert syn.k == 0.1
-    assert syn.theta == .2
+
+def test_stim_current_init():
+    u3 = WCUnit(name="u3")
+    stim = np.ones(10)
+    curr = StimCurrent(stim, .5, u3)
+    assert curr.target.name == "u3"
+
+
+def test_wc_add_stim_current():
+    u2 = WCUnit(name="u2")
+    stim = np.ones(10)
+    u2.add_stim_current(
+        stimulus=stim, weight=.5)
+    assert u2.currents["stim"].weight == .5
+    u2.currents["stim"].update(0)
+    assert u2.stim[0] == 0.5
+
+

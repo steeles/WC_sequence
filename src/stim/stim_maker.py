@@ -10,7 +10,7 @@ from numbers import Number
 from collections import OrderedDict
 import melopy.utility as music
 
-from src.sim_plots.known_figures import generic_plot, plot_triplet_stimuli
+from src.sim_plots.make_figures import generic_plot, plot_triplet_stimuli
 
 
 def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=False):
@@ -53,20 +53,9 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=Fal
         fig.show()
     return tuning_curve
 
-    # fq_axis = 440 * (2. ** (1 / 12.)) ** arange(-12, 13)
-    # tuning_curve = normpdf(linspace(-7, 7, len(fq_axis)), 0, 3)
-    # tuning_curve /= max(tuning_curve)  # rescale to equal 1
+TUNE = fq_tuning_curve()
 
-    # create fq_axis - ordered dict, ['A']:440, fqs is fq_axis.values
-
-    # get lower and upper bounds
-# iti=.05
-# a_semitone=49
-# b_semitone=None
-# tone_length=0.30
-# dt=.001
-
-def aba_triplet(tuning_curve, df, iti=.05, a_semitone=49, b_semitone=None, tone_length=0.030, dt=.001):
+def aba_triplet(tuning_curve=TUNE, df=3, iti=.05, a_semitone=49, b_semitone=None, tone_length=0.030, dt=.001):
     """
     basic function to create an ABA stimulus with a particular time granularity.
     Option to either identify an A tone and a df interval in semitones, or specify two absolute tones.

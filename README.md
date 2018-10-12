@@ -40,7 +40,7 @@ where did all the NMDA go...?
 i _think_ the S is just sitting around,
 waiting to be a source for someone else's current...
 but I don't know what NMDA current eq is
-
+probably in xj wang somewhere
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
@@ -59,6 +59,19 @@ with feature based synaptic footprints
 
 [us 6]
 stimuli superclass
+
+[us 9]
+can i describe "attractors" in this system...
+
+[us 10]
+eye candy... it would be fun to take xj's image of stimulus selective sustained activity (from working memory papers) 
+and create something similar for auditory guys.
+add noise?
+
+[us 11]
+perturbations... discrete events are a bad idea with uncertain tau (from ch 3, cumhist)
+but _periodic_ perterbuations might be a swell deal, ie, if we could do 3/2 period or something like that
+<in phase vs out of phase>
 
 
 ____
