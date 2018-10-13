@@ -16,6 +16,7 @@ class TimeAxis(object):
         self.T = T
         self.dt = dt
         self.tax = np.arange(dt, T + dt, dt)
+        self.ttot = len(self.tax)
 
 
 class Simulation(TimeAxis):

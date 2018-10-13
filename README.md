@@ -39,6 +39,9 @@ rpt stim maker
 how do i deliver same stim to different tuning efficiently?
 stim generator function, static method. maybe a class method?
 
+[us 14]
+
+
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 

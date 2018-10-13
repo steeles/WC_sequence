@@ -53,6 +53,8 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=Fal
 TUNE = fq_tuning_curve()
 
 
+#################
+# i think this can all go... replace main in wc_sim with the stim class
 def aba_triplet(tuning_curve=TUNE, df=3, iti=.05, a_semitone=49, b_semitone=None, tone_length=0.030, dt=.001):
     """
     basic function to create an ABA stimulus with a particular time granularity.

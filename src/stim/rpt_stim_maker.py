@@ -51,7 +51,7 @@ class ABAStimulus(TimeAxis):
         tones = np.zeros(self.ttot)
         n_cycles = int(np.ceil(self.ttot/self.period))
         tmp = np.tile(triplet, [1, n_cycles])
-        tones[:, :tmp.shape[1]] = tmp
+        tones[:tmp.shape[1]] = tmp
         return tones
 
     def map_tones_to_cell(self, unit):
