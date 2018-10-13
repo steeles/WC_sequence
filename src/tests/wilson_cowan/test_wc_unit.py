@@ -1,6 +1,6 @@
 import numpy as np
 from src.a_wilson_cowan.wc_unit \
-    import WCUnit, Simulation, Current, StimCurrent
+    import WCUnit, Current, StimCurrent
 
 
 def test_wc_unit_init():
@@ -10,15 +10,6 @@ def test_wc_unit_init():
     assert wc2.tau == 200
     assert wc2.foo == "bar"
     assert wc2.tauNMDA == 100
-
-
-def test_simulation_init():
-    eps = .000001
-    sim = Simulation()
-    assert sim.ttot == 5/.001
-    sim2 = Simulation(dt=.05,T=5000)
-    tax = sim2.tax
-    assert tax[-1]-tax[-2]-.05 < eps
 
 
 def test_stim_current_init():

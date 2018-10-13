@@ -1,7 +1,7 @@
 # TODO: import WC_class
 import numpy as np
 from src.stim.stim_maker import aba_triplet
-
+from src.simulation.simulation import Simulation
 
 # does creation of sensory unit update registry for WC overall?
 
@@ -50,6 +50,7 @@ class WCUnit(KWPars):
     def __init__(self, name="u1", tau=10., **kwargs):
         """ set up the vars, make sure there's a name """
         KWPars.__init__(self, **kwargs)
+        Simulation.__init__(self, **kwargs)
         self.r = [self.r0]
         self.a = [self.a0]
         self.S = [self.S0]
@@ -71,7 +72,9 @@ class WCUnit(KWPars):
         self.currents[name] = stim_current
 
     def update(self):
-        pass
+        cvals = [c.value for c in self.currents.itervalues()]
+        dr = 1/self.tau * -self.r[0] + self.f_r(sum(cvals))
+        self.r[0] += dr
 
 
 class Current(object):
