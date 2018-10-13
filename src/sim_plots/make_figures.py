@@ -16,19 +16,22 @@ def generic_plot(x,y,**kwargs):
     """
     fig = plt.figure()
     ax = plt.gca()
+    ax.axes.get_yaxis().set_ticks([])
+    ax.axes.get_xaxis().set_ticks([])
     try:
         bad_access = y.shape[1]
         num_plots = y.shape[0]
         for ind in xrange(num_plots):
             ax = fig.add_subplot(num_plots, 1, ind + 1)
             ax.plot(x, y[ind, :])
+            ax.set_yticks(np.arange(.2,1,.2))
     except IndexError:
         ax.plot(x, y)
 
     plt.show(block=False)
     return fig
 
-
+np.arange
 def plot_triplet_stimuli(tax, stim, title=None, labels=[None, None]):
     """
     Pre-fab function to plot stimuli

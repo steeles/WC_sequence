@@ -9,3 +9,4 @@ def test_simulation_init():
     sim2 = Simulation(dt=.05,T=5000)
     tax = sim2.tax
     assert tax[-1]-tax[-2]-.05 < eps
+

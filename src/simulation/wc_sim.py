@@ -1,9 +1,12 @@
+" Feed stim to a WC Unit "
+
+import matplotlib.pyplot as plt
+import numpy as np
 from src.a_wilson_cowan.wc_unit import WCUnit
 from src.stim.stim_maker import aba_triplet
 from src.sim_plots.make_figures import generic_plot
 
-from simulation import Simulation
-
+from src.simulation.simulation import Simulation
 
 class WCTripletsSimulation(Simulation):
     """ basic wc unit simulation """
@@ -22,36 +25,40 @@ class WCTripletsSimulation(Simulation):
             self.t_i (int): the current time step
             self.traces (dict): traces
         """
-        Simulation.__init__(T=T, dt=dt, **kwargs)
+        Simulation.__init__(self, T=T, dt=dt, **kwargs)
         self.unit = wc_unit
 
         trace_sources = {
-            "u1_r": wc_unit.r
-            # "u1_a": wc_unit.a,
+            "u1_r": wc_unit.r,
+            "stim": wc_unit.stim,
+            "u1_a": wc_unit.a,
             # "u1_S": wc_unit.S
         }
-        for k, v in trace_sources:
-            self.add_new_trace(source=v, name=k)
+        for k, v in trace_sources.items():
+            self.add_new_trace(source=v, trace_name=k)
 
     def run(self):
         while self.t_i < self.ttot:
+            # drive the stimulus forward
+            u1.currents["stim"].set_time(self.t_i)
             for current in self.unit.currents.values():
                 current.update()
             # update response
             self.unit.update()
             # update traces
-            for trace in self.traces:
-                value = self.sources[trace]
-                self.update_trace(trace, value)
+            for trace in self.traces.keys():
+                self.update_trace(trace)
 
+            self.t_i += 1
 
 
 if __name__ == '__main__':
     u1 = WCUnit(name="u1")
     triplet = aba_triplet()
-    u1.add_stim_current(triplet)
+    u1.add_stim_current(stimulus=triplet,weight=0.8)
+    u1.add_SFA_current(weight=5)
 
-    sim = WCTripletsSimulation(u1)
+    sim = WCTripletsSimulation(wc_unit=u1, T=0.2)
     sim.run()
-    generic_plot(sim.tax, sim.traces)
-
+    generic_plot(sim.tax, np.array(sim.traces.values()))
+    plt.show()

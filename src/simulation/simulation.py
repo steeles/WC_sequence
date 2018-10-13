@@ -49,12 +49,13 @@ class Simulation(object):
         self.traces[trace_name] = blank_trace
         self.sources[trace_name] = source
 
-    def update_trace(self, trace_name, value):
+    def update_trace(self, trace_name):
         """
         recorder- takes data coming in and marks it on the trace at time self.t_i
         Args:
             trace_name (str): the name of the trace
             value (float): the value to set at time self.t_i on the trace
         """
+        value = self.sources[trace_name][0]
         self.traces[trace_name][self.t_i] = value
 
