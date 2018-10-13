@@ -54,11 +54,11 @@ class WCTripletsSimulation(Simulation):
 
 if __name__ == '__main__':
     u1 = WCUnit(name="u1")
-    triplet = aba_triplet()
+    triplet = aba_triplet(iti=.08)
     u1.add_stim_current(stimulus=triplet,weight=0.8)
     u1.add_SFA_current(weight=5)
 
-    sim = WCTripletsSimulation(wc_unit=u1, T=0.2)
+    sim = WCTripletsSimulation(wc_unit=u1, T=0.32)
     sim.run()
     generic_plot(sim.tax, np.array(sim.traces.values()))
     plt.show()

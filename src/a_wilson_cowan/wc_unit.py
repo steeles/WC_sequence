@@ -87,6 +87,7 @@ class WCUnit(KWPars):
             name (str): what to call it in target.current[name]; default target.name + str(weight) + "_SFA"
         Result: self.currents.update{name: SFACurrent}
         """
+        if weight > 0: weight = -weight
         sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=tau_A, target=self, name=name)
         name=sfa_current.name
         self.currents[name] = sfa_current

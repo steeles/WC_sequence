@@ -32,9 +32,8 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
-[us 1]
-I could make an input A guy take all the inputs and NMDA-inhibit _itself_
-now we have habituated inputs and a baby new network
+[us 11] 
+rpt stim maker
 
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
@@ -73,6 +72,12 @@ but _periodic_ perterbuations might be a swell deal, ie, if we could do 3/2 peri
 
 ____
 #### Completed
+
+[us 1]
+I could make an input A guy take all the inputs and NMDA-inhibit _itself_
+now we have habituated inputs and a baby new network
+
+
 [us 3]
 Which means stim should have an absolute reference, even if it's an index
 

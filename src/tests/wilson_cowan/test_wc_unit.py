@@ -44,9 +44,20 @@ def test_wc_update():
     u2.currents["stim"].t = 1
     u2.currents["stim"].update()
     u2.update()
-    assert u2.r[0] > 0.08
-    assert u2.r[0] < 0.085
+    assert u2.r[0] > 0.05
+    assert u2.r[0] < 0.055
 
+def test_wc_higher_weight_update():
+    u2 = WCUnit(name="u2")
+    stim = np.ones(10)
+    u2.add_stim_current(
+        stimulus=stim, weight=.9)
+    assert u2.currents["stim"].weight == .9
+    u2.currents["stim"].t = 1
+    u2.currents["stim"].update()
+    u2.update()
+    assert u2.r[0] > 0.085
+    assert u2.r[0] < 0.09
 
 def test_lower_weights_drive_less():
     pass
