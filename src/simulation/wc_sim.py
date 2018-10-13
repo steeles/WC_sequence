@@ -54,6 +54,7 @@ class WCTripletsSimulation(Simulation):
 
 if __name__ == '__main__':
     u1 = WCUnit(name="u1")
+    # TODO: the stimulus should get made with the same dt as sim
     triplet = aba_triplet(iti=.08)
     u1.add_stim_current(stimulus=triplet,weight=0.8)
     u1.add_SFA_current(weight=5)

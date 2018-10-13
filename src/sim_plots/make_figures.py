@@ -31,7 +31,7 @@ def generic_plot(x,y,**kwargs):
     plt.show(block=False)
     return fig
 
-np.arange
+
 def plot_triplet_stimuli(tax, stim, title=None, labels=[None, None]):
     """
     Pre-fab function to plot stimuli
@@ -47,14 +47,19 @@ def plot_triplet_stimuli(tax, stim, title=None, labels=[None, None]):
     foo = plt.gca()
     plt.title(title)
     #title('ITI = ' + str(ITI * 1000) + ' ms, df = ' + str(df))
-    # foo.axes.get_xaxis().set_ticks([])  # turn off those nasty ticks
-    # foo.axes.get_yaxis().set_ticks([])
+
+    if len(stim.shape) > 1:
+        n_units = stim.shape[0]
+        foo.axes.get_xaxis().set_ticks([])  # turn off those nasty ticks
+        foo.axes.get_yaxis().set_ticks([])
+    else:
+        n_units = 1
+
     if labels[0]:
         plt.xlabel(labels[0])
-
     else:
         plt.xlabel('time (s)')
-    n_units = stim.shape[0]
+
     for ind in xrange(n_units):
         ax = fig.add_subplot(n_units, 1, ind + 1)
         plt.ylabel('u' + str(ind + 1))

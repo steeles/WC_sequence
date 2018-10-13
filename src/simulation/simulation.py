@@ -2,8 +2,23 @@
 
 import numpy as np
 
+class TimeAxis(object):
+    def __init__(self, T=5, dt=.001, **kwargs):
+        """
+        Initialize the simulation. Creates the time axis at specified dt
+        Args:
+            T (float): T in seconds
+            dt (float): integration timestep
+            **kwargs:
+        Derived attributes:
+            self.tax (numpy.array): time axis
+        """
+        self.T = T
+        self.dt = dt
+        self.tax = np.arange(dt, T + dt, dt)
 
-class Simulation(object):
+
+class Simulation(TimeAxis):
     """ master class to set up and record simulations """
 
     def __init__(self, T=5, dt=.001, **kwargs):
@@ -20,9 +35,7 @@ class Simulation(object):
             self.t_i (int): the current time step
             self.traces (dict): traces
         """
-        self.T = T
-        self.dt = dt
-        self.tax = np.arange(dt, T + dt, dt)
+        TimeAxis.__init__(self, T, dt, **kwargs)
         self.ttot = len(self.tax)
         self.t_i = 0
         self.traces = dict()

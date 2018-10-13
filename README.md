@@ -32,8 +32,12 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
-[us 11] 
+[us 12] 
 rpt stim maker
+
+[us 13]
+how do i deliver same stim to different tuning efficiently?
+stim generator function, static method. maybe a class method?
 
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
