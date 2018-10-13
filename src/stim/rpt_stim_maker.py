@@ -25,7 +25,8 @@ class ABAStimulus(TimeAxis):
         self.a_semitone = a_semitone
         self.b_semitone = b_semitone
         self.tone_length = tone_length
-
+        self.stim_length = len(self.tax)
+        # we also have ttot, tax
 
     def generate_triplet_tones(self):
         """ returns 1d numpy.array with the tones """
@@ -38,6 +39,15 @@ class ABAStimulus(TimeAxis):
         triplet[trt:trt + tone_time] = self.b_semitone
         triplet[2 * trt:2 * trt + tone_time] = self.a_semitone
         return triplet
+
+    def repeating_tones(self):
+        stim_length = self.ttot
+        triplet = self.generate_triplet_tones()
+        period=len(triplet)
+        stim = np.zeros(stim_length)
+        n_cycles = int(np.ceil(stim_length/period))
+        tmp = np.tile(triplet, [1, n_cycles])
+        stim[:, :tmp.shape[1]] = tmp
 
     def tuning_curve(self, **kwargs):
         """
