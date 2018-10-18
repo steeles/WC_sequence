@@ -2,8 +2,8 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from src.a_wilson_cowan.wc_unit import WCUnit
-from src.stim.stim_maker import aba_triplet
+from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
+from src.stim.stimulus import ABAStimulus
 from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
@@ -53,13 +53,16 @@ class WCTripletsSimulation(Simulation):
 
 
 if __name__ == '__main__':
-    u1 = WCUnit(name="u1")
+    u1 = SensoryWCUnit(name="u1", tauA=5000)
     # TODO: the stimulus should get made with the same dt as sim
     #triplet = aba_triplet(iti=.08)
-    u1.add_stim_current(stimulus=triplet,weight=0.8)
-    u1.add_SFA_current(weight=5)
+    stim = ABAStimulus()
+    #u1.add_stim_current(stimulus=triplet,weight=0.8)
+    u1.add_stim_current(stim, weight=0.5)
+    u1.add_SFA_current(weight=.5)
 
-    sim = WCTripletsSimulation(wc_unit=u1, T=0.32)
+    sim = WCTripletsSimulation(wc_unit=u1, T=5)
+    print(sim.unit.__dict__)
     sim.run()
     generic_plot(sim.tax, np.array(sim.traces.values()))
     plt.show()

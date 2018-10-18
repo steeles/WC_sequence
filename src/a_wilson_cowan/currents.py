@@ -37,7 +37,7 @@ class StimCurrent(Current):
         """
         create a stimulus current
         Args:
-            stimulus (numpy.array):
+            stimulus (numpy.array): the stimulus
             weight (float): strength of current on target
             target (WCUnit): unit the current is added to; that unit will update its connections
                 and add this current to the summed inputs to its firing rate function

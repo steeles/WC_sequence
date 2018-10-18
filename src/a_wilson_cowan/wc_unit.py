@@ -1,6 +1,6 @@
 # TODO: import WC_class
 import numpy as np
-from src.stim.stim_maker import aba_triplet
+
 from src.a_wilson_cowan.currents import Current, StimCurrent, SFACurrent
 from src.simulation.simulation import Simulation
 
@@ -78,7 +78,7 @@ class WCUnit(KWPars):
         stim_current = StimCurrent(stimulus=stimulus, weight=weight, name=name, target=self)
         self.currents[name] = stim_current
 
-    def add_SFA_current(self, weight, tau_A=200, name="SFA"):
+    def add_SFA_current(self, weight, name="SFA"):
         """
         add a new current for spike frequency adaptation; unit adapts (slowly) in response to its own firing rate.
         Args:
@@ -88,7 +88,7 @@ class WCUnit(KWPars):
         Result: self.currents.update{name: SFACurrent}
         """
         if weight > 0: weight = -weight
-        sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=tau_A, target=self, name=name)
+        sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=self.tauA, target=self, name=name)
         name=sfa_current.name
         self.currents[name] = sfa_current
         print(name)
@@ -98,8 +98,3 @@ class WCUnit(KWPars):
         dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
         self.r[0] += dr
 
-
-if __name__ == "__main__":
-    STIM = aba_triplet()
-    u1 = WCUnit(name="u1")
-    u1.add_stim_current(weight=0.5, stimulus=STIM)

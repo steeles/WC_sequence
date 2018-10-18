@@ -1,6 +1,5 @@
-
-
 import numpy as np
+
 
 class TimeAxis(object):
     def __init__(self, T=5, dt=.001, **kwargs):
@@ -12,11 +11,14 @@ class TimeAxis(object):
             **kwargs:
         Derived attributes:
             self.tax (numpy.array): time axis
+            self.ttot (int): number of time steps
+            self.t_i: counter
         """
         self.T = T
         self.dt = dt
         self.tax = np.arange(dt, T + dt, dt)
         self.ttot = len(self.tax)
+        self.t_i = 0
 
 
 class Simulation(TimeAxis):
@@ -37,8 +39,6 @@ class Simulation(TimeAxis):
             self.traces (dict): traces
         """
         TimeAxis.__init__(self, T, dt, **kwargs)
-        self.ttot = len(self.tax)
-        self.t_i = 0
         self.traces = dict()
         self.sources = dict()
 

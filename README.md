@@ -36,9 +36,9 @@ onset and a slow decay for the ITI gating long lasting inhibitory current I thin
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
-[us 16]
-make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 
-some similarities, i should nail down how close or not we are
+[us 19]
+micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
+integrator layer
 
 [us 13]
 how do i deliver same stim to different tuning efficiently?
@@ -56,8 +56,21 @@ i guess each current needs a "read_source" method so trace can call the same thi
 [us 4]
 and we can write arbitrary feature-selective networks
 
+
+[us 16]
+make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 
+some similarities, i should nail down how close or not we are
+
+[us 17]
+add frequency arguments for stimulus
+
 [us 5]
 with feature based synaptic footprints
+
+[us 18]
+balanced connection footprints? excitation == inhibition
+OR not ; should probably be a parameter
+DOG?
 
 [us 8]
 where did all the NMDA go...? i _think_ the S is just sitting around,
@@ -65,9 +78,6 @@ waiting to be a source for someone else's current... but I don't know what NMDA 
 probably in xj wang somewhere NOPE he's all spiking
 https://books.google.com/books?id=YkV5AgAAQBAJ&pg=PA458&lpg=PA458&dq=wilson+cowan+nmda+synaptic+dynamics&source=bl&ots=fiY4P7w4h3&sig=neYbFFeHFuz8mdvqZoaMkaeLgDo&hl=en&sa=X&sqi=2&ved=2ahUKEwiuicKC1oLeAhVQPK0KHfvRCcoQ6AEwBHoECAQQAQ#v=onepage&q=wilson%20cowan%20nmda%20synaptic%20dynamics&f=false
 it's a current! eq. 15.90
-
-[us 6]
-stimuli superclass
 
 [us 9]
 can i describe "attractors" in this system...
@@ -87,6 +97,9 @@ add noise... ornstein uhlenbeck, i should have eq/ code in my other pub (ARP). T
 the variance with dt; i think it may be sqrt dt or something? dt <<< 1
 ____
 #### Completed
+
+[us 6]
+stimuli superclass
 
 [us 12] 
 rpt stim maker

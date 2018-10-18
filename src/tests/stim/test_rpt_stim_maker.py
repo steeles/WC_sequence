@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import numpy as np
 
-from src.stim.rpt_stim_maker import ABAStimulus
+from src.stim.stimulus import ABAStimulus
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
 
 # class SensoryWCUnit():
