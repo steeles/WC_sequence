@@ -42,7 +42,7 @@ class WCUnit(KWPars):
     pars = dict(
         ke=.1, the=.2,  # IO params
         kS=.1, thS=.5,
-        r0=0., a0=0., S0=0., stim0=1.,  # time varying values
+        r0=0., a0=0., S0=0., stim0=0.,  # time varying values
         gee=.57,
         gStim=1.,
         gSFA=0,

@@ -44,6 +44,7 @@ def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=Fal
 
     max_val = np.max(tuning_curve.values())
     tuning_curve.update((x, y / max_val) for x, y in tuning_curve.items())
+    tuning_curve.update({0: 0})
     if bPlot:
         fig = generic_plot(tuning_curve.keys(), tuning_curve.values())
         fig.show()

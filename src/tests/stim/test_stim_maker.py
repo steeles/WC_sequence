@@ -76,5 +76,6 @@ def test_triplets_timing():
             assert list(actual[start_ind + tone_time:] > 0).index(True) == gap_time
     # check the period
     assert len(actual) == iti_time * 4
+    assert not any([np.isnan(x) for x in actual])
 
 

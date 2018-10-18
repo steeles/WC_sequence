@@ -32,18 +32,24 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
-[us 12] 
-rpt stim maker
+
+[ us 2]
+For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
+
+[us 16]
+make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 
+some similarities, i should nail down how close or not we are
 
 [us 13]
 how do i deliver same stim to different tuning efficiently?
 stim generator function, static method. maybe a class method?
 
 [us 14]
-
-
-[ us 2]
-For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
+I can probably make it faster if I get rid of the mutables and map them to object attributes;
+as long as the methods know which attribute to pull from, ie sfa current has a source of u1, attribute r
+and a target of u1, attribute a (or rather the sfa current update method knows to read source.r and update target.a) 
+and source and target are the same; traces updates to read from...
+i guess each current needs a "read_source" method so trace can call the same thing and pull from different attributes.
 
 [tests]
 
@@ -76,9 +82,15 @@ perturbations... discrete events are a bad idea with uncertain tau (from ch 3, c
 but _periodic_ perterbuations might be a swell deal, ie, if we could do 3/2 period or something like that
 <in phase vs out of phase>
 
-
+[us 15]
+add noise... ornstein uhlenbeck, i should have eq/ code in my other pub (ARP). There's something about how you normalize 
+the variance with dt; i think it may be sqrt dt or something? dt <<< 1
 ____
 #### Completed
+
+[us 12] 
+rpt stim maker
+
 
 [us 1]
 I could make an input A guy take all the inputs and NMDA-inhibit _itself_
@@ -87,7 +99,7 @@ now we have habituated inputs and a baby new network
 
 [us 3]
 Which means stim should have an absolute reference, even if it's an index
-
+- melopy.utilities.frequency_to_key!
 
 been having trouble getting packages installed in my virtualenv...
 workaround has been to install with pip from python console...

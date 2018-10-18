@@ -5,7 +5,7 @@ import numpy as np
 from src.a_wilson_cowan.wc_unit import WCUnit
 from src.stim.stim_maker import aba_triplet
 from src.sim_plots.make_figures import generic_plot
-
+from src.stim.rpt_stim_maker import ABAStimulus
 from src.simulation.simulation import Simulation
 
 class WCTripletsSimulation(Simulation):
@@ -55,7 +55,7 @@ class WCTripletsSimulation(Simulation):
 if __name__ == '__main__':
     u1 = WCUnit(name="u1")
     # TODO: the stimulus should get made with the same dt as sim
-    triplet = aba_triplet(iti=.08)
+    #triplet = aba_triplet(iti=.08)
     u1.add_stim_current(stimulus=triplet,weight=0.8)
     u1.add_SFA_current(weight=5)
 

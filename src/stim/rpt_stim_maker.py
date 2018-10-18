@@ -24,13 +24,19 @@ class ABAStimulus(TimeAxis):
         self.df = df
         self.iti = iti
         self.a_semitone = a_semitone
-        self.b_semitone = b_semitone
+        if df:
+            self.b_semitone = a_semitone + df
+        elif b_semitone:
+            self.b_semitone = b_semitone
+        else:
+            print('need a b tone')
         self.tone_length = tone_length
         # can it use its own method to create an attribute on init?
         self.trt = int(self.iti / self.dt)
         self.period = 4 * self.trt
         self.tone_time = int(self.tone_length / self.dt)
         self.tones = self.repeating_tones()
+
         # we also have ttot, tax
 
     def generate_triplet_tones(self):
@@ -54,18 +60,8 @@ class ABAStimulus(TimeAxis):
         tones[:tmp.shape[1]] = tmp
         return tones
 
-    def map_tones_to_cell(self, unit):
-        """
-
-        Args:
-            unit (SensoryWCUnit): has attr BF and spread
-        Result:
-            Use the sensory unit's tuning properties to find the input current through their tuning curve
-
-        """
-        pass
-
-    def tuning_curve(self, **kwargs):
+    @staticmethod
+    def fq_tuning_curve(**kwargs):
         """
             Function to produce the proper raw inputs for frequency-selective neuronal populations.
             We will have tones in terms of frequency, and spread in terms of semitones.
