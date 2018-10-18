@@ -28,10 +28,10 @@ class ToneCurrent(Current):
         return value
 
     def update(self):
-        """ update the stim (incr t_i by +1) and map it to the target as a current """
+        """ update the stim (incr t_i by +1) and map it to current value through tuning curve and weight """
         self.stimulus.update()
         self.value = self.map_tone_to_current()
-
+        self.target.stim[0] = self.value
 
 class ABAStimulus(TimeAxis):
     """ master stimulus class; subclass of TimeAxis, with time granularity functions """
@@ -91,8 +91,10 @@ class ABAStimulus(TimeAxis):
 
     def update(self):
         self.t_i += 1
-        self.value = self.tones[self.t_i]
-
+        if self.t_i < self.ttot:
+            self.value = self.tones[self.t_i]
+        else:
+            self.value = 0
 """pars from micheyl 20015: Each sequence was comprised of 20 triplets.
 Each tone was 125 ms in duration, including 20 ms raised-cosine
 ramps. In the basic test condition, there was no silent gap between

@@ -1,5 +1,5 @@
 " Feed stim to a WC Unit "
-
+import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
@@ -8,16 +8,29 @@ from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
 
-class WCTripletsSimulation(Simulation):
+class LeanSim(Simulation):
+    """ don't copy current values to mutables... just access them directly to update trace """
+    def update_trace(self, trace_name):
+        """
+                recorder- takes data coming in and marks it on the trace at time self.t_i
+                Args:
+                    trace_name (str): the name of the trace
+                    value (float): the value to set at time self.t_i on the trace
+                """
+        value = self.sources[trace_name].value
+        self.traces[trace_name][self.t_i] = value
+
+
+class SensoryTripletsSimulation(Simulation):
     """ basic wc unit simulation """
 
-    def __init__(self, wc_unit=None, T=5, dt=.001, **kwargs):
+    def __init__(self, sensory_unit=None, T=5, dt=.001, **kwargs):
         """
         Pass in a wc unit, set up recordings, get ready to run.
         Args:
-            wc_unit (WCUnit): it should already have everything you want connected to it
+            sensory_unit (SensoryWCUnit): it should already have everything you want connected to it
             T (float): T in seconds
-            dt (float): integration timestep
+            dt (float): integration timestep (seconds)
             **kwargs:
         Derived attributes:
             self.tax (numpy.array): time axis
@@ -26,12 +39,12 @@ class WCTripletsSimulation(Simulation):
             self.traces (dict): traces
         """
         Simulation.__init__(self, T=T, dt=dt, **kwargs)
-        self.unit = wc_unit
+        self.unit = sensory_unit
 
         trace_sources = {
-            "u1_r": wc_unit.r,
-            "stim": wc_unit.stim,
-            "u1_a": wc_unit.a,
+            "u1_r": sensory_unit.r,
+            "stim": sensory_unit.stim,
+            "u1_a": sensory_unit.a,
             # "u1_S": wc_unit.S
         }
         for k, v in trace_sources.items():
@@ -40,7 +53,7 @@ class WCTripletsSimulation(Simulation):
     def run(self):
         while self.t_i < self.ttot:
             # drive the stimulus forward
-            u1.currents["stim"].set_time(self.t_i)
+            # u1.currents["stim"].set_time(self.t_i)
             for current in self.unit.currents.values():
                 current.update()
             # update response
@@ -53,16 +66,15 @@ class WCTripletsSimulation(Simulation):
 
 
 if __name__ == '__main__':
+    tic = datetime.datetime.now()
     u1 = SensoryWCUnit(name="u1", tauA=5000)
-    # TODO: the stimulus should get made with the same dt as sim
-    #triplet = aba_triplet(iti=.08)
     stim = ABAStimulus()
-    #u1.add_stim_current(stimulus=triplet,weight=0.8)
     u1.add_stim_current(stim, weight=0.5)
     u1.add_SFA_current(weight=.5)
-
-    sim = WCTripletsSimulation(wc_unit=u1, T=5)
+    sim = SensoryTripletsSimulation(sensory_unit=u1, T=5)
     print(sim.unit.__dict__)
     sim.run()
     generic_plot(sim.tax, np.array(sim.traces.values()))
+    toc = datetime.datetime.now()
+    print (toc - tic).microseconds / 10e6
     plt.show()

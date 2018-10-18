@@ -8,6 +8,9 @@ from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
 
+
+
+
 class WCTripletsSimulation(Simulation):
     """ basic wc unit simulation """
 
@@ -55,7 +58,7 @@ class WCTripletsSimulation(Simulation):
 if __name__ == '__main__':
     u1 = WCUnit(name="u1")
     # TODO: the stimulus should get made with the same dt as sim
-    #triplet = aba_triplet(iti=.08)
+    triplet = aba_triplet(iti=.08)
     u1.add_stim_current(stimulus=triplet,weight=0.8)
     u1.add_SFA_current(weight=5)
 

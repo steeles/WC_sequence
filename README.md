@@ -36,10 +36,6 @@ onset and a slow decay for the ITI gating long lasting inhibitory current I thin
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
-[us 19]
-micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
-integrator layer
-
 [us 13]
 how do i deliver same stim to different tuning efficiently?
 stim generator function, static method. maybe a class method?
@@ -50,11 +46,18 @@ as long as the methods know which attribute to pull from, ie sfa current has a s
 and a target of u1, attribute a (or rather the sfa current update method knows to read source.r and update target.a) 
 and source and target are the same; traces updates to read from...
 i guess each current needs a "read_source" method so trace can call the same thing and pull from different attributes.
+original speed copying values to list:
+it says it's only .01 to .08 sec, but it seems to be > 2. weird.
+will have to see how it scales.
 
 [tests]
 
 [us 4]
 and we can write arbitrary feature-selective networks
+
+[us 19]
+micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
+integrator layer
 
 
 [us 16]
