@@ -49,7 +49,12 @@ i guess each current needs a "read_source" method so trace can call the same thi
 original speed copying values to list:
 it says it's only .01 to .08 sec, but it seems to be > 2. weird.
 will have to see how it scales.
-
+Response = namedtuple('Response', ['value'])
+r = Response(0)
+r
+Response(value=0)
+r.value
+0
 [tests]
 
 [us 4]
@@ -64,6 +69,9 @@ interval detector- integration layer 1
 
 [us 21]
 2 interval detectors - aba vs bab
+
+[us 22]
+seaborn figures- mermaid
 
 [us 16]
 make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 

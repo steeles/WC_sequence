@@ -8,7 +8,7 @@ import melopy.utility as music
 from src.sim_plots.make_figures import generic_plot, plot_triplet_stimuli
 
 
-def fq_tuning_curve(num_tones=25, center=440, spread=3, func=norm.pdf, bPlot=False):
+def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=False):
     """
     Function to produce the proper raw inputs for frequency-selective neuronal populations.
     We will have tones in terms of frequency, and spread in terms of semitones.

@@ -1,5 +1,5 @@
 " Feed stim to a WC Unit "
-
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 from src.a_wilson_cowan.wc_unit import WCUnit
@@ -56,6 +56,7 @@ class WCTripletsSimulation(Simulation):
 
 
 if __name__ == '__main__':
+    tic = time.time()
     u1 = WCUnit(name="u1")
     # TODO: the stimulus should get made with the same dt as sim
     triplet = aba_triplet(iti=.08)
@@ -65,4 +66,6 @@ if __name__ == '__main__':
     sim = WCTripletsSimulation(wc_unit=u1, T=0.32)
     sim.run()
     generic_plot(sim.tax, np.array(sim.traces.values()))
+    toc = time.time()
+    print toc - tic
     plt.show()

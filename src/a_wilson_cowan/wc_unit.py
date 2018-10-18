@@ -65,6 +65,9 @@ class WCUnit(KWPars):
         self.name = name
         self.tau = tau
         self.currents = dict()
+        # add intrinsic currents
+        if self.tauA and self.gSFA:
+            self.add_SFA_current(weight=self.gSFA)
         self.f_r = f_activation_builder(self.ke, self.the)
 
     def add_stim_current(self, stimulus, weight, name="stim"):
@@ -91,10 +94,14 @@ class WCUnit(KWPars):
         sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=self.tauA, target=self, name=name)
         name=sfa_current.name
         self.currents[name] = sfa_current
-        print(name)
+        # print(name)
 
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
         dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
         self.r[0] += dr
 
+    def update_all(self):
+        for current in self.currents.values():
+            current.update()
+        self.update()

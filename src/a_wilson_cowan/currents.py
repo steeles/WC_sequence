@@ -60,7 +60,7 @@ class StimCurrent(Current):
         """ stimulus is the only one that updates a variable directly """
         stim = self.stimulus[self.t]
         self.value = stim * self.weight
-        self.target.stim[0] = self.value  # WE CAN PROBABLY GET RID OF THIS
+        self.target.stim[0] = self.stimulus  # WE CAN PROBABLY GET RID OF THIS
 
 
 class SFACurrent(Current):
@@ -70,7 +70,7 @@ class SFACurrent(Current):
         create a new current, it will go into target's connections
         and take from's variable value[0]
         Args:
-            source (list): should connect to a unit's firing rate, u.r; length = 1, access like u.r[0]
+            source (list): should connect to a unit's firing rate, u.r; length = 1, access like source[0] # = u.r[0]
             weight (float): strength of current on target
             target (WCUnit): here it will be the same unit whose firing rate is its source
             tau_A (float): adaptation time constant (in time steps)
@@ -81,6 +81,6 @@ class SFACurrent(Current):
         self.tau_A = tau_A
 
     def update(self):
-        da = 1. / self.tau_A * (-self.value + self.source[0])
-        self.value += da
-        self.target.a[0] = self.value
+        da = 1. / self.tau_A * (-self.target.a[0] + self.source[0])
+        self.target.a[0] += da
+        self.value = self.weight * self.target.a[0]

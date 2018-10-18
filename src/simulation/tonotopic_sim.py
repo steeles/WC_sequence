@@ -2,11 +2,13 @@
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
 from src.stim.stimulus import ABAStimulus
 from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
+
 
 class LeanSim(Simulation):
     """ don't copy current values to mutables... just access them directly to update trace """
@@ -21,14 +23,17 @@ class LeanSim(Simulation):
         self.traces[trace_name][self.t_i] = value
 
 
-class SensoryTripletsSimulation(Simulation):
-    """ basic wc unit simulation """
+class TonotopicTripletsSimulation(Simulation):
+    """
+    first network with fq selectivity;
+    desired characteristics of sensory units given,
+    """
 
     def __init__(self, sensory_unit=None, T=5, dt=.001, **kwargs):
         """
         Pass in a wc unit, set up recordings, get ready to run.
         Args:
-            sensory_unit (SensoryWCUnit): it should already have everything you want connected to it
+            sensory_units (SensoryWCUnit): it should already have everything you want connected to it
             T (float): T in seconds
             dt (float): integration timestep (seconds)
             **kwargs:
@@ -40,7 +45,7 @@ class SensoryTripletsSimulation(Simulation):
         """
         Simulation.__init__(self, T=T, dt=dt, **kwargs)
         self.unit = sensory_unit
-
+        # or units.currents...
         trace_sources = {
             "u1_r": sensory_unit.r,
             "stim": sensory_unit.stim,
@@ -70,7 +75,7 @@ if __name__ == '__main__':
     stim = ABAStimulus(a_semitone=44, df=9)
     u1.add_stim_current(stim, weight=0.5)
     u1.add_SFA_current(weight=.5)
-    sim = SensoryTripletsSimulation(sensory_unit=u1, T=5)
+    sim = TonotopicTripletsSimulation(sensory_unit=u1, T=5)
 
     sim.run()
     f1 = generic_plot(sim.tax, np.array(sim.traces.values()))

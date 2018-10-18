@@ -61,3 +61,31 @@ def test_wc_higher_weight_update():
 
 def test_lower_weights_drive_less():
     pass
+
+
+def test_add_intrinsic_currents():
+    u1 = WCUnit(name="u1", tauA=300, gSFA=0.8)
+    stim = np.ones(10)
+    u1.add_stim_current(stimulus=stim, weight=.9)
+    for ind in xrange(10):
+        u1.update_all()
+    print(u1.a)
+    print(u1.currents["SFA"].value)
+
+    u2 = WCUnit(tauA=30, gSFA=0.8)
+    stim = np.ones(10)
+    u2.add_stim_current(stimulus=stim, weight=.9)
+    for ind in xrange(10):
+        u2.update_all()
+    print(u2.a)
+    print(u2.currents["SFA"].value)
+
+    u3 = WCUnit(tauA=30, gSFA=0.5)
+    stim = np.ones(10)
+    u3.add_stim_current(stimulus=stim, weight=.9)
+    for ind in xrange(10):
+        u3.update_all()
+    print(u3.a)
+    print(u3.currents["SFA"].value)
+    assert False
+
