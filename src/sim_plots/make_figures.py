@@ -14,6 +14,9 @@ def generic_plot(x,y,**kwargs):
     Returns:
         matplotlib.pyplot.figure
     """
+    xmin, xmax = np.min(x), np.max(x)
+    margx = np.max((np.abs(xmin), np.abs(xmax))) * 0.1
+
     fig = plt.figure()
     ax = plt.gca()
     ax.axes.get_yaxis().set_ticks([])
@@ -22,11 +25,25 @@ def generic_plot(x,y,**kwargs):
         bad_access = y.shape[1]
         num_plots = y.shape[0]
         for ind in xrange(num_plots):
+            yi = y[ind, :]
+            ymin, ymax = np.min(yi), np.max(yi)
+            marg = np.max((np.abs(ymin), np.abs(ymax))) * 0.1
             ax = fig.add_subplot(num_plots, 1, ind + 1)
-            ax.plot(x, y[ind, :])
-            ax.set_yticks(np.arange(.2,1,.2))
+            ax.plot(x, yi)
+            ax.set_yticks(np.linspace(ymin, ymax, 4))
+            ax.set_ylim(ymin - marg, ymax + marg)
     except IndexError:
+        yi = y
+        ymin, ymax = np.min(yi), np.max(yi)
+        marg = np.max((np.abs(ymin), np.abs(ymax))) * 0.1
         ax.plot(x, y)
+        ax.set_yticks(np.linspace(ymin, ymax, 4))
+        ax.set_ylim(ymin - marg, ymax + marg)
+        ax.set_xticks(x[0::4])
+        foo = plt.xlim(xmin-marg, xmax+marg)
+        print(foo)
+        #ax.set_xlim(xmin=xmin, xmax=xmax)
+    # ax.set_xticks(x[0::4])
 
     plt.show(block=False)
     return fig

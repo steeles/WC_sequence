@@ -59,6 +59,11 @@ and we can write arbitrary feature-selective networks
 micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
 integrator layer
 
+[us 20]
+interval detector- integration layer 1
+
+[us 21]
+2 interval detectors - aba vs bab
 
 [us 16]
 make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 
