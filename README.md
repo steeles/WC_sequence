@@ -114,6 +114,10 @@ now we have habituated inputs and a baby new network
 Which means stim should have an absolute reference, even if it's an index
 - melopy.utilities.frequency_to_key!
 
+The Terminal in my Pycharm isn't able to do anything besides commit to git; it certainly doesn't run tests from the same
+conda environment as alternating_renewal_process. Running tests by right clicking on the tests folder in the project
+window seems to work
+
 been having trouble getting packages installed in my virtualenv...
 workaround has been to install with pip from python console...
 pip.main(['install','-flags', 'package'])

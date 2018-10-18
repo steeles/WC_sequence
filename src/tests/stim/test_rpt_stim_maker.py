@@ -63,5 +63,5 @@ def test_map_tones_to_cell():
     # assert False
     assert u1.stim[0] == 0
     u1.currents["stim"].update()
-    assert u1.stim[0] == .5
+    assert u1.currents["stim"].value == .5
 

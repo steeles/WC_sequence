@@ -15,7 +15,7 @@ class ToneCurrent(Current):
             target (src.a_wilson_cowan.sensory_neuron.SensoryUnit): a SensoryUnit with a self.tuning_curve
             name (str): what to call it in target.current[name]
         """
-        Current.__init__(self, weight=weight, target=target, name=name)
+        Current.__init__(self, weight=weight, target=target, name=name, source=None)
         self.stimulus = stimulus
         self.value = self.map_tone_to_current()
 
