@@ -1,7 +1,7 @@
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
 
 def test_init():
-    pass
+    su = SensoryWCUnit()
 
 def test_tuning_curve():
     pass

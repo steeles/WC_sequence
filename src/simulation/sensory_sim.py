@@ -56,6 +56,8 @@ class SensoryTripletsSimulation(Simulation):
             # u1.currents["stim"].set_time(self.t_i)
             for current in self.unit.currents.values():
                 current.update()
+                if self.t_i % 100 == 0:
+                    print(current.value, current.name)
             # update response
             self.unit.update()
             # update traces
@@ -63,22 +65,30 @@ class SensoryTripletsSimulation(Simulation):
                 self.update_trace(trace)
             self.t_i += 1
 
+    @staticmethod
+    def main():
+        pass
+
+
 
 if __name__ == '__main__':
     tic = datetime.datetime.now()
-    u1 = SensoryWCUnit(name="u1", tauA=5000)
+    u1 = SensoryWCUnit(name="u1", tauA=5000, gSFA=0.8)
     stim = ABAStimulus(a_semitone=44, df=9)
     u1.add_stim_current(stim, weight=0.5)
-    u1.add_SFA_current(weight=.5)
+    # #u1.add_SFA_current(weight=.5)
     sim = SensoryTripletsSimulation(sensory_unit=u1, T=5)
-
+    # print(u1.currents)
+    #
     sim.run()
-    f1 = generic_plot(sim.tax, np.array(sim.traces.values()))
     toc = datetime.datetime.now()
+    #
     print (toc - tic).microseconds / 10e6
-    #plt.show()
-    x = np.array(u1.tuning_curve.keys()[:-1])
-    y = np.array(u1.tuning_curve.values()[:-1])
-    f2 = generic_plot(x, y)
+    f1 = generic_plot(sim.tax, np.array(sim.traces.values()))
+    #
+    # plt.show()
+    # x = np.array(u1.tuning_curve.keys()[:-1])
+    # y = np.array(u1.tuning_curve.values()[:-1])
+    # f2 = generic_plot(x, y)
     plt.show()
 

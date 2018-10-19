@@ -41,7 +41,7 @@ def generic_plot(x,y,**kwargs):
         ax.set_ylim(ymin - marg, ymax + marg)
         ax.set_xticks(x[0::4])
         foo = plt.xlim(xmin-margx, xmax+margx)
-        print(foo)
+        # print(foo)
         #ax.set_xlim(xmin=xmin, xmax=xmax)
     # ax.set_xticks(x[0::4])
 

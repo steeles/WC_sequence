@@ -13,7 +13,7 @@ class SensoryWCUnit(WCUnit):
         r0=0., a0=0., S0=0., stim0=0.,  # time varying values
         gee=.57,
         gStim=1.,
-        gSFA=0,
+        gSFA=0.4,
         tau=10., tauNMDA=100., tauA=2000., G=.64)
 
     def __init__(self, best_frequency=440., spread=4., **kwargs):
@@ -28,7 +28,7 @@ class SensoryWCUnit(WCUnit):
         key = music.frequency_to_key(best_frequency)
         if music.key_to_frequency(key) != best_frequency:
             print("warning- cell's response has been shifted to nearest semitone")
-        self.best_frequency=best_frequency
+        self.best_frequency = best_frequency
         self.spread = spread
         self.tuning_curve = self.fq_tuning_curve()
 

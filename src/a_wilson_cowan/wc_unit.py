@@ -92,9 +92,7 @@ class WCUnit(KWPars):
         """
         if weight > 0: weight = -weight
         sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=self.tauA, target=self, name=name)
-        name=sfa_current.name
         self.currents[name] = sfa_current
-        # print(name)
 
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
