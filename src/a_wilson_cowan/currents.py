@@ -60,7 +60,7 @@ class StimCurrent(Current):
         """ stimulus is the only one that updates a variable directly """
         stim = self.stimulus[self.t]
         self.value = stim #  * self.weight
-        self.target.stim[0] = self.stimulus  # WE CAN PROBABLY GET RID OF THIS
+        self.target.stim[0] = self.value  # WE CAN PROBABLY GET RID OF THIS
 
 
 class SFACurrent(Current):

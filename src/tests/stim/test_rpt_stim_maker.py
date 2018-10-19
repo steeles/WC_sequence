@@ -48,7 +48,7 @@ def test_triplets_timing():
 
 def test_tones_init():
     stim = ABAStimulus()
-    print(stim.__dict__)
+    # print(stim.__dict__)
     assert len(stim.tax) == len(stim.tones) == stim.ttot
     assert stim.tones[0] == 49
     assert stim.tax[-1] == stim.T # tax[0] is not 0...
@@ -63,5 +63,5 @@ def test_map_tones_to_cell():
     # assert False
     assert u1.stim[0] == 0
     u1.currents["stim"].update()
-    assert u1.currents["stim"].value == .5
+    assert u1.currents["stim"].value == 1
 

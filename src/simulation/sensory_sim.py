@@ -70,16 +70,13 @@ class SensoryTripletsSimulation(Simulation):
         pass
 
 
-
 if __name__ == '__main__':
     tic = datetime.datetime.now()
     u1 = SensoryWCUnit(name="u1", tauA=5000, gSFA=0.8)
     stim = ABAStimulus(a_semitone=44, df=9)
     u1.add_stim_current(stim, weight=0.5)
-    # #u1.add_SFA_current(weight=.5)
     sim = SensoryTripletsSimulation(sensory_unit=u1, T=5)
-    # print(u1.currents)
-    #
+
     sim.run()
     toc = datetime.datetime.now()
     #

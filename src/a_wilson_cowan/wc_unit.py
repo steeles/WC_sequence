@@ -99,7 +99,8 @@ class WCUnit(KWPars):
         dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
         self.r[0] += dr
 
-    def update_all(self):
-        for current in self.currents.values():
-            current.update()
-        self.update()
+    def update_all(self, n=1):
+        for ind in xrange(n):
+            for current in self.currents.values():
+                current.update()
+            self.update()

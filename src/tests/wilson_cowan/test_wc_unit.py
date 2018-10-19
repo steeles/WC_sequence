@@ -26,7 +26,7 @@ def test_wc_add_stim_current():
         stimulus=stim, weight=.5)
     assert u2.currents["stim"].weight == .5
     u2.currents["stim"].update()
-    assert u2.stim[0] == 0.5
+    assert u2.stim[0] == 1
 
 
 def test_add_SFA_current():
@@ -36,7 +36,7 @@ def test_add_SFA_current():
     u2.currents['SFA'].update()
     assert u2.a[0] > 0
     assert u2.currents['SFA'].weight < 0
-    assert u2.currents['SFA'].value < 0
+    assert u2.currents['SFA'].value > 0
     u2.update()
     assert u2.r[0] < 1
 
@@ -93,7 +93,6 @@ def test_add_intrinsic_currents_SFA():
         u1.update_all()
     assert u1.a[0] > 0
     assert u1.currents["SFA"].value > 0
-    # assert abs(u1.currents["SFA"].value) < u1.a[0]
 
     u2 = WCUnit(tauA=30, gSFA=0.8)
     stim = np.ones(10)
@@ -102,7 +101,6 @@ def test_add_intrinsic_currents_SFA():
         u2.update_all()
     # tauA is shorter so there should be more
     assert u2.a[0] > u1.a[0]
-    # assert abs((u2.a[0]/ u1.a[0]) - (u2.currents["SFA"].value / u1.currents["SFA"].value)) < eps
 
     u3 = WCUnit(tauA=30, gSFA=0.5)
     stim = np.ones(10)
@@ -112,8 +110,5 @@ def test_add_intrinsic_currents_SFA():
     assert abs(u3.currents["SFA"].value -\
            u2.currents["SFA"].value) < eps
     assert abs(u3.a[0] - u2.a[0]) < eps
-    print u3.currents["SFA"].weight
-    print u2.r
     assert u1.r[0] - u2.r[0] > eps
     assert u3.r[0] - u2.r[0] > eps
-    # assert u3.a[0] < u2.a[0]

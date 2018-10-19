@@ -24,7 +24,7 @@ class ToneCurrent(Current):
         semitone -> weight x tuning curve -> current
         looks up the semitone value of the stimulus right now and maps it to a current with tuning curve and weight
         """
-        value = self.target.tuning_curve[self.stimulus.value] * self.weight
+        value = self.target.tuning_curve[self.stimulus.value] #* self.weight
         return value
 
     def update(self):
