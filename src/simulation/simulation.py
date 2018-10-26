@@ -21,6 +21,29 @@ class TimeAxis(object):
         self.t_i = 0
 
 
+class Trace():
+    """ copy a variable into an array """
+    def __init__(self, sim, source, target=None, trace_name=None):
+        """
+        recording for a variable in a simulation
+        Args:
+            sim (Simulation): t_i and ttot
+            source (list len 0, soon: x.value):
+            target (OrderedDict): where the trace gets stored
+            trace_name (str): name to get stored
+        """
+        self.sim = sim
+        if not target:
+            target = self.sim.traces
+        self.target = target
+        self.source = source
+        self.trace = np.zeros(self.sim.ttot)
+        self.target.update([(trace_name, self)])
+
+    def update_trace(self):
+        self.trace[self.sim.t_i] = self.source[0]
+
+
 class Simulation(TimeAxis):
     """ master class to set up and record simulations """
 
@@ -48,28 +71,40 @@ class Simulation(TimeAxis):
             self.t_i += 1
 
     def add_new_trace(self, source, trace_name=None):
-        """
-        Set up a new recording to a variable
-        Note: you don't need to record the stimulus, you pre-generated it
-        Args:
-            source (list): list length one. variable to record, ie. u1.r, which has a mutable value you can
-                access like u1.r[0]
-            trace_name (str): name of the trace
-        Returns:  None; adds a new trace to self.traces (dict)
-        """
         if not trace_name:
-            trace_name = source
-        blank_trace = np.zeros(self.ttot)
-        self.traces[trace_name] = blank_trace
-        self.sources[trace_name] = source
+            trace_name=source
+        trc = Trace(sim=self, source=source, target=self.traces, trace_name=trace_name)
 
-    def update_trace(self, trace_name):
-        """
-        recorder- takes data coming in and marks it on the trace at time self.t_i
-        Args:
-            trace_name (str): the name of the trace
-            value (float): the value to set at time self.t_i on the trace
-        """
-        value = self.sources[trace_name][0]
-        self.traces[trace_name][self.t_i] = value
+
+    # # todo: pass in traces and sources as arguments...
+    # def add_new_trace(self, source, trace_name=None, traces=None, sources=None):
+    #     """
+    #     Set up a new recording to a variable
+    #     Note: you don't need to record the stimulus, you pre-generated it
+    #     Args:
+    #         source (list): list length one. variable to record, ie. u1.r, which has a mutable value you can
+    #             access like u1.r[0]
+    #         trace_name (str): name of the trace
+    #     Returns:  None; adds a new trace to self.traces (dict)
+    #     """
+    #     if not traces:
+    #         traces = self.traces
+    #     if not sources:
+    #         sources = self.sources
+    #
+    #     if not trace_name:
+    #         trace_name = source
+    #     blank_trace = np.zeros(self.ttot)
+    #     traces[trace_name] = blank_trace
+    #     sources[trace_name] = source
+    #
+    # def update_trace(self, trace_name):
+    #     """
+    #     recorder- takes data coming in and marks it on the trace at time self.t_i
+    #     Args:
+    #         trace_name (str): the name of the trace
+    #         value (float): the value to set at time self.t_i on the trace
+    #     """
+    #     value = self.sources[trace_name][0]
+    #     self.traces[trace_name][self.t_i] = value
 

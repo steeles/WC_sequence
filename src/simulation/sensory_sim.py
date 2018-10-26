@@ -61,8 +61,8 @@ class SensoryTripletsSimulation(Simulation):
             # update response
             self.unit.update()
             # update traces
-            for trace in self.traces.keys():
-                self.update_trace(trace)
+            for trace in self.traces.values():
+                trace.update_trace()
             self.t_i += 1
 
     @staticmethod
@@ -79,10 +79,10 @@ if __name__ == '__main__':
 
     sim.run()
     toc = datetime.datetime.now()
+    traces = [[t.trace] for t in sim.traces.values()]
     #
     print (toc - tic).microseconds / 10e6
-    f1 = generic_plot(sim.tax, np.array(sim.traces.values()))
-    #
+    f1 = generic_plot(sim.tax, np.concatenate(traces))
     # plt.show()
     # x = np.array(u1.tuning_curve.keys()[:-1])
     # y = np.array(u1.tuning_curve.values()[:-1])

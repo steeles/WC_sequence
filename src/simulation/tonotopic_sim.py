@@ -1,9 +1,11 @@
 " Feed stim to a WC Unit "
 import datetime
+from collections import OrderedDict
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
+from src.a_wilson_cowan.sensory_network import Selectivity, TonotopicNetwork
+
 from src.stim.stimulus import ABAStimulus
 from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
@@ -29,7 +31,7 @@ class TonotopicTripletsSimulation(Simulation):
     desired characteristics of sensory units given,
     """
 
-    def __init__(self, sensory_unit=None, T=5, dt=.001, **kwargs):
+    def __init__(self, network, T=5, dt=.001, **kwargs):
         """
         Pass in a wc unit, set up recordings, get ready to run.
         Args:
@@ -44,16 +46,30 @@ class TonotopicTripletsSimulation(Simulation):
             self.traces (dict): traces
         """
         Simulation.__init__(self, T=T, dt=dt, **kwargs)
-        self.unit = sensory_unit
+        self.network = network
+        self.traces = OrderedDict
+        self.sources = OrderedDict
+
+        for name, unit in self.network.units.items():
+            trace_sources = {
+                "u1_r": unit.r,
+                "stim": unit.stim,
+                "u1_a": unit.a,
+                # "u1_S": wc_unit.S
+            }
+            self.traces[name]
         # or units.currents...
-        trace_sources = {
-            "u1_r": sensory_unit.r,
-            "stim": sensory_unit.stim,
-            "u1_a": sensory_unit.a,
-            # "u1_S": wc_unit.S
-        }
-        for k, v in trace_sources.items():
-            self.add_new_trace(source=v, trace_name=k)
+
+            for k, v in trace_sources.items():
+                self.add_new_trace(source=v, trace_name=k)
+
+    def add_new_trace(self, unit, source, trace_name=None):
+        if not trace_name:
+            trace_name = source
+        blank_trace = np.zeros(self.ttot)
+        self.traces[unit][trace_name] = blank_trace
+        self.sources[unit][trace_name] = source
+
 
     def run(self):
         while self.t_i < self.ttot:
@@ -71,10 +87,7 @@ class TonotopicTripletsSimulation(Simulation):
 
 if __name__ == '__main__':
     tic = datetime.datetime.now()
-    u1 = SensoryWCUnit(name="u1", tauA=5000)
-    stim = ABAStimulus(a_semitone=44, df=9)
-    u1.add_stim_current(stim, weight=0.5)
-    u1.add_SFA_current(weight=.5)
+
     sim = TonotopicTripletsSimulation(sensory_unit=u1, T=5)
 
     sim.run()
@@ -82,8 +95,4 @@ if __name__ == '__main__':
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6
     #plt.show()
-    x = np.array(u1.tuning_curve.keys()[:-1])
-    y = np.array(u1.tuning_curve.values()[:-1])
-    f2 = generic_plot(x, y)
-    plt.show()
 

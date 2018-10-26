@@ -32,13 +32,15 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
+[us 4]
+and we can write arbitrary feature-selective networks sims and visualize
 
-[ us 2]
-For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
+[us 22]
+seaborn figures- mermaid
 
-[us 13]
-how do i deliver same stim to different tuning efficiently?
-stim generator function, static method. maybe a class method?
+[us 5]
+with feature based synaptic footprints
+
 
 [us 14]
 I can probably make it faster if I get rid of the mutables and map them to object attributes;
@@ -51,14 +53,9 @@ it says it's only .01 to .08 sec, but it seems to be > 2. weird.
 will have to see how it scales.
 Response = namedtuple('Response', ['value'])
 r = Response(0)
-r
-Response(value=0)
-r.value
-0
+
 [tests]
 
-[us 4]
-and we can write arbitrary feature-selective networks
 
 [us 19]
 micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
@@ -70,8 +67,6 @@ interval detector- integration layer 1
 [us 21]
 2 interval detectors - aba vs bab
 
-[us 22]
-seaborn figures- mermaid
 
 [us 16]
 make sure i cite cheng cheng for all the contributions to this type of wc architecture - her interval detector shares 
@@ -80,8 +75,6 @@ some similarities, i should nail down how close or not we are
 [us 17]
 add frequency arguments for stimulus
 
-[us 5]
-with feature based synaptic footprints
 
 [us 18]
 balanced connection footprints? excitation == inhibition
@@ -114,17 +107,23 @@ the variance with dt; i think it may be sqrt dt or something? dt <<< 1
 ____
 #### Completed
 
+[ us 2]
+For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
+
+[us 13]
+how do i deliver same stim to different tuning efficiently?
+stim generator function, static method. maybe a class method?
+
+
 [us 6]
 stimuli superclass
 
 [us 12] 
 rpt stim maker
 
-
 [us 1]
 I could make an input A guy take all the inputs and NMDA-inhibit _itself_
 now we have habituated inputs and a baby new network
-
 
 [us 3]
 Which means stim should have an absolute reference, even if it's an index

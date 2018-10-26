@@ -49,23 +49,26 @@ class WCTripletsSimulation(Simulation):
             # update response
             self.unit.update()
             # update traces
-            for trace in self.traces.keys():
-                self.update_trace(trace)
+            for trace in self.traces.values():
+                trace.update_trace()
 
             self.t_i += 1
 
 
 if __name__ == '__main__':
     tic = time.time()
-    u1 = WCUnit(name="u1")
+    u1 = WCUnit(name="u1", gSFA=0.3)
     # TODO: the stimulus should get made with the same dt as sim
     triplet = aba_triplet(iti=.08)
     u1.add_stim_current(stimulus=triplet,weight=0.8)
-    u1.add_SFA_current(weight=5)
+    #u1.add_SFA_current(weight=5)
 
     sim = WCTripletsSimulation(wc_unit=u1, T=0.32)
     sim.run()
-    generic_plot(sim.tax, np.array(sim.traces.values()))
+    traces = [[t.trace] for t in sim.traces.values()]
+    #print(traces)
+   # print(np.concatenate(traces))
+    generic_plot(sim.tax, np.concatenate(traces))
     toc = time.time()
     print toc - tic
     plt.show()

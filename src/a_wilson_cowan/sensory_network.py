@@ -1,6 +1,6 @@
 from collections import namedtuple, OrderedDict
 import numpy as np
-
+import time
 import melopy.utility as music
 
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
@@ -41,8 +41,11 @@ class TonotopicNetwork():
                 u.update_all()
 
 if __name__ == "__main__":
+    tic = time.time()
     stim = ABAStimulus()
     network = TonotopicNetwork(s_units, stim)
     network.update_all(10)
+    toc = time.time()
+    print(toc-tic)
     print(network.units.values()[0].r, network.units.values()[1].r)
     print(stim.value)
