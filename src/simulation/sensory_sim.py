@@ -7,6 +7,7 @@ import seaborn as sns
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
 from src.stim.stimulus import ABAStimulus
 from src.sim_plots.make_figures import generic_plot
+from src.sim_plots.sns_plots import plot_sensory_traces
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
 
@@ -86,8 +87,18 @@ if __name__ == '__main__':
     trace_dict = {}
     trace_dict.update((k, v.trace) for k, v in sim.traces.items())
     trace_dict['tax'] = sim.tax
-    # data = pd.DataFrame(trace_dict, index=sim.tax) \
-    #     [['tax', 'u1_r', 'u1_a', 'stim']]
+    data = pd.DataFrame(trace_dict, index=sim.tax) \
+        [['tax', 'u1_r', 'u1_a', 'stim']]
+
+    plot_sensory_traces(data=data, unit=u1)
+
+    # data1 = data.add(pd.Series(np.ones(len(sim.tax)), index=sim.tax))
+    # data2 = data.add(pd.Series(np.ones(len(sim.tax)) * 2, index=sim.tax))
+    # data2["u1_r"] = data2["u1_r"].apply(lambda x: x * 2)
+    # data2["u1_a"] = data2["u1_a"].apply(lambda x: x * 2)
+
+
+
     # df = data[['tax', 'u1_r', 'u1_a']].melt(
     #     'tax', var_name='trace', value_name='values'
     # )
@@ -101,14 +112,14 @@ if __name__ == '__main__':
     # # df = data.melt('tax', var_name='trace', value_name='values')
 
     # g = sns.FacetGrid(df, col='trace', col_wrap=1)
-    # g.map(sns.lineplot, 'tax', 'values')
+    # g.map(plot_sensory_traces, 'tax', 'values')
 
 
     print (toc - tic).microseconds / 10e6
-    f1 = generic_plot(sim.tax, np.concatenate(traces))
-    plt.show()
-    x = np.array(u1.tuning_curve.keys()[:-1])
-    y = np.array(u1.tuning_curve.values()[:-1])
-    f2 = generic_plot(x, y)
-    plt.show()
+    # f1 = generic_plot(sim.tax, np.concatenate(traces))
+    # plt.show()
+    # x = np.array(u1.tuning_curve.keys()[:-1])
+    # y = np.array(u1.tuning_curve.values()[:-1])
+    # f2 = generic_plot(x, y)
+    # plt.show()
 

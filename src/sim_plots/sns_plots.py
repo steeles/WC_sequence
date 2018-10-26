@@ -7,7 +7,7 @@ import seaborn as sns; sns.set()
 # ax2 = []
 # data = pd.DataFrame(trace_dict, index=sim.tax) \
 #     [['tax', 'u1_r', 'u1_a', 'stim']]
-def plot_sensory_traces(data, unit):
+def plot_sensory_traces(data, unit, **kwargs):
     """
     hard seaborn code for plotting a single wc unit on one trace
     Args:
@@ -17,7 +17,7 @@ def plot_sensory_traces(data, unit):
     Returns:
         matplotlib.figure.Figure: the figure
     """
-
+    #TODO: iterate these. split resp from curr?
     df = data[['tax', 'u1_r', 'u1_a']].melt(
         'tax', var_name='trace', value_name='values'
     )
@@ -25,7 +25,7 @@ def plot_sensory_traces(data, unit):
     lines = []
     ax = sns.lineplot(x='tax', y='values',
                       hue='trace', data=df,
-                      legend=False)
+                      legend=False, **kwargs)
 
     F = ax.fill_between(data["tax"], data["u1_a"])
     F.set_color(ax.lines[1].get_color())

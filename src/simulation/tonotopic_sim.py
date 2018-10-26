@@ -3,13 +3,14 @@ import datetime
 from collections import OrderedDict
 import matplotlib.pyplot as plt
 import numpy as np
-
+import seaborn as sns
 from src.a_wilson_cowan.sensory_network import Selectivity, TonotopicNetwork
 
 from src.stim.stimulus import ABAStimulus
-from src.sim_plots.make_figures import generic_plot
+# from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
+from src.sim_plots.sns_plots import plot_sensory_traces
 
 
 class LeanSim(Simulation):
@@ -95,4 +96,6 @@ if __name__ == '__main__':
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6
     #plt.show()
+    g = sns.FacetGrid(df, col='trace', col_wrap=1)
+    g.map(plot_sensory_traces, 'tax', 'values')
 
