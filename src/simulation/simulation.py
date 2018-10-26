@@ -43,6 +43,8 @@ class Trace():
     def update_trace(self):
         self.trace[self.sim.t_i] = self.source[0]
 
+    def __repr__(self):
+        return 'Trace'
 
 class Simulation(TimeAxis):
     """ master class to set up and record simulations """

@@ -2,6 +2,8 @@
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
 from src.a_wilson_cowan.sensory_neuron import SensoryWCUnit
 from src.stim.stimulus import ABAStimulus
 from src.sim_plots.make_figures import generic_plot
@@ -56,8 +58,8 @@ class SensoryTripletsSimulation(Simulation):
             # u1.currents["stim"].set_time(self.t_i)
             for current in self.unit.currents.values():
                 current.update()
-                if self.t_i % 100 == 0:
-                    print(current.value, current.name)
+                # if self.t_i % 100 == 0:
+                #     print(current.value, current.name)
             # update response
             self.unit.update()
             # update traces
@@ -80,12 +82,33 @@ if __name__ == '__main__':
     sim.run()
     toc = datetime.datetime.now()
     traces = [[t.trace] for t in sim.traces.values()]
+    # let's try it with seaborn and a dataframe
+    trace_dict = {}
+    trace_dict.update((k, v.trace) for k, v in sim.traces.items())
+    trace_dict['tax'] = sim.tax
+    # data = pd.DataFrame(trace_dict, index=sim.tax) \
+    #     [['tax', 'u1_r', 'u1_a', 'stim']]
+    # df = data[['tax', 'u1_r', 'u1_a']].melt(
+    #     'tax', var_name='trace', value_name='values'
+    # )
+    # sns.lineplot(x='tax', y='values', hue='trace', data=df)
+    # ax2 = plt.twinx()
+    # ax2.set_ylim([-1, 0])
+    # data_n = data[['tax', 'stim']]
+    # data_n['stim'] = data_n['stim'].apply(lambda x: x * -.1)
     #
+    # sns.lineplot(x='tax', y='stim', data=data_n, ax=ax2, color='grey')
+    # # df = data.melt('tax', var_name='trace', value_name='values')
+
+    # g = sns.FacetGrid(df, col='trace', col_wrap=1)
+    # g.map(sns.lineplot, 'tax', 'values')
+
+
     print (toc - tic).microseconds / 10e6
     f1 = generic_plot(sim.tax, np.concatenate(traces))
-    # plt.show()
-    # x = np.array(u1.tuning_curve.keys()[:-1])
-    # y = np.array(u1.tuning_curve.values()[:-1])
-    # f2 = generic_plot(x, y)
+    plt.show()
+    x = np.array(u1.tuning_curve.keys()[:-1])
+    y = np.array(u1.tuning_curve.values()[:-1])
+    f2 = generic_plot(x, y)
     plt.show()
 

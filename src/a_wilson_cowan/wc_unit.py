@@ -16,7 +16,7 @@ def f_activation_builder(k, theta):
     Returns:
         function
     """
-    func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) - 1 / (1 + np.exp(theta / k))
+    func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) #- 1 / (1 + np.exp(theta / k))
     return func
 
 
@@ -97,6 +97,7 @@ class WCUnit(KWPars):
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
         dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
+        # if self.f_r(sum(cvals)): print "fr: " + str(self.f_r(sum(cvals)))
         self.r[0] += dr
 
     def update_all(self, n=1):

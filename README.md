@@ -7,12 +7,18 @@ and visualizing._
 
 Getting started:
 Install requirements:
+< activate virtualenv, python 2.7 >
 - open a terminal / shell, 
 - navigate to this directory 
 (i. e., `cd ~/WC_Sequence/` and 
 - run 
 `pip install -r requirements.txt` )
 
+
+- if you want to run the tests, I included a test-runner script.
+Open a terminal and make it executable on your system:
+`cmhod +x run_tests.sh`
+- then you can execute the script 
 
 my new FR (firing rate?) sequence detector
 

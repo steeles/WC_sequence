@@ -11,7 +11,7 @@ execfile('repeating_stim_maker.py')
 def SFA_pop(df = 3,ITI = .05,bPlot = False):
 
 	def f(x, k = .1, theta = .3):
-		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
+		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k)) # This looks WRONG- just the first half!
 
 	timescale, dt, T_in_seconds = .01, .1, 2.5
 	timesteps = T_in_seconds / timescale

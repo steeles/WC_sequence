@@ -112,3 +112,12 @@ def test_add_intrinsic_currents_SFA():
     assert abs(u3.a[0] - u2.a[0]) < eps
     assert u1.r[0] - u2.r[0] > eps
     assert u3.r[0] - u2.r[0] > eps
+
+
+def test_no_negative_firing_rates_bugfix():
+    u1 = WCUnit(name="u1", tauA=300, gSFA=0.8)
+    stim = np.ones(10) * -100
+    u1.add_stim_current(stimulus=stim, weight=.9)
+    for ind in xrange(10):
+        u1.update_all()
+    assert u1.r > 0
