@@ -67,8 +67,8 @@ class TonotopicTripletsSimulation(Simulation):
         if not trace_name:
             trace_name = source
         blank_trace = np.zeros(self.ttot)
-        self.traces[unit][trace_name] = blank_trace
-        self.sources[unit][trace_name] = source
+        self.traces[unit.name][trace_name] = blank_trace
+        self.sources[unit.name][trace_name] = source
 
 
     def run(self):

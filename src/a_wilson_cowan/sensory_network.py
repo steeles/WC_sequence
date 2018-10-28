@@ -30,7 +30,11 @@ class TonotopicNetwork():
         if selectivities:
             for s in selectivities:
                 best_frequency, spread, gain = s
-                name = "S" + str(best_frequency) + "_" + str(spread)
+                name = 's({st},{sp},{g})'.format(
+                    st=int(music.frequency_to_key(best_frequency)),
+                    sp=spread, g=gain
+                )
+               # name = "s(" + str(int(music.frequency_to_key(best_frequency))) + "," + str(spread) + ","
                 unit = SensoryWCUnit(best_frequency=s[0], spread=s[1], name=name, **kwargs)
                 unit.add_stim_current(stimulus, weight=gain)
                 self.units.update([(name, unit)])
@@ -50,7 +54,10 @@ class TonotopicNetwork():
                 gain (float): strength of the stimulus on the cell.
         """
         best_frequency, spread, gain = selectivity
-        name = "S" + str(best_frequency) + "_" + str(spread)
+        name = name = 's({st}:{sp}:{g})'.format(
+                    st=int(music.frequency_to_key(best_frequency)),
+                    sp=spread, g=gain
+                )
         unit = SensoryWCUnit(
             best_frequency=best_frequency, spread=spread, name=name, **kwargs)
         unit.add_stim_current(self.stimulus, weight=gain)

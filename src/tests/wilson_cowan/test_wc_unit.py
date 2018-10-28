@@ -50,7 +50,7 @@ def test_wc_update():
     u2.currents["stim"].update()
     u2.update()
     assert u2.r[0] > 0.08
-    assert u2.r[0] < 0.085
+    assert u2.r[0] < 0.097
 
 
 def test_wc_higher_weight_update():
@@ -62,9 +62,8 @@ def test_wc_higher_weight_update():
     u2.currents["stim"].t = 1
     u2.currents["stim"].update()
     u2.update()
-    assert u2.r[0] > 0.085
-    assert u2.r[0] < 0.09
-
+    assert u2.r[0] < 0.1
+    assert u2.r[0] > 0.098
 
 def test_lower_weights_drive_less():
     pass
