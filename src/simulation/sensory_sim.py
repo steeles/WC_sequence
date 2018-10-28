@@ -82,7 +82,6 @@ if __name__ == '__main__':
 
     sim.run()
     toc = datetime.datetime.now()
-    traces = [[t.trace] for t in sim.traces.values()]
     # let's try it with seaborn and a dataframe
     trace_dict = {}
     trace_dict.update((k, v.trace) for k, v in sim.traces.items())

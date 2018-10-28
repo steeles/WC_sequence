@@ -27,3 +27,17 @@ def test_trace():
     assert all(trc.trace[:5] == np.array([0., 1., 2., 3., 4.]))
 
 
+def test_nested_trace():
+    sim = Simulation()
+    sim.traces["foo"]=dict()
+    src = [0]
+    trc = Trace(sim, source=src, target=sim.traces["foo"], trace_name="bar")
+    # print(trc.__dict__.get("source"))
+    for ind in xrange(5):
+        src[0] = ind
+        trc.update_trace()
+        trc.sim.step()
+
+    assert sim.traces["foo"]["bar"]
+    assert False
+

@@ -32,13 +32,17 @@ class Trace():
             target (OrderedDict): where the trace gets stored
             trace_name (str): name to get stored
         """
+#        print(str(target) + " TARGET")
+
         self.sim = sim
+        target.update([(trace_name, self)])
+
         if not target:
             target = self.sim.traces
-        self.target = target
         self.source = source
         self.trace = np.zeros(self.sim.ttot)
-        self.target.update([(trace_name, self)])
+#        print(str(target))
+        self.target = target
 
     def update_trace(self):
         self.trace[self.sim.t_i] = self.source[0]

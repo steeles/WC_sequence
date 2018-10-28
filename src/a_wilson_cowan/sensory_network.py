@@ -34,8 +34,8 @@ class TonotopicNetwork():
                     st=int(music.frequency_to_key(best_frequency)),
                     sp=spread, g=gain
                 )
-               # name = "s(" + str(int(music.frequency_to_key(best_frequency))) + "," + str(spread) + ","
-                unit = SensoryWCUnit(best_frequency=s[0], spread=s[1], name=name, **kwargs)
+
+                unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread, name=name, **kwargs)
                 unit.add_stim_current(stimulus, weight=gain)
                 self.units.update([(name, unit)])
 
