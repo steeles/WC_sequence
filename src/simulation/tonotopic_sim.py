@@ -6,7 +6,6 @@ import numpy as np
 import seaborn as sns
 from src.a_wilson_cowan.sensory_network import Selectivity, TonotopicNetwork
 
-from src.stim.stimulus import ABAStimulus
 # from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation

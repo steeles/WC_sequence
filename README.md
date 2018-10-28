@@ -3,6 +3,7 @@
 _A python framework for building recurrently connected Wilson-Cowan neuronal populations,
 synaptic weights/ footprints, and basic stimulus features, as well as running simulations 
 and visualizing._
+Developed by Sara Steele
 
 
 Getting started:

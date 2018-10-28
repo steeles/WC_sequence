@@ -16,7 +16,7 @@ class SensoryWCUnit(WCUnit):
         gSFA=0.4,
         tau=10., tauNMDA=100., tauA=2000., G=.64)
 
-    def __init__(self, best_frequency=440., spread=4., **kwargs):
+    def __init__(self, name=None, best_frequency=440., spread=4., **kwargs):
         """
         all the same things as WCUnit, but also has a bf and selectivity
         Args:
@@ -24,7 +24,9 @@ class SensoryWCUnit(WCUnit):
             spread (float): inverse of selectivity, in terms of semitones to standard deviations
             **kwargs:
         """
-        WCUnit.__init__(self, **kwargs)
+        if not name:
+            name = "S" + str(best_frequency) + "-" + str(spread)
+        WCUnit.__init__(self, name=name, **kwargs)
         key = music.frequency_to_key(best_frequency)
         if music.key_to_frequency(key) != best_frequency:
             print("warning- cell's response has been shifted to nearest semitone")
