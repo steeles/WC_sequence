@@ -52,16 +52,16 @@ class TonotopicTripletsSimulation(Simulation):
 
         for name, unit in self.network.units.items():
             trace_sources = {
-                "u1_r": unit.r,
+                "u_r": unit.r,
                 "stim": unit.stim,
-                "u1_a": unit.a,
+                "u_a": unit.a
                 # "u1_S": wc_unit.S
             }
             self.traces[name]
         # or units.currents...
 
             for k, v in trace_sources.items():
-                self.add_new_trace(source=v, trace_name=k)
+                self.add_new_trace(unit, source=v, trace_name=k)
 
     def add_new_trace(self, unit, source, trace_name=None):
         if not trace_name:
