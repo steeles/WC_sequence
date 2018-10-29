@@ -57,6 +57,7 @@ class SensoryTripletsSimulation(Simulation):
         while self.t_i < self.ttot:
             # drive the stimulus forward
             # u1.currents["stim"].set_time(self.t_i)
+            self.unit.currents
             for current in self.unit.currents.values():
                 current.update()
                 # if self.t_i % 100 == 0:

@@ -45,6 +45,8 @@ and we can write arbitrary feature-selective networks sims and visualize
 [us 22]
 seaborn figures- mermaid
 
+would it help to give Traces a Type, so we know how to plot them? This can also be done in the data frame function... easier there, closer to the product
+
 [us 5]
 with feature based synaptic footprints
 

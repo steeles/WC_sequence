@@ -80,6 +80,7 @@ class TonotopicTripletsSimulation(Simulation):
         while self.t_i < self.ttot:
             # drive the stimulus forward
             # u1.currents["stim"].set_time(self.t_i)
+            self.network.stimulus.set_time(self.t_i)
             self.network.update_all()
             self.update_all_traces()
             self.t_i += 1
@@ -101,7 +102,7 @@ class TonotopicTripletsSimulation(Simulation):
             for tk, tv in v.iteritems():
                 trace = tv.trace
                 if b_weight:
-                    wgt = sim.network.units[k].currents.get(tk)
+                    wgt = self.network.units[k].currents.get(tk)
                     if wgt:
                         trace = wgt.weight * trace
                 traces.update({tk: trace})
@@ -148,6 +149,8 @@ if __name__ == '__main__':
     network = TonotopicNetwork(s_units, stim)
     sim = TonotopicTripletsSimulation(network=network)
     sim.run()
+    data = sim.traces_to_df()
+
     # f1 = generic_plot(sim.tax, np.array(sim.traces.values()))
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6

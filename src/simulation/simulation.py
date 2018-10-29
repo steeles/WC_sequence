@@ -32,6 +32,7 @@ class Trace():
             target (OrderedDict): where the trace gets stored
             trace_name (str): name to get stored
         """
+        # TODO: add type?
 #        print(str(target) + " TARGET")
 
         self.sim = sim
@@ -47,8 +48,8 @@ class Trace():
     def update_trace(self):
         self.trace[self.sim.t_i] = self.source[0]
 
-    def __repr__(self):
-        return 'Trace'
+    # def __repr__(self):
+    #     return 'Trace'
 
 class Simulation(TimeAxis):
     """ master class to set up and record simulations """

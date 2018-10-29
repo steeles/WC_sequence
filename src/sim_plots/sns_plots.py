@@ -17,19 +17,21 @@ cmap_dict = {
 }
 
 
-def plot_generic_traces(data, unit,
-                        cmap_dict = sns.color_palette(n_colors = 7), **kwargs):
+def plot_generic_traces(*args, **kwargs):
+                        # cmap_dict = sns.color_palette(n_colors = 7), **kwargs):
     """
     hard seaborn code for plotting a single wc unit on one trace
     Args:
         data (pandas.DataFrame): should have a 'tax' column and currents and stim and responses for a unit
             needs tax, responses, and "type" in {"stim", "FR", "curr"}
             currents will plot stacked, resp will be line, stim will be inset top
-        unit (SensoryWCUnit): the unit being plotted
+        trying to get facetgrid to work https://stackoverflow.com/questions/29968097/seaborn-facetgrid-user-defined-plot-function
 
     Returns:
         matplotlib.figure.Figure: the figure
     """
+
+    data = kwargs.pop('data')
     # # TODO: iterate these. split resp from curr?
     df = data[['tax', 'FR', 'SFA']].melt(
         'tax', var_name='name', value_name='response'
@@ -37,12 +39,14 @@ def plot_generic_traces(data, unit,
 
     # df_r = data.query("type == 'FR'")
 
-    current_array = [x.values() for x in data.drop(columns=['tax', 'unit', 'stim']).to_dict().values()]
+    #current_array = [x.values() for x in data.drop(columns=['tax', 'unit', 'stim']).to_dict().values()]
 
     lines = []
     ax = sns.lineplot(x='tax', y='response',
-                      hue='name', data=df
+                      hue='name', data=df,
                       legend=False) #, **kwargs)
+
+
     #
     # F = ax.fill_between(x=data["tax"], y=data["u1_a"])
     # F.set_color(ax.lines[1].get_color())
@@ -70,7 +74,7 @@ def plot_generic_traces(data, unit,
     lines += ax2.lines[:1]
     labs = [l.get_label() for l in lines]
     ax.legend(lines, labs, loc='best', bbox_to_anchor=(.5, .5, .45, .45))
-    ax.figure.suptitle('BF={}'.format(unit.best_frequency))
+    # ax.figure.suptitle('BF={}'.format(unit.best_frequency))
 
 
 
