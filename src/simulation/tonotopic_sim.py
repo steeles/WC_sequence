@@ -84,6 +84,37 @@ class TonotopicTripletsSimulation(Simulation):
             self.update_all_traces()
             self.t_i += 1
 
+    def traces_to_df(self, type_map = {
+        "stim": "stim",
+        "u_r": "FR",
+        "u_a": "curr",
+    }):
+        """ unpack the traces and return a dataframe in form:
+            tax, unit, resp, name, type, type in 'FR', 'stim', 'curr'
+        """
+        units = {}
+        units.update(
+            [(k, {tk: tv.trace * tv.weight for tk, tv in v.items()}) for k, v in sim.traces.items()]
+        )
+        # take the first unit's whole dictionary of traces
+        df = pd.DataFrame(units.items()[0][1], index=sim.tax)
+        df["unit"] = units.items()[0][0]
+        df["tax"] = sim.tax
+        ulst = [df]
+        # df.head()
+        for k, v in units.items()[1:]:
+            ndf = pd.DataFrame(v)  # units.items()[0][1], index=sim.tax)
+            ndf.head()
+            ndf["unit"] = k  # units.items()[0][0]
+            ndf["tax"] = sim.tax
+            # ndf.head()
+            ulst.append(ndf)
+            print(ndf.shape)
+
+        df_out = pd.concat(ulst)
+        df_out['type'] = df_out['']
+        return df_out
+
 
 if __name__ == '__main__':
     tic = datetime.datetime.now()
@@ -107,20 +138,6 @@ if __name__ == '__main__':
     # g = sns.FacetGrid(df, col='trace', col_wrap=1)
     # g.map(plot_sensory_traces, 'tax', 'values')
     #
-    units = {}
-    units.update(
-        [(k, {tk: tv.trace for tk, tv in v.items()}) for k, v in sim.traces.items()]
-    )
-    df = pd.DataFrame(units.items()[0][1], index=sim.tax)
-    df["unit"] = units.items()[0][0]
-    df["tax"] = sim.tax
-    df.head()
-    for k, v in units.items()[1:]:
-        ndf = pd.DataFrame(units.items()[0][1], index=sim.tax)
-        ndf["unit"] = units.items()[0][0]
-        ndf["tax"] = sim.tax
-        # ndf.head()
-        df.add(ndf)
-        pass
-    df.head()
+
+    # df.head()
 

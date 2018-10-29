@@ -41,7 +41,7 @@ onset and a slow decay for the ITI gating long lasting inhibitory current I thin
 
 [us 4]
 and we can write arbitrary feature-selective networks sims and visualize
-
+- it looks like we need 2 different formats to make line plots and area plots.
 [us 22]
 seaborn figures- mermaid
 
