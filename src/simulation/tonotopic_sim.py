@@ -12,6 +12,7 @@ from src.a_wilson_cowan.sensory_network import Selectivity, TonotopicNetwork
 # from src.sim_plots.make_figures import generic_plot
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation, Trace
+
 from src.sim_plots.sns_plots import plot_sensory_traces
 
 
@@ -54,7 +55,7 @@ class TonotopicTripletsSimulation(Simulation):
 
         for name, unit in self.network.units.items():
             trace_sources = OrderedDict(
-                u_r=unit.r, stim=unit.stim, u_a=unit.a
+                FR=unit.r, stim=unit.stim, SFA=unit.a
             )
             self.traces[unit.name] = OrderedDict()
 
@@ -62,11 +63,10 @@ class TonotopicTripletsSimulation(Simulation):
                 self.add_new_trace(unit, source=v, trace_name=k)
 
     def add_new_trace(self, unit, source, trace_name=None):
+        # TODO: it would be simpler if trace read a current; would need analogy for FR
         if not trace_name:
             trace_name = source
-
         # Trace needs a target to update into
-        # self.sources[unit.name][trace_name] = source
         trc = Trace(sim=self, source=source, target=self.traces[unit.name], trace_name=trace_name)
 
     def update_all_traces(self):
@@ -84,35 +84,52 @@ class TonotopicTripletsSimulation(Simulation):
             self.update_all_traces()
             self.t_i += 1
 
+    def extract_traces(self, b_weight=True):
+        """
+        extract traces for each unit into a dictionary; option to scale the variables by the effective weights of the
+            currents
+        Args:
+            b_weight: default True; whether to apply the weights for currents
+        Returns:
+            dict of dicts: unit:traces
+            Note: I had to have names of currents match traces to pull this off
+
+        """
+        units = {}
+        for k, v in self.traces.iteritems():
+            traces = {}
+            for tk, tv in v.iteritems():
+                trace = tv.trace
+                if b_weight:
+                    wgt = sim.network.units[k].currents.get(tk)
+                    if wgt:
+                        trace = wgt.weight * trace
+                traces.update({tk: trace})
+            units.update({k: traces})
+        return units
+
     def traces_to_df(self, type_map = {
         "stim": "stim",
-        "u_r": "FR",
-        "u_a": "curr",
-    }):
+        "FR": "FR",
+        "SFA": "curr",
+    }, b_weight = True
+                     ):
         """ unpack the traces and return a dataframe in form:
             tax, unit, resp, name, type, type in 'FR', 'stim', 'curr'
         """
-        units = {}
-        units.update(
-            [(k, {tk: tv.trace * tv.weight for tk, tv in v.items()}) for k, v in sim.traces.items()]
-        )
+        units = self.extract_traces()
         # take the first unit's whole dictionary of traces
         df = pd.DataFrame(units.items()[0][1], index=sim.tax)
         df["unit"] = units.items()[0][0]
         df["tax"] = sim.tax
         ulst = [df]
-        # df.head()
         for k, v in units.items()[1:]:
             ndf = pd.DataFrame(v)  # units.items()[0][1], index=sim.tax)
-            ndf.head()
             ndf["unit"] = k  # units.items()[0][0]
             ndf["tax"] = sim.tax
-            # ndf.head()
             ulst.append(ndf)
-            print(ndf.shape)
 
         df_out = pd.concat(ulst)
-        df_out['type'] = df_out['']
         return df_out
 
 
@@ -127,7 +144,7 @@ if __name__ == '__main__':
         Selectivity(music.key_to_frequency(49), 1, 0.8),
         Selectivity(music.key_to_frequency(52), 1, 0.8)
     ]
-    stim = ABAStimulus(a_semitone=44, df=9)
+    stim = ABAStimulus(a_semitone=49, df=3)
     network = TonotopicNetwork(s_units, stim)
     sim = TonotopicTripletsSimulation(network=network)
     sim.run()

@@ -11,10 +11,11 @@ import seaborn as sns; sns.set()
 colors = sns.color_palette(n_colors=7)
 
 cmap_dict = {
-    'u_r': colors[0],
-    'u_a': colors[3],
+    'FR': colors[0],
+    'SFA': colors[3],
     'stim': colors[-2]
 }
+
 
 def plot_generic_traces(data, unit,
                         cmap_dict = sns.color_palette(n_colors = 7), **kwargs):
@@ -30,17 +31,17 @@ def plot_generic_traces(data, unit,
         matplotlib.figure.Figure: the figure
     """
     # # TODO: iterate these. split resp from curr?
-    df = data[['tax', 'u1_r', 'u1_a']].melt(
+    df = data[['tax', 'FR', 'SFA']].melt(
         'tax', var_name='name', value_name='response'
     )
 
-    df_r = data.query("type = 'FR'")
+    # df_r = data.query("type == 'FR'")
 
     current_array = [x.values() for x in data.drop(columns=['tax', 'unit', 'stim']).to_dict().values()]
 
     lines = []
     ax = sns.lineplot(x='tax', y='response',
-                      hue='name', data=df,
+                      hue='name', data=df
                       legend=False) #, **kwargs)
     #
     # F = ax.fill_between(x=data["tax"], y=data["u1_a"])
