@@ -47,14 +47,15 @@ def plot_generic_traces(*args, **kwargs):
                       legend=False) #, **kwargs)
 
 
-    #
-    # F = ax.fill_between(x=data["tax"], y=data["u1_a"])
-    # F.set_color(ax.lines[1].get_color())
-    # F.set_alpha(0.3)
+
+    F = ax.fill_between(x=data["tax"], y1=np.zeros(len(data['tax'])),
+                        y2=data["SFA"])
+    F.set_color(ax.lines[1].get_color())
+    F.set_alpha(0.3)
 
     ylim = list(ax.get_ylim())
     ylim[1] *= 1.25
-    ylim[0] -= .5
+    ylim[0] -= .1
     ax.set_ylim(ylim)
     ax.lines[0].set_label('response')
     ax.lines[1].set_label('adaptation')
@@ -83,14 +84,14 @@ def plot_sensory_traces(data, unit, **kwargs):
     hard seaborn code for plotting a single wc unit on one trace
     Args:
         data (pandas.DataFrame): should have a 'tax' column and currents and stim and responses for a unit
-            hard coded: 'u1_r', 'u1_a', 'stim"
+            hard coded: 'FR', 'SFA', 'stim"
         unit (SensoryWCUnit): the unit being plotted
 
     Returns:
         matplotlib.figure.Figure: the figure
     """
     #TODO: iterate these. split resp from curr?
-    df = data[['tax', 'u1_r', 'u1_a']].melt(
+    df = data[['tax', 'FR', 'SFA']].melt(
         'tax', var_name='trace', value_name='values'
     )
 
@@ -99,7 +100,7 @@ def plot_sensory_traces(data, unit, **kwargs):
                       hue='trace', data=df,
                       legend=False, **kwargs)
 
-    F = ax.fill_between(x=data["tax"], y1=np.zeros(len(data['tax'])), y2=data["u1_a"])
+    F = ax.fill_between(x=data["tax"], y1=np.zeros(len(data['tax'])), y2=data["SFA"])
     F.set_color(ax.lines[1].get_color())
     F.set_alpha(0.3)
 

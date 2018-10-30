@@ -23,6 +23,9 @@ Open a terminal and make it executable on your system:
 
 my new FR (firing rate?) sequence detector
 
+SFA_WC_pop_func.py seems to work from the old days.
+
+something more closely resembling a software package is being written in the src/ folder
 __________________________
 ### Development notes: 
 New branch: a_units_same_stim
@@ -39,13 +42,12 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
-[us 4]
-and we can write arbitrary feature-selective networks sims and visualize
-- it looks like we need 2 different formats to make line plots and area plots.
-[us 22]
-seaborn figures- mermaid
+[us 19]
+micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
+integrator layer
 
-would it help to give Traces a Type, so we know how to plot them? This can also be done in the data frame function... easier there, closer to the product
+[us 20]
+interval detector- integration layer 1
 
 [us 5]
 with feature based synaptic footprints
@@ -66,12 +68,6 @@ r = Response(0)
 [tests]
 
 
-[us 19]
-micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
-integrator layer
-
-[us 20]
-interval detector- integration layer 1
 
 [us 21]
 2 interval detectors - aba vs bab
@@ -115,6 +111,15 @@ add noise... ornstein uhlenbeck, i should have eq/ code in my other pub (ARP). T
 the variance with dt; i think it may be sqrt dt or something? dt <<< 1
 ____
 #### Completed
+
+[us 4]
+and we can write arbitrary feature-selective networks sims and visualize
+- it looks like we need 2 different formats to make line plots and area plots.
+[us 22]
+seaborn figures- mermaid
+
+would it help to give Traces a Type, so we know how to plot them? This can also be done in the data frame function... easier there, closer to the product
+
 
 [ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.

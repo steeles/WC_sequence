@@ -13,7 +13,7 @@ from src.a_wilson_cowan.sensory_network import Selectivity, TonotopicNetwork
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation, Trace
 
-from src.sim_plots.sns_plots import plot_sensory_traces
+from src.sim_plots.sns_plots import plot_generic_traces
 
 
 class LeanSim(Simulation):
@@ -142,18 +142,21 @@ if __name__ == '__main__':
 
     # center, spread for each unit, starting at 440 Hz A and 3 semitones up from there
     s_units = [
-        Selectivity(music.key_to_frequency(49), 1, 0.8),
-        Selectivity(music.key_to_frequency(52), 1, 0.8)
+        Selectivity(music.key_to_frequency(49), 1, 0.6),
+        Selectivity(music.key_to_frequency(52), 1, 0.6)
     ]
+
     stim = ABAStimulus(a_semitone=49, df=3)
     network = TonotopicNetwork(s_units, stim)
     sim = TonotopicTripletsSimulation(network=network)
     sim.run()
     data = sim.traces_to_df()
-
+    g = sns.FacetGrid(data, col='unit', col_wrap=1)
+    g.map_dataframe(plot_generic_traces)
     # f1 = generic_plot(sim.tax, np.array(sim.traces.values()))
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6
+
     # #plt.show()
     # g = sns.FacetGrid(df, col='trace', col_wrap=1)
     # g.map(plot_sensory_traces, 'tax', 'values')

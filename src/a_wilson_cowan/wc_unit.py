@@ -68,6 +68,8 @@ class WCUnit(KWPars):
         # add intrinsic currents
         if self.tauA and self.gSFA:
             self.add_SFA_current(weight=self.gSFA)
+        if self.gee:
+            self.add_SFA_current(weight=self.gSFA)
         self.f_r = f_activation_builder(self.ke, self.the)
 
     def add_stim_current(self, stimulus, weight, name="stim"):

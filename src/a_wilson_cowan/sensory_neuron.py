@@ -13,7 +13,7 @@ class SensoryWCUnit(WCUnit):
         r0=0., a0=0., S0=0., stim0=0.,  # time varying values
         gee=.57,
         gStim=1.,
-        gSFA=0.4,
+        gSFA=0.7,
         tau=10., tauNMDA=100., tauA=2000., G=.64)
 
     def __init__(self, name=None, best_frequency=440., spread=4., **kwargs):

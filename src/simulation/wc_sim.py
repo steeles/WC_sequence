@@ -9,8 +9,6 @@ from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
 
 
-
-
 class WCTripletsSimulation(Simulation):
     """ basic wc unit simulation """
 
@@ -32,9 +30,9 @@ class WCTripletsSimulation(Simulation):
         self.unit = wc_unit
 
         trace_sources = {
-            "u1_r": wc_unit.r,
+            "FR": wc_unit.r,
             "stim": wc_unit.stim,
-            "u1_a": wc_unit.a,
+            "SFA": wc_unit.a,
             # "u1_S": wc_unit.S
         }
         for k, v in trace_sources.items():

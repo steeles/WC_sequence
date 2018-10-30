@@ -45,9 +45,9 @@ class SensoryTripletsSimulation(Simulation):
         self.unit = sensory_unit
 
         trace_sources = {
-            "u1_r": sensory_unit.r,
+            "FR": sensory_unit.r,
             "stim": sensory_unit.stim,
-            "u1_a": sensory_unit.a,
+            "SFA": sensory_unit.a,
             # "u1_S": wc_unit.S
         }
         for k, v in trace_sources.items():
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     trace_dict.update((k, v.trace) for k, v in sim.traces.items())
     trace_dict['tax'] = sim.tax
     data = pd.DataFrame(trace_dict, index=sim.tax) \
-        [['tax', 'u1_r', 'u1_a', 'stim']]
+        [['tax', 'FR', 'SFA', 'stim']]
 
     plot_sensory_traces(data=data, unit=u1)
 
