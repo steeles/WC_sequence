@@ -88,7 +88,7 @@ if bPlot & bNull:
 	plot(xax,zline,'k')
 	show()
 
-if 0:
+if 1:
 	xax=arange(0,1,.01)
 	zline = zeros(len(xax))
 	dSdown = -xax/tau_NMDA

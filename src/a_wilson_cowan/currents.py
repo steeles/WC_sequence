@@ -59,7 +59,7 @@ class StimCurrent(Current):
     def update(self):
         """ stimulus is the only one that updates a variable directly """
         stim = self.stimulus[self.t]
-        self.value = stim #  * self.weight
+        self.value = stim  #  * self.weight
         self.target.stim[0] = self.value  # WE CAN PROBABLY GET RID OF THIS
 
 
@@ -83,4 +83,4 @@ class SFACurrent(Current):
     def update(self):
         da = 1. / self.tau_A * (-self.target.a[0] + self.source[0])
         self.target.a[0] += da
-        self.value = self.target.a[0] # self.weight *
+        self.value = self.target.a[0]  # self.weight *

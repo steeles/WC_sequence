@@ -67,7 +67,8 @@ r = Response(0)
 
 [tests]
 
-
+[us 23]
+return dx for each current
 
 [us 21]
 2 interval detectors - aba vs bab
@@ -109,7 +110,13 @@ but _periodic_ perterbuations might be a swell deal, ie, if we could do 3/2 peri
 [us 15]
 add noise... ornstein uhlenbeck, i should have eq/ code in my other pub (ARP). There's something about how you normalize 
 the variance with dt; i think it may be sqrt dt or something? dt <<< 1
+
+[mysteries of the deep]
+- run build_and_then and and_then - there's some weird sh*t!
+
 ____
+
+
 #### Completed
 
 [us 4]
@@ -121,7 +128,6 @@ seaborn figures- mermaid
 would it help to give Traces a Type, so we know how to plot them? This can also be done in the data frame function... easier there, closer to the product
 
 
-[ us 2]
 For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
 [us 13]
@@ -134,6 +140,8 @@ stimuli superclass
 
 [us 12] 
 rpt stim maker
+
+[us ]
 
 [us 1]
 I could make an input A guy take all the inputs and NMDA-inhibit _itself_

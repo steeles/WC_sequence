@@ -122,7 +122,7 @@ pars = pars()
 
 # Set plotting properties
 params = {'axes.labelsize': 16,
-          'text.fontsize': 16,
+          'font.size': 16,
           'legend.fontsize': 12,
           'xtick.labelsize': 10,
           'ytick.labelsize': 10}
@@ -140,16 +140,14 @@ ax.set_xlabel('Time')
 ax.set_ylabel('Synaptic Paramter')
 
 axcolor = 'lightgoldenrodyellow'
-axsInject = plt.axes([0.6, 0.7, 0.35, 0.04], axisbg=axcolor)
-axsg_AM_E  = plt.axes([0.6, 0.65, 0.35, 0.04], axisbg=axcolor)
-axsg_AM_I  = plt.axes([0.6, 0.6, 0.35, 0.04], axisbg=axcolor)
-axsg_GABA_E  = plt.axes([0.6, 0.55, 0.35, 0.04], axisbg=axcolor)
-axsg_GABA_I  = plt.axes([0.6, 0.50, 0.35, 0.04], axisbg=axcolor)
-axstau_G  = plt.axes([0.6, 0.45, 0.35, 0.04], axisbg=axcolor)
-axstau_A  = plt.axes([0.6, 0.40, 0.35, 0.04], axisbg=axcolor)
+axsInject = plt.axes([0.6, 0.7, 0.35, 0.04], facecolor=axcolor)
+axsg_AM_E  = plt.axes([0.6, 0.65, 0.35, 0.04], facecolor=axcolor)
+axsg_AM_I  = plt.axes([0.6, 0.6, 0.35, 0.04], facecolor=axcolor)
+axsg_GABA_E  = plt.axes([0.6, 0.55, 0.35, 0.04], facecolor=axcolor)
+axsg_GABA_I  = plt.axes([0.6, 0.50, 0.35, 0.04], facecolor=axcolor)
+axstau_G  = plt.axes([0.6, 0.45, 0.35, 0.04], facecolor=axcolor)
+axstau_A  = plt.axes([0.6, 0.40, 0.35, 0.04], facecolor=axcolor)
 axh = plt.axes([-1,-1,1,1])
-
-
 
 
 # Make sliders that control parameters
