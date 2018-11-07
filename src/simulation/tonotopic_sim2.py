@@ -45,16 +45,19 @@ class TonotopicTripletsSimulation(Simulation):
 
         # just slap a trace on there?
         for name, unit in self.network.units.items():
-            trace_sources = OrderedDict(
-                FR=unit.r)  # , stim=unit.stim, SFA=unit.a
-            # )
-            current_trace_sources = unit.currents()
-            # self.traces[unit.name] = OrderedDict()
             # we'll just staple the traces to the unit, maybe this is wrong but it should make things easier
             unit.trace_dict = OrderedDict()
 
+            trace_sources = OrderedDict(
+                FR=unit.r)  # , stim=unit.stim, SFA=unit.a
+            # )
             for k, v in trace_sources.items():
                 self.add_new_trace(unit, source=v, trace_name=k)
+
+            current_trace_sources = unit.currents
+            for k, v in current_trace_sources.items():
+                self.add_new_current_trace(unit, source=v, trace_name=k)
+            # self.traces[unit.name] = OrderedDict()
 
     def add_new_trace(self, unit, source, trace_name=None):
         # TODO: it would be simpler if trace read a current; would need analogy for FR
@@ -64,13 +67,21 @@ class TonotopicTripletsSimulation(Simulation):
         trc = Trace(sim=self, source=source, target=unit.trace_dict, trace_name=trace_name)
 
     def add_new_current_trace(self, unit, source, trace_name):
+        """
+        record a current in a simulation
+        Args:
+            unit (WCUnit:
+            source (Current):
+            trace_name (str):
+        """
         if not trace_name:
             trace_name = unit.name + source.name
+        trc = CurrentTrace(sim=self, source=source, target=unit.trace_dict, trace_name=trace_name)
 
     def update_all_traces(self):
-        for u in self.network.units:
-            for t in u.traces_dict.values():
-                t.update_traces()
+        for u in self.network.units.values():
+            for t in u.trace_dict.values():
+                t.update_trace()
 
         # print(self.traces) TODO: NOOOOOO
         # for u in self.traces.values():
@@ -87,57 +98,25 @@ class TonotopicTripletsSimulation(Simulation):
             self.update_all_traces()
             self.t_i += 1
 
+    def unit_traces_to_dict_arrays(self, unit_name):
+        """ THIS IS SO MUCH CLEANER """
+        unit = self.network.units[unit_name]
+        traces = [(k, v.trace) for k, v in unit.trace_dict.items()]
+        return dict(traces)
 
-#### TODO: NO!!!
-    # def extract_traces(self, b_weight=True):
-    #     """
-    #     extract traces for each unit into a dictionary; option to scale the variables by the effective weights of the
-    #         currents
-    #     Args:
-    #         b_weight: default True; whether to apply the weights for currents
-    #     Returns:
-    #         dict of dicts: unit:traces
-    #         Note: I had to have names of currents match traces to pull this off
-    #
-    #     """
-    #     units = {}
-    #     for k, v in self.traces.iteritems():
-    #         traces = {}
-    #         for tk, tv in v.iteritems():
-    #             trace = tv.trace
-    #             if b_weight:
-    #                 wgt = self.network.units[k].currents.get(tk)
-    #                 if wgt:
-    #                     trace = wgt.weight * trace
-    #             traces.update({tk: trace})
-    #         units.update({k: traces})
-    #     return units
-    #
-    # # TODO: MAKE THIS NOT HELL
-    # # it should just go unit.get_df
-    # def traces_to_df(self, type_map = {
-    #     "stim": "stim",
-    #     "FR": "FR",
-    #     "SFA": "curr",
-    # }, b_weight = True
-    #                  ):
-    #     """ unpack the traces and return a dataframe in form:
-    #         tax, unit, resp, name, type, type in 'FR', 'stim', 'curr'
-    #     """
-    #     units = self.extract_traces()
-    #     # take the first unit's whole dictionary of traces
-    #     df = pd.DataFrame(units.items()[0][1], index=sim.tax)
-    #     df["unit"] = units.items()[0][0]
-    #     df["tax"] = sim.tax
-    #     ulst = [df]
-    #     for k, v in units.items()[1:]:
-    #         ndf = pd.DataFrame(v)  # units.items()[0][1], index=sim.tax)
-    #         ndf["unit"] = k  # units.items()[0][0]
-    #         ndf["tax"] = sim.tax
-    #         ulst.append(ndf)
-    #
-    #     df_out = pd.concat(ulst)
-    #     return df_out
+    def unit_df(self, unit_name):
+        return pd.DataFrame(self.unit_traces_to_dict_arrays(unit_name), index=sim.tax)
+
+    def traces_to_df(self):
+        ulst = []
+        for k in self.network.units:
+            ndf = self.unit_df(k)  # units.items()[0][1], index=sim.tax)
+            ndf["unit"] = k  # units.items()[0][0]
+            ndf["tax"] = sim.tax
+            ulst.append(ndf)
+
+        df_out = pd.concat(ulst)
+        return df_out
 
 
 if __name__ == '__main__':
