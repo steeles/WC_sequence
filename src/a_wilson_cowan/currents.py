@@ -11,7 +11,7 @@ class Current(object):
         create a new current, it will go into target's connections
         and take from's variable value[0]
         Args:
-            source (list): variable from which current comes; will be either length 0 as from
+            source (list len 1): variable from which current comes; will be either length 0 as from
                 a mutable attribute, or an nd.array from a stimulus.
             weight (float): strength of current on target
             target (WCUnit): unit the current is added to; that unit will update its connections
@@ -80,7 +80,11 @@ class SFACurrent(Current):
         Current.__init__(self, source, weight, target, name)
         self.tau_A = tau_A
 
-    def update(self):
+    def find_delta(self):
         da = 1. / self.tau_A * (-self.target.a[0] + self.source[0])
+        return da
+
+    def update(self):
+        da = self.find_delta()
         self.target.a[0] += da
         self.value = self.target.a[0]  # self.weight *

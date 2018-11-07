@@ -52,6 +52,10 @@ interval detector- integration layer 1
 [us 5]
 with feature based synaptic footprints
 
+[us 24]
+14 is probably too much to rework right now but since i just started networks, 
+maybe i can get traces to live with units in the net simulation? that should make for an easier data structure to deal
+OR-- a "current-trace" in the sensory sim, makes the most sense.
 
 [us 14]
 I can probably make it faster if I get rid of the mutables and map them to object attributes;
@@ -93,6 +97,10 @@ waiting to be a source for someone else's current... but I don't know what NMDA 
 probably in xj wang somewhere NOPE he's all spiking
 https://books.google.com/books?id=YkV5AgAAQBAJ&pg=PA458&lpg=PA458&dq=wilson+cowan+nmda+synaptic+dynamics&source=bl&ots=fiY4P7w4h3&sig=neYbFFeHFuz8mdvqZoaMkaeLgDo&hl=en&sa=X&sqi=2&ved=2ahUKEwiuicKC1oLeAhVQPK0KHfvRCcoQ6AEwBHoECAQQAQ#v=onepage&q=wilson%20cowan%20nmda%20synaptic%20dynamics&f=false
 it's a current! eq. 15.90
+FOUND IT (sequence detector notes on gdocs)
+Wong and wang 2006 recurrent network mechanism of time integration in perceptual decisions
+Ref wang 2002 mean field
+
 
 [us 9]
 can i describe "attractors" in this system...

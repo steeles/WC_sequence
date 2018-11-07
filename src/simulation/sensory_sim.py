@@ -11,18 +11,6 @@ from src.sim_plots.sns_plots import plot_sensory_traces
 from src.stim.stimulus import ABAStimulus
 from src.simulation.simulation import Simulation
 
-class LeanSim(Simulation):
-    """ don't copy current values to mutables... just access them directly to update trace """
-    def update_trace(self, trace_name):
-        """
-                recorder- takes data coming in and marks it on the trace at time self.t_i
-                Args:
-                    trace_name (str): the name of the trace
-                    value (float): the value to set at time self.t_i on the trace
-                """
-        value = self.sources[trace_name].value
-        self.traces[trace_name][self.t_i] = value
-
 
 class SensoryTripletsSimulation(Simulation):
     """ basic wc unit simulation """

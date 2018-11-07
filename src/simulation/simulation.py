@@ -1,5 +1,7 @@
 import numpy as np
 
+from src.simulation.traces import Trace
+
 
 class TimeAxis(object):
     def __init__(self, T=5, dt=.001, **kwargs):
@@ -19,34 +21,6 @@ class TimeAxis(object):
         self.tax = np.arange(dt, T + dt, dt)
         self.ttot = len(self.tax)
         self.t_i = 0
-
-
-class Trace():
-    """ copy a variable into an array """
-    def __init__(self, sim, source, target=None, trace_name=None):
-        """
-        recording for a variable in a simulation
-        Args:
-            sim (Simulation): t_i and ttot
-            source (list len 0, soon: x.value):
-            target (OrderedDict): where the trace gets stored
-            trace_name (str): name to get stored
-        """
-        # TODO: add type?
-#        print(str(target) + " TARGET")
-
-        self.sim = sim
-        target.update([(trace_name, self)])
-
-        if not target:
-            target = self.sim.traces
-        self.source = source
-        self.trace = np.zeros(self.sim.ttot)
-#        print(str(target))
-        self.target = target
-
-    def update_trace(self):
-        self.trace[self.sim.t_i] = self.source[0]
 
     # def __repr__(self):
     #     return 'Trace'

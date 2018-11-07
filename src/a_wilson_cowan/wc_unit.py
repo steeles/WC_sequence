@@ -2,7 +2,6 @@
 import numpy as np
 
 from src.a_wilson_cowan.currents import Current, StimCurrent, SFACurrent
-from src.simulation.simulation import Simulation
 
 # does creation of sensory unit update registry for WC overall?
 
@@ -15,7 +14,7 @@ def f_activation_builder(k, theta):
         theta: threshold
     Returns:
         function
-    """
+    """                                                 # uncomment for stable point at 0,0 guaranteed
     func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) #- 1 / (1 + np.exp(theta / k))
     return func
 
@@ -95,6 +94,10 @@ class WCUnit(KWPars):
         if weight > 0: weight = -weight
         sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=self.tauA, target=self, name=name)
         self.currents[name] = sfa_current
+
+    def find_delta(self, i_app):
+        """ compute delta firing rate from self and applied current """
+        return (-self.r[0] + self.f_r(i_app))
 
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
