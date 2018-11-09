@@ -20,8 +20,10 @@ class SynapticNetwork(TonotopicNetwork):
     """ i want to vectorize some of the calculations so we'll be taking away some of the mechanics from
     WCUnit... which is buried in there somewhere.
     We'll create arrays for all the vars in the unit, compute all the
-    currents at once... """
-
+    currents at once...
+    all the vars will get recorded together, but at the end of the sim we'll unzip them row by row and stitch them
+    together by unit =^.^=
+    """
     def __init__(self, syn_weights=weights, selectivities=s_units, stimulus=stim, **kwargs):
         TonotopicNetwork.__init__(self,  selectivities, stimulus, **kwargs)
         """ this guy would take a bunch of selectivities and make some units """
@@ -75,10 +77,6 @@ class SynapticNetwork(TonotopicNetwork):
 
     def Isyn(self):
         return self.syn_weights * self.r_array
-
-
-
-
 
     def build_stimulus_currents(self):
         """
