@@ -42,6 +42,12 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
+[us 5]
+with feature based synaptic footprints
+- Synapses:
+
+
+
 [us 19]
 micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
 integrator layer
@@ -49,30 +55,10 @@ integrator layer
 [us 20]
 interval detector- integration layer 1
 
-[us 5]
-with feature based synaptic footprints
 
-[us 24]
-14 is probably too much to rework right now but since i just started networks, 
-maybe i can get traces to live with units in the net simulation? that should make for an easier data structure to deal
-OR-- a "current-trace" in the sensory sim, makes the most sense.
-
-[us 14]
-I can probably make it faster if I get rid of the mutables and map them to object attributes;
-as long as the methods know which attribute to pull from, ie sfa current has a source of u1, attribute r
-and a target of u1, attribute a (or rather the sfa current update method knows to read source.r and update target.a) 
-and source and target are the same; traces updates to read from...
-i guess each current needs a "read_source" method so trace can call the same thing and pull from different attributes.
-original speed copying values to list:
-it says it's only .01 to .08 sec, but it seems to be > 2. weird.
-will have to see how it scales.
-Response = namedtuple('Response', ['value'])
-r = Response(0)
 
 [tests]
 
-[us 23]
-return dx for each current
 
 [us 21]
 2 interval detectors - aba vs bab
@@ -100,7 +86,8 @@ it's a current! eq. 15.90
 FOUND IT (sequence detector notes on gdocs)
 Wong and wang 2006 recurrent network mechanism of time integration in perceptual decisions
 Ref wang 2002 mean field
-
+- note: i don't have to go straight to realistic nmda; i should start with simple ee, no?
+and read the papers...
 
 [us 9]
 can i describe "attractors" in this system...
@@ -118,14 +105,38 @@ but _periodic_ perterbuations might be a swell deal, ie, if we could do 3/2 peri
 [us 15]
 add noise... ornstein uhlenbeck, i should have eq/ code in my other pub (ARP). There's something about how you normalize 
 the variance with dt; i think it may be sqrt dt or something? dt <<< 1
+< fokker plank eq...? describes... how distr of locations of a random walk vary over time... or something like that >
 
 [mysteries of the deep]
 - run build_and_then and and_then - there's some weird sh*t!
 
+
+
+[us 14]
+I can probably make it faster if I get rid of the mutables and map them to object attributes;
+as long as the methods know which attribute to pull from, ie sfa current has a source of u1, attribute r
+and a target of u1, attribute a (or rather the sfa current update method knows to read source.r and update target.a) 
+and source and target are the same; traces updates to read from...
+i guess each current needs a "read_source" method so trace can call the same thing and pull from different attributes.
+original speed copying values to list:
+it says it's only .01 to .08 sec, but it seems to be > 2. weird.
+will have to see how it scales.
+Response = namedtuple('Response', ['value'])
+r = Response(0)
 ____
 
 
 #### Completed
+
+
+[us 24]
+14 is probably too much to rework right now but since i just started networks, 
+maybe i can get traces to live with units in the net simulation? that should make for an easier data structure to deal
+OR-- a "current-trace" in the sensory sim, makes the most sense.
+
+[us 23]
+return dx for each current
+
 
 [us 4]
 and we can write arbitrary feature-selective networks sims and visualize

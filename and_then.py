@@ -65,15 +65,16 @@ for i in xrange(1):
 
 	if bPlot:
 
-		figure()
+		# figure()
+		fig, ax = subplots()
 		title(str(gNMDA) + '; max(Isyn)=' + str(Isyn.max()))
-		plot(tax,Isyn,'c')
-		plot(tax,E2,'b')
-		plot(tax,Iext,'g')
-		plot(tax,gInp1*Inp1,'y')
-		plot(tax,E1,'m')
-
-		plot(tax,S_NMDA_1,'k')
+		ax.plot(tax,Isyn,'c', )
+		# ax.plot(tax,E2,'b')
+		# ax.plot(tax,Iext,'g')
+		# ax.plot(tax,gInp1*Inp1,'y')
+		# ax.plot(tax,E1,'m')
+		# ax.plot(tax,S_NMDA_1,'k')
+		ax.legend()
 		show(block=False)
 bNull = 1 # carry out an analysis of the nullclines?
 if bPlot & bNull:
@@ -86,6 +87,8 @@ if bPlot & bNull:
 	plot(xax,dE(xax,maxInp),'r')
 	plot(xax,dE(xax,minInp),'b')
 	plot(xax,zline,'k')
+	title("dE")
+	legend()
 	show()
 
 if 1:

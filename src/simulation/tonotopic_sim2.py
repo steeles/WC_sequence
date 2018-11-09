@@ -18,6 +18,9 @@ from src.simulation.traces import Trace, CurrentTrace
 from src.sim_plots.sns_plots import plot_generic_traces
 
 
+pd.options.mode.chained_assignment = None
+
+
 class TonotopicTripletsSimulation(Simulation):
     """
     THIS TIME WE PACK IT IN WITH THE UNITS
@@ -142,7 +145,9 @@ if __name__ == '__main__':
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6
 
-    # #plt.show()
+    plt.show()
+
+
     # g = sns.FacetGrid(df, col='trace', col_wrap=1)
     # g.map(plot_sensory_traces, 'tax', 'values')
     #

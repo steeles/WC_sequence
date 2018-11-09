@@ -6,7 +6,7 @@
 from pylab import *
 from numpy import *
 from matplotlib.mlab import *
-
+from repeating_stim_maker import rpt_stim_maker
 execfile('repeating_stim_maker.py')
 def SFA_pop(df = 3,ITI = .05,bPlot = False):
 
@@ -70,3 +70,5 @@ def SFA_pop(df = 3,ITI = .05,bPlot = False):
 		show(block=False)
 
 	return tax,E,a,Isyn,stim
+
+SFA_pop()
