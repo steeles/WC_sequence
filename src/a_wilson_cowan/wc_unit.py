@@ -70,6 +70,7 @@ class WCUnit(KWPars):
         # if self.gee:
         #     self.add_SFA_current(weight=self.gSFA)
         self.f_r = f_activation_builder(self.ke, self.the)
+        self.f_activation_builder = f_activation_builder
 
     def add_stim_current(self, stimulus, weight, name="stim"):
         """

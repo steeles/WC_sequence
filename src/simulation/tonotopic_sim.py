@@ -1,4 +1,6 @@
 " Feed stim to a WC Unit "
+
+
 import datetime
 from collections import OrderedDict, namedtuple
 import matplotlib.pyplot as plt
@@ -16,8 +18,12 @@ from src.simulation.traces import Trace, CurrentTrace
 from src.sim_plots.sns_plots import plot_generic_traces
 
 
+pd.options.mode.chained_assignment = None
+
+
 class TonotopicTripletsSimulation(Simulation):
     """
+    THIS TIME WE PACK IT IN WITH THE UNITS
     first network with fq selectivity;
     desired characteristics of sensory units given,
     """
@@ -40,28 +46,51 @@ class TonotopicTripletsSimulation(Simulation):
         self.network = network
         self.traces = OrderedDict()
 
+        # just slap a trace on there?
         for name, unit in self.network.units.items():
-            trace_sources = OrderedDict(
-                FR=unit.r, stim=unit.stim, SFA=unit.a
-            )
-            self.traces[unit.name] = OrderedDict()
+            # we'll just staple the traces to the unit, maybe this is wrong but it should make things easier
+            unit.trace_dict = OrderedDict()
 
+            trace_sources = OrderedDict(
+                FR=unit.r)  # , stim=unit.stim, SFA=unit.a
+            # )
             for k, v in trace_sources.items():
                 self.add_new_trace(unit, source=v, trace_name=k)
+
+            current_trace_sources = unit.currents
+            for k, v in current_trace_sources.items():
+                self.add_new_current_trace(unit, source=v, trace_name=k)
+            # self.traces[unit.name] = OrderedDict()
 
     def add_new_trace(self, unit, source, trace_name=None):
         # TODO: it would be simpler if trace read a current; would need analogy for FR
         if not trace_name:
             trace_name = source
         # Trace needs a target to update into
-        trc = Trace(sim=self, source=source, target=self.traces[unit.name], trace_name=trace_name)
+        trc = Trace(sim=self, source=source, target=unit.trace_dict, trace_name=trace_name)
+
+    def add_new_current_trace(self, unit, source, trace_name):
+        """
+        record a current in a simulation
+        Args:
+            unit (WCUnit:
+            source (Current):
+            trace_name (str):
+        """
+        if not trace_name:
+            trace_name = unit.name + source.name
+        trc = CurrentTrace(sim=self, source=source, target=unit.trace_dict, trace_name=trace_name)
 
     def update_all_traces(self):
-        #print(self.traces)
-        for u in self.traces.values():
-            #print u
-            for t in u.values():
+        for u in self.network.units.values():
+            for t in u.trace_dict.values():
                 t.update_trace()
+
+        # print(self.traces) TODO: NOOOOOO
+        # for u in self.traces.values():
+        #     #print u
+        #     for t in u.values():
+        #         t.update_trace()
 
     def run(self):
         while self.t_i < self.ttot:
@@ -72,47 +101,19 @@ class TonotopicTripletsSimulation(Simulation):
             self.update_all_traces()
             self.t_i += 1
 
-    def extract_traces(self, b_weight=True):
-        """
-        extract traces for each unit into a dictionary; option to scale the variables by the effective weights of the
-            currents
-        Args:
-            b_weight: default True; whether to apply the weights for currents
-        Returns:
-            dict of dicts: unit:traces
-            Note: I had to have names of currents match traces to pull this off
+    def unit_traces_to_dict_arrays(self, unit_name):
+        """ THIS IS SO MUCH CLEANER """
+        unit = self.network.units[unit_name]
+        traces = [(k, v.trace) for k, v in unit.trace_dict.items()]
+        return dict(traces)
 
-        """
-        units = {}
-        for k, v in self.traces.iteritems():
-            traces = {}
-            for tk, tv in v.iteritems():
-                trace = tv.trace
-                if b_weight:
-                    wgt = self.network.units[k].currents.get(tk)
-                    if wgt:
-                        trace = wgt.weight * trace
-                traces.update({tk: trace})
-            units.update({k: traces})
-        return units
+    def unit_df(self, unit_name):
+        return pd.DataFrame(self.unit_traces_to_dict_arrays(unit_name), index=sim.tax)
 
-    def traces_to_df(self, type_map = {
-        "stim": "stim",
-        "FR": "FR",
-        "SFA": "curr",
-    }, b_weight = True
-                     ):
-        """ unpack the traces and return a dataframe in form:
-            tax, unit, resp, name, type, type in 'FR', 'stim', 'curr'
-        """
-        units = self.extract_traces()
-        # take the first unit's whole dictionary of traces
-        df = pd.DataFrame(units.items()[0][1], index=sim.tax)
-        df["unit"] = units.items()[0][0]
-        df["tax"] = sim.tax
-        ulst = [df]
-        for k, v in units.items()[1:]:
-            ndf = pd.DataFrame(v)  # units.items()[0][1], index=sim.tax)
+    def traces_to_df(self):
+        ulst = []
+        for k in self.network.units:
+            ndf = self.unit_df(k)  # units.items()[0][1], index=sim.tax)
             ndf["unit"] = k  # units.items()[0][0]
             ndf["tax"] = sim.tax
             ulst.append(ndf)
@@ -144,7 +145,9 @@ if __name__ == '__main__':
     toc = datetime.datetime.now()
     print (toc - tic).microseconds / 10e6
 
-    # #plt.show()
+    plt.show()
+
+
     # g = sns.FacetGrid(df, col='trace', col_wrap=1)
     # g.map(plot_sensory_traces, 'tax', 'values')
     #

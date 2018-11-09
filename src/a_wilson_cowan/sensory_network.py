@@ -15,7 +15,7 @@ s_units = [
 ]
 
 
-class TonotopicNetwork():
+class TonotopicNetwork(SensoryWCUnit):
     """ basic tonotopic network; initializes a sensory layer and connects it to a stimulus """
     def __init__(self, selectivities, stimulus, **kwargs):
         """
@@ -24,6 +24,7 @@ class TonotopicNetwork():
             selectivities (list of tuples): each tuple contains (best frequency (Hz), spread (semitones))
             stimulus (src.stim.stimulus.ABAStimulus): ABAStimulus
         """
+        SensoryWCUnit.__init__(self, **kwargs)
         self.stimulus = stimulus
         # create the units, name them, hook up stim and pack them into a dict
         self.units = OrderedDict()

@@ -46,6 +46,8 @@ onset and a slow decay for the ITI gating long lasting inhibitory current I thin
 with feature based synaptic footprints
 - Synapses:
 
+[us 25]
+split neurons into kwargs arrays... neural jsons... wow
 
 
 [us 19]
@@ -55,7 +57,8 @@ integrator layer
 [us 20]
 interval detector- integration layer 1
 
-
+[us 25]
+for big networks i probably want to vectorize my code and all my vars for all my units.
 
 [tests]
 
