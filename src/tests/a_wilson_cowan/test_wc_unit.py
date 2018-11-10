@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from src.a_wilson_cowan.wc_unit \
     import WCUnit, StimCurrent
@@ -78,7 +80,6 @@ def test_update_all():
     assert u1.a[0] > 0
 
 
-
 def test_add_intrinsic_currents_SFA():
     """
     i could wind up changing the defaults; i should just check that
@@ -114,9 +115,21 @@ def test_add_intrinsic_currents_SFA():
 
 
 def test_no_negative_firing_rates_bugfix():
+    # TODO: if i get rid of my f0 offset so i can have f(0)=0 this breaks
     u1 = WCUnit(name="u1", tauA=300, gSFA=0.8)
     stim = np.ones(10) * -100
     u1.add_stim_current(stimulus=stim, weight=.9)
     for ind in xrange(10):
         u1.update_all()
     assert u1.r > 0
+
+def test_non_default_pars():
+    default_pars = copy.copy(WCUnit.pars)
+    pars = {"foos": "bars", "gee": 42}
+    u1 = WCUnit(**pars)
+    assert u1.__dict__["gee"] == 42
+    foo=None
+    u2 = WCUnit(**(foo or default_pars))
+    # this mutated the class!
+    # print u2.__dict__
+    assert u2.__dict__['gee'] == .57

@@ -48,7 +48,7 @@ class Simulation(TimeAxis):
 
     def step(self):
         """ increase time step self.t_i by one """
-        if self.t_i < self.T:
+        if self.t_i < self.ttot:
             self.t_i += 1
 
     def add_new_trace(self, source, trace_name=None):

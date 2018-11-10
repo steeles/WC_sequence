@@ -1,4 +1,5 @@
 from collections import namedtuple, OrderedDict
+import copy
 import numpy as np
 import time
 import melopy.utility as music
@@ -17,32 +18,40 @@ s_units = [
 
 class TonotopicNetwork(SensoryWCUnit):
     """ basic tonotopic network; initializes a sensory layer and connects it to a stimulus """
-    def __init__(self, selectivities, stimulus, **kwargs):
+    def __init__(self, selectivities, stimulus, pars_list=None, **kwargs):
         """
         initialize the network
         Args:
             selectivities (list of tuples): each tuple contains (best frequency (Hz), spread (semitones))
             stimulus (src.stim.stimulus.ABAStimulus): ABAStimulus
+            pars_list: optional list of pars to pass to unit in indexed form.
+                Must be same length as selectivities. Use None for default pars for unit
         """
         SensoryWCUnit.__init__(self, **kwargs)
         self.stimulus = stimulus
         # create the units, name them, hook up stim and pack them into a dict
-        self.units = OrderedDict()
-        if selectivities:
-            for s in selectivities:
-                best_frequency, spread, gain = s
-                name = 's({st},{sp},{g})'.format(
-                    st=int(music.frequency_to_key(best_frequency)),
-                    sp=spread, g=gain
-                )
-
-                unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread, name=name, **kwargs)
-                unit.add_stim_current(stimulus, weight=gain)
-                self.units.update([(name, unit)])
+        self.units = []
+        # if selectivities:
+        ind = 0
+        default_pars = copy.copy(SensoryWCUnit.pars)
+        for s in selectivities:
+            best_frequency, spread, gain = s
+            name = 's({st},{sp},{g})'.format(
+                st=int(music.frequency_to_key(best_frequency)),
+                sp=spread, g=gain
+            )
+            if pars_list:
+                pars = pars_list[ind]
+            else:
+                pars = None
+            unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread, name=name, **(pars or default_pars))
+            unit.add_stim_current(stimulus, weight=gain)
+            self.units.append(unit)
+            ind += 1
 
     def update_all(self, n=1):
         for ind in xrange(n):
-            for u in self.units.values():
+            for u in self.units:
                 u.update_all()
 
     def add_unit(self, selectivity, **kwargs):
@@ -62,7 +71,7 @@ class TonotopicNetwork(SensoryWCUnit):
         unit = SensoryWCUnit(
             best_frequency=best_frequency, spread=spread, name=name, **kwargs)
         unit.add_stim_current(self.stimulus, weight=gain)
-        self.units.update([(name, unit)])
+        self.units.append(unit)
 
 
 if __name__ == "__main__":
@@ -72,6 +81,6 @@ if __name__ == "__main__":
     network.update_all(10)
     toc = time.time()
     print(toc-tic)
-    print(network.units.values()[0].r, network.units.values()[1].r)
+    print(network.units[0].r, network.units[1].r)
     print(stim.value)
 

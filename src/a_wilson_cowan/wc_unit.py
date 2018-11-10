@@ -45,7 +45,7 @@ class WCUnit(KWPars):
         gee=.57,
         gStim=1.,
         gSFA=0,
-        tau=10., tauNMDA=100., tauA=200., G=.64)
+        tau=10., tauNMDA=100., tauA=200., G=.64, t_units="milliseconds")
 
     def __init__(self, name="u1", tau=10., **kwargs):
         """
@@ -62,11 +62,11 @@ class WCUnit(KWPars):
         self.S = [self.S0] # yeah set_trace needs a container.
         self.stim = [self.stim0]
         self.name = name
-        self.tau = tau
+        self.tau = float(tau)
         self.currents = dict()
         # add intrinsic currents
         if self.tauA and self.gSFA:
-            self.add_SFA_current(weight=self.gSFA)
+            self.add_SFA_current(weight=float(self.gSFA))
         # if self.gee:
         #     self.add_SFA_current(weight=self.gSFA)
         self.f_r = f_activation_builder(self.ke, self.the)

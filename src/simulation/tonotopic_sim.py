@@ -82,7 +82,7 @@ class TonotopicTripletsSimulation(Simulation):
         trc = CurrentTrace(sim=self, source=source, target=unit.trace_dict, trace_name=trace_name)
 
     def update_all_traces(self):
-        for u in self.network.units.values():
+        for u in self.network.units:
             for t in u.trace_dict.values():
                 t.update_trace()
 
