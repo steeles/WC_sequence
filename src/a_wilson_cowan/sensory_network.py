@@ -44,7 +44,9 @@ class TonotopicNetwork(SensoryWCUnit):
                 pars = pars_list[ind]
             else:
                 pars = None
-            unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread, name=name, **(pars or default_pars))
+            pname = pars.get("name") if pars else None
+            unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread,
+                                 name=(pname or name), **(pars or default_pars))
             unit.add_stim_current(stimulus, weight=gain)
             self.units.append(unit)
             ind += 1

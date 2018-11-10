@@ -1,6 +1,11 @@
 import numpy as np
 import melopy.utility as music
+from collections import OrderedDict
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
+from src.sim_plots.sns_plots import plot_more_generic_traces
 from src.stim.stimulus import ABAStimulus
 from src.a_wilson_cowan.sensory_network import SensoryWCUnit, TonotopicNetwork, Selectivity
 from src.simulation.simulation import Simulation
@@ -33,12 +38,12 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         self.syn_weights = syn_weights
 
         # now we build us some arrays - we're going to vectorize
-        self.R_array = np.zeros([len(self.units), self.ttot])
-        self.A_array = np.zeros([len(self.units), self.ttot])
-        self.S_array = np.zeros([len(self.units), self.ttot])
+        self.R_var_array = np.zeros([len(self.units), self.ttot])
+        self.A_var_array = np.zeros([len(self.units), self.ttot])
+        self.S_var_array = np.zeros([len(self.units), self.ttot])
 
         # pull out the vars from the vars arrays
-        self.vars = [x.split("_")[0] for x in self.__dict__ if x.endswith("_array")]
+        self.vars = [x.split("_")[0] for x in self.__dict__ if x.endswith("_var_array")]
 
         self.stim_currents = self.build_stimulus_currents()
         # list of units
@@ -61,10 +66,13 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         kSs = np.array([x.kS for x in units_array])
         thSs = np.array([x.thS for x in units_array])
         self.f_S = self.f_activation_builder(kSs, thSs)
+        # initialize
+        self.point_wise_Isyn = np.outer(self.syn_weights, self.R_var_array)
 
     def run(self):
-        while self.t_i < self.ttot:
+        while self.t_i < self.ttot-1:
             self.update_all()
+        self.point_wise_Isyn = np.outer(self.syn_weights, self.R_var_array)
 
     def update_all(self, n=1):
         """ we want to calculate all the deltas first then we can add them """
@@ -75,12 +83,12 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
                 deltas[var] = method()
             # now apply the deltas
             for var in self.vars:
-                array = getattr(self, var + "_array")
+                array = getattr(self, var + "_var_array")
                 array[:, self.t_i + 1] = array[:, self.t_i] + deltas[var]
             self.step()
 
     def get_dA(self):
-        dA = self.delta_A(self.A_array[:, self.t_i], self.R_array[:, self.t_i], self.tauAs, self.dt * 1000)
+        dA = self.delta_A(self.A_var_array[:, self.t_i], self.R_var_array[:, self.t_i], self.tauAs, self.dt * 1000)
         return dA
 
     @staticmethod
@@ -89,7 +97,7 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
 
     def get_dR(self):
         Iapp = self.SFA() + self.Isyn() + self.rec_exc() + self.gstims * self.stim_currents[:, self.t_i]
-        dR = self.delta_R(self.R_array[:,self.t_i], Iapp, self.taus, self.f_e, self.dt * 1000)
+        dR = self.delta_R(self.R_var_array[:, self.t_i], Iapp, self.taus, self.f_e, self.dt * 1000)
         return dR
 
     @staticmethod
@@ -99,26 +107,25 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         return dr
 
     def get_dS(self):
-        #     VV decay
         dS = self.delta_S(
-            self.S_array[:, self.t_i], self.tauNMDAs, self.f_S,
-            self.Gs, self.R_array[:, self.t_i], self.dt * 1000)
+            self.S_var_array[:, self.t_i], self.tauNMDAs, self.f_S,
+            self.Gs, self.R_var_array[:, self.t_i], self.dt * 1000)
         return dS
 
     @staticmethod
     def delta_S(S, tauNMDA, fS, G, R, dt):
-        #     vv decay
+        #     vv decay             vv activation
         dS = (-S / tauNMDA + (1 - S) * G * fS(R)) * dt
         return dS
 
     def SFA(self):
-        return abs(self.gSFAs)*-1 * self.A_array[:, self.t_i]
+        return abs(self.gSFAs)*-1 * self.A_var_array[:, self.t_i]
 
     def rec_exc(self):
-        return self.gees * self.R_array[:, self.t_i]
+        return self.gees * self.R_var_array[:, self.t_i]
 
     def Isyn(self):
-        return np.dot(self.syn_weights, self.R_array[:, self.t_i])
+        return np.dot(self.syn_weights, self.R_var_array[:, self.t_i])
 
     def build_stimulus_currents(self):
         """
@@ -132,10 +139,49 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
             out.append([tc[x] for x in self.stimulus.tones])
         return np.array(out)
 
+    def unit_traces_to_dict_arrays(self, unit_ind):
+        n_units = len(self.units)
+        unit_dict = OrderedDict()
+        unit_dict["tax"] = self.tax
+
+        for var in self.vars:
+            # pull out the traces of all the vars
+            unit_dict[var] = getattr(self, "{}_var_array".format(var))[unit_ind]
+        unit_dict["FR"] = unit_dict["R"]
+        unit_dict["stim"] = self.stim_currents[unit_ind] * self.gstims[unit_ind]
+        unit_dict["SFA"] = self.A_var_array[unit_ind] * abs(self.gSFAs[unit_ind]) * -1
+        unit_dict["rec_exc"] = self.R_var_array[unit_ind] * self.gees[unit_ind]
+        syn_ind = n_units * unit_ind
+        syn_currents = self.point_wise_Isyn[syn_ind:syn_ind + n_units, :]
+        for s_ind in xrange(syn_currents.shape[0]):
+            syn = syn_currents[unit_ind, :]
+            if any(syn):
+                unit_dict["Isyn_u{}".format(s_ind)] = syn
+        return unit_dict
+
+    def build_unit_dfs(self):
+        n_units = len(self.units)
+        unit_dfs = []
+        for ind in xrange(n_units):
+            unit = self.units[ind]
+            unit_dict = self.unit_traces_to_dict_arrays(ind)
+            ndf = pd.DataFrame(unit_dict, index=self.tax)
+            ndf["unit"] = "u{}".format(ind)
+            unit_dfs.append(ndf)
+            # print(unit_dfs)
+        return pd.concat(unit_dfs)
+
 
 if __name__ == "__main__":
     network = SynapticNetwork()
-    network.update_all(1000)
+    network.run()
+    data = network.build_unit_dfs()
+    g = sns.FacetGrid(data, col='unit', col_wrap=1)
+    g.map_dataframe(plot_more_generic_traces)
+    plt.show()
+
+
+
 
 
 

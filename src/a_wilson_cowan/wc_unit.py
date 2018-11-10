@@ -6,16 +6,20 @@ from src.a_wilson_cowan.currents import Current, StimCurrent, SFACurrent
 # does creation of sensory unit update registry for WC overall?
 
 
-def f_activation_builder(k, theta):
+def f_activation_builder(k, theta, b_00 = False):
     """
      returns an activation function with specified k and theta
     Args:
         k: slope
         theta: threshold
+        b_00 (default False): whether or not to set f(0)=0; if True, negative firing rates are possible
     Returns:
         function
     """                                                 # uncomment for stable point at 0,0 guaranteed
-    func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) #- 1 / (1 + np.exp(theta / k))
+    if b_00:
+        func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) - 1 / (1 + np.exp(theta / k))
+    else:
+        func = lambda x: 1 / (1 + np.exp(-(x - theta) / k)) #- 1 / (1 + np.exp(theta / k))
     return func
 
 
