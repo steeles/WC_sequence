@@ -172,6 +172,8 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         create a plot of the change in R with R under the current regime
         Args:
             unit_ind: which unit's pars to use
+            Iapp:
+            bPlot:
         Returns:
             pd.DataFrame: ["R', "dR"]
         """

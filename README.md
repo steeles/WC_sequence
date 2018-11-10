@@ -42,23 +42,19 @@ we can model that later, this equation is basically just the recover from adapta
 It COULD also be the DECAY of an active sustained NMDA powered INHIBITION, that could explain a really fast 
 onset and a slow decay for the ITI gating long lasting inhibitory current I think...
 
+
+[us 20]
+interval detector- integration layer 1
+-Stimuli - we need B-A vs A-B, and it breaks for incr df
+
 [us 5]
 with feature based synaptic footprints
 - Synapses:
-
-[us 25]
-split neurons into kwargs arrays... neural jsons... wow
 
 
 [us 19]
 micheyl 2005 actually looks like a fast self adaptation and a slow feedback inhibition from the nmda currents from the 
 integrator layer
-
-[us 20]
-interval detector- integration layer 1
-
-[us 25]
-for big networks i probably want to vectorize my code and all my vars for all my units.
 
 [tests]
 
@@ -81,6 +77,9 @@ OR not ; should probably be a parameter
 DOG?
 
 [us 8]
+the gist of the paper is they do nmda only model, cuz all the other things are way faster.
+if i were to do something like that i could do S and A...
+
 where did all the NMDA go...? i _think_ the S is just sitting around,
 waiting to be a source for someone else's current... but I don't know what NMDA current eq is
 probably in xj wang somewhere NOPE he's all spiking
@@ -115,7 +114,21 @@ the variance with dt; i think it may be sqrt dt or something? dt <<< 1
 
 
 
+____
+
+
+#### Completed
+
+[us 25]
+split neurons into kwargs arrays... neural jsons... wow
+
+[us 26]
+for big networks i probably want to vectorize my code and all my vars for all my units.
+
+
+
 [us 14]
+-- note- this rambling turned into CurrentTrace and tonotopic network 2 replaced tonotopic network around 2018-11-08 ish
 I can probably make it faster if I get rid of the mutables and map them to object attributes;
 as long as the methods know which attribute to pull from, ie sfa current has a source of u1, attribute r
 and a target of u1, attribute a (or rather the sfa current update method knows to read source.r and update target.a) 
@@ -126,11 +139,6 @@ it says it's only .01 to .08 sec, but it seems to be > 2. weird.
 will have to see how it scales.
 Response = namedtuple('Response', ['value'])
 r = Response(0)
-____
-
-
-#### Completed
-
 
 [us 24]
 14 is probably too much to rework right now but since i just started networks, 
@@ -156,6 +164,8 @@ For everything interesting we want with feature selectivity, each unit has to ha
 how do i deliver same stim to different tuning efficiently?
 stim generator function, static method. maybe a class method?
 
+[us 7]
+WC superclass
 
 [us 6]
 stimuli superclass
@@ -163,7 +173,8 @@ stimuli superclass
 [us 12] 
 rpt stim maker
 
-[us ]
+[us 2]
+For everything interesting we want with feature selectivity, each unit has to have its own tuning curve.
 
 [us 1]
 I could make an input A guy take all the inputs and NMDA-inhibit _itself_

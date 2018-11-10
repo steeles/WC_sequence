@@ -73,9 +73,6 @@ class WCUnit(KWPars):
         # add intrinsic currents
         if self.tauA and self.gSFA:
             self.add_SFA_current(weight=float(self.gSFA))
-        # if self.gee:
-        #     self.add_SFA_current(weight=self.gSFA)
-        # self.b_00 = b_00  # whether to set f(0) = 0, allows neg firing rates
         self.f_r = f_activation_builder(self.ke, self.the, self.b_00)
         self.f_activation_builder = f_activation_builder
 
@@ -103,13 +100,16 @@ class WCUnit(KWPars):
         sfa_current = SFACurrent(source=self.r, weight=weight, tau_A=self.tauA, target=self, name=name)
         self.currents[name] = sfa_current
 
-    def find_delta(self, i_app):
-        """ compute delta firing rate from self and applied current """
-        return (-self.r[0] + self.f_r(i_app))
+    @staticmethod
+    def delta_R(R, Iapp, tau, fe, gee=0):
+        """ we don't have a rec exc current i think so it's gotta get calculated here """
+        dr = 1 / tau * (-R + fe(Iapp + gee * R))
+        return dr
 
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
-        dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
+        dr = self.delta_R(self.r[0], sum(cvals), self.f_r, self.gee)
+        # dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
         # if self.f_r(sum(cvals)): print "fr: " + str(self.f_r(sum(cvals)))
         self.r[0] += dr
 
