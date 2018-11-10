@@ -14,7 +14,9 @@ class SensoryWCUnit(WCUnit):
         gee=.57,
         gStim=1.,
         gSFA=0.7,
-        tau=10., tauNMDA=100., tauA=2000., G=.64)
+        tau=10., tauNMDA=100., tauA=2000., G=.64, b_00=False,
+        i_0 = -.2, timescale = 1000 # milliseconds
+    )
 
     def __init__(self, name=None, best_frequency=440., spread=4., **kwargs):
         """

@@ -49,7 +49,8 @@ class WCUnit(KWPars):
         gee=.57,
         gStim=1.,
         gSFA=0,
-        tau=10., tauNMDA=100., tauA=200., G=.64, t_units="milliseconds")
+        tau=10., tauNMDA=100., tauA=200., G=.64,
+        t_units="milliseconds", b_00=False)
 
     def __init__(self, name="u1", tau=10., **kwargs):
         """
@@ -57,6 +58,7 @@ class WCUnit(KWPars):
         Args:
             name (str): what to call the unit for reference, dicts, plotting, etc
             tau: membrane timescale in time step units (dt)
+            b_00: whether or not to set the activation function so f(0)=0
             **kwargs:
         """
         KWPars.__init__(self, **kwargs)
@@ -73,7 +75,8 @@ class WCUnit(KWPars):
             self.add_SFA_current(weight=float(self.gSFA))
         # if self.gee:
         #     self.add_SFA_current(weight=self.gSFA)
-        self.f_r = f_activation_builder(self.ke, self.the)
+        # self.b_00 = b_00  # whether to set f(0) = 0, allows neg firing rates
+        self.f_r = f_activation_builder(self.ke, self.the, self.b_00)
         self.f_activation_builder = f_activation_builder
 
     def add_stim_current(self, stimulus, weight, name="stim"):

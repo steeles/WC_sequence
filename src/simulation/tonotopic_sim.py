@@ -47,7 +47,7 @@ class TonotopicTripletsSimulation(Simulation):
         self.traces = OrderedDict()
 
         # just slap a trace on there?
-        for name, unit in self.network.units.items():
+        for unit in self.network.units:
             # we'll just staple the traces to the unit, maybe this is wrong but it should make things easier
             unit.trace_dict = OrderedDict()
 
@@ -101,20 +101,19 @@ class TonotopicTripletsSimulation(Simulation):
             self.update_all_traces()
             self.t_i += 1
 
-    def unit_traces_to_dict_arrays(self, unit_name):
+    def unit_traces_to_dict_arrays(self, unit):
         """ THIS IS SO MUCH CLEANER """
-        unit = self.network.units[unit_name]
         traces = [(k, v.trace) for k, v in unit.trace_dict.items()]
         return dict(traces)
 
-    def unit_df(self, unit_name):
-        return pd.DataFrame(self.unit_traces_to_dict_arrays(unit_name), index=sim.tax)
+    def unit_df(self, unit):
+        return pd.DataFrame(self.unit_traces_to_dict_arrays(unit), index=sim.tax)
 
     def traces_to_df(self):
         ulst = []
         for k in self.network.units:
             ndf = self.unit_df(k)  # units.items()[0][1], index=sim.tax)
-            ndf["unit"] = k  # units.items()[0][0]
+            ndf["unit"] = k.name  # units.items()[0][0]
             ndf["tax"] = sim.tax
             ulst.append(ndf)
 

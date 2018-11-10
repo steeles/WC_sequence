@@ -5,6 +5,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from src.sim_plots.make_figures import generic_plot
 from src.sim_plots.sns_plots import plot_more_generic_traces
 from src.stim.stimulus import ABAStimulus
 from src.a_wilson_cowan.sensory_network import SensoryWCUnit, TonotopicNetwork, Selectivity
@@ -13,8 +14,8 @@ from src.simulation.simulation import Simulation
 
 stim = ABAStimulus()
 s_units = [
-    Selectivity(music.key_to_frequency(49), 1, 0.8),
-    Selectivity(music.key_to_frequency(52), 1, 0.8),
+    Selectivity(music.key_to_frequency(49), 1, 0.2),
+    Selectivity(music.key_to_frequency(52), 1, 0.2),
     Selectivity(music.key_to_frequency(52), 1, 0.)
 ]
 
@@ -24,11 +25,8 @@ weights = np.array([
 
 
 class SynapticNetwork(TonotopicNetwork, Simulation):
-    """ i want to vectorize some of the calculations so we'll be taking away some of the mechanics from
-    WCUnit... which is buried in there somewhere.
-    We'll create arrays for all the vars in the unit, compute all the
-    currents at once...
-    all the vars will get recorded together, but at the end of the sim we'll unzip them row by row and stitch them
+    """ i want to vectorize some of the calculations
+    all the vars will get recorded together, but at the end of the sim we'll peel them row by row and stitch them
     together by unit =^.^=
     """
     def __init__(self, syn_weights=weights, selectivities=s_units, stimulus=stim, **kwargs):
@@ -51,7 +49,7 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         self.gstims = np.array([
             x.currents["stim"].weight for x in units_array
         ])
-
+        self.i_0s = np.array([x.i_0 for x in units_array])
         self.gees = np.array([x.gee for x in units_array])
         self.gSFAs = np.array([x.gSFA for x in units_array])
         self.Gs = np.array([x.G for x in units_array])
@@ -60,12 +58,12 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         self.tauNMDAs = np.array([x.tauNMDA for x in units_array])
 
         # activation function parameters
-        kes = np.array([x.ke for x in units_array])
-        thes = np.array([x.the for x in units_array])
-        self.f_e = self.f_activation_builder(kes, thes)
-        kSs = np.array([x.kS for x in units_array])
-        thSs = np.array([x.thS for x in units_array])
-        self.f_S = self.f_activation_builder(kSs, thSs)
+        self.kes = np.array([x.ke for x in units_array])
+        self.thes = np.array([x.the for x in units_array])
+        self.f_e = self.f_activation_builder(self.kes, self.thes)
+        self.kSs = np.array([x.kS for x in units_array])
+        self.thSs = np.array([x.thS for x in units_array])
+        self.f_S = self.f_activation_builder(self.kSs, self.thSs, self.b_00)
         # initialize
         self.point_wise_Isyn = np.outer(self.syn_weights, self.R_var_array)
 
@@ -96,7 +94,7 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         return dt/tauA * (-A + R)
 
     def get_dR(self):
-        Iapp = self.SFA() + self.Isyn() + self.rec_exc() + self.gstims * self.stim_currents[:, self.t_i]
+        Iapp = self.SFA() + self.Isyn() + self.i_0s + self.rec_exc() + self.gstims * self.stim_currents[:, self.t_i]
         dR = self.delta_R(self.R_var_array[:, self.t_i], Iapp, self.taus, self.f_e, self.dt * 1000)
         return dR
 
@@ -143,7 +141,6 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         n_units = len(self.units)
         unit_dict = OrderedDict()
         unit_dict["tax"] = self.tax
-
         for var in self.vars:
             # pull out the traces of all the vars
             unit_dict[var] = getattr(self, "{}_var_array".format(var))[unit_ind]
@@ -163,13 +160,31 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         n_units = len(self.units)
         unit_dfs = []
         for ind in xrange(n_units):
-            unit = self.units[ind]
             unit_dict = self.unit_traces_to_dict_arrays(ind)
             ndf = pd.DataFrame(unit_dict, index=self.tax)
             ndf["unit"] = "u{}".format(ind)
             unit_dfs.append(ndf)
-            # print(unit_dfs)
+        # TODO: make sure this doesn't clobber columns when u0, 1, etc get involved... i think it shouldn't...
         return pd.concat(unit_dfs)
+
+    def get_dR_R(self, unit_ind, Iapp=None, bPlot=True):
+        """
+        create a plot of the change in R with R under the current regime
+        Args:
+            unit_ind: which unit's pars to use
+        Returns:
+            pd.DataFrame: ["R', "dR"]
+        """
+        if Iapp is None:
+            Iapp = self.i_0s[unit_ind]
+        tau = self.taus[unit_ind]
+        gee = self.gees[unit_ind]
+        fe = self.f_activation_builder(self.kes[unit_ind], self.thes[unit_ind])
+        r_arr = np.linspace(-.1, 1., 1000)
+        dR_arr = self.delta_R(r_arr, Iapp=Iapp, tau=tau, fe=fe, dt=self.dt*1000, gee=gee)
+        out = pd.DataFrame({"R_ax": r_arr, "dR": dR_arr})
+        if bPlot: generic_plot(out["R_ax"], out["dR"])
+        return out
 
 
 if __name__ == "__main__":
@@ -179,7 +194,9 @@ if __name__ == "__main__":
     g = sns.FacetGrid(data, col='unit', col_wrap=1)
     g.map_dataframe(plot_more_generic_traces)
     plt.show()
-
+    dRR = network.get_dR_R(0, 0, bPlot=False)
+    dRR["zline"]=0
+    dRR.plot(x="R_ax")
 
 
 
