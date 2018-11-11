@@ -46,6 +46,7 @@ onset and a slow decay for the ITI gating long lasting inhibitory current I thin
 [us 20]
 interval detector- integration layer 1
 -Stimuli - we need B-A vs A-B, and it breaks for incr df
+ABInterval and BAInterval
 
 [us 5]
 with feature based synaptic footprints

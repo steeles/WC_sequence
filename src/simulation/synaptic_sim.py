@@ -22,24 +22,31 @@ from src.stim.stimulus import ABAStimulus
 from src.a_wilson_cowan.sensory_network import SensoryWCUnit, TonotopicNetwork, Selectivity
 from src.simulation.simulation import Simulation
 from src.a_wilson_cowan.synaptic_network import SynapticNetwork
+from src.stim.intervals import Intervals
 
+plt.close()
+
+i_0 = -.05
 pars_list = [
-    {"gee": 0.5, "i_0": -.2},
-{"gee": 0.5, "i_0": -.2}, {"gee": 0.5, "i_0": -.2, "the": 0.3}
+    {"gee": 0.5, "i_0": i_0},
+{"gee": 0.1, "i_0": i_0}, {"gee": 0.5, "i_0": i_0, "the": 0.4}
 ]
+T = 3.
 
-stim = ABAStimulus()
+# from micheyl
+stim = Intervals(T=T, ITI=125, tone_length=125)
+stim.set_ba_ab()
 s_units = [
     Selectivity(music.key_to_frequency(49), 1, 0.2),
-    Selectivity(music.key_to_frequency(52), 1, 0.2),
-    Selectivity(music.key_to_frequency(52), 1, 0.)
+    Selectivity(music.key_to_frequency(46), 1, 0.2),
+    Selectivity(music.key_to_frequency(46), 1, 0.)
 ]
 
 weights = np.array([
-    [0, 0, 0], [0, 0, 0], [-2, 1, 0]
+    [0, 0, 0], [0, 0, 0], [.39, .39, 0]
 ])
 
-network = SynapticNetwork(pars_list=pars_list, selectivities=s_units, syn_weights=weights)
+network = SynapticNetwork(pars_list=pars_list, selectivities=s_units, stimulus=stim, syn_weights=weights, T=T)
 network.run()
 data = network.build_unit_dfs()
 g = sns.FacetGrid(data, col='unit', col_wrap=1)
@@ -47,5 +54,5 @@ g.map_dataframe(plot_more_generic_traces)
 plt.show()
 dRR = network.get_dR_R(0, bPlot=False)
 dRR["zline"]=0
-dRR.plot(x="R_ax")
+# dRR.plot(x="R_ax")
 

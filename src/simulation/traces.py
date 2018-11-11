@@ -3,7 +3,7 @@ import numpy as np
 from src.a_wilson_cowan.wc_unit import KWPars
 
 class Trace(KWPars):
-    pars = {"variety": "variablw"}
+    pars0 = {"variety": "variablw"}
     """ copy a variable into an array """
     def __init__(self, sim, source, target=None, trace_name=None, **kwargs):
         """
@@ -43,7 +43,7 @@ class CurrentTrace(Trace):
     #     is it voltage times conductance gives current? all the inputs are PSPs...
     #     """
     #
-    pars = {"variety": "current"}
+    pars0 = {"variety": "current"}
     """ copy a current into an array """
     def __init__(self, sim, source, target=None, trace_name=None, unit=None, **kwargs):
         """

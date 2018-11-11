@@ -73,9 +73,9 @@ def plot_more_generic_traces(*args, **kwargs):
                  data=data_n, ax=ax2, color='grey',
                  legend=False)
     ax2.lines[0].set_label('stim')
-    # lines += ax2.lines[:1]
-    # labs = [l.get_label() for l in lines]
-    # ax.legend(lines, labs, loc='best', bbox_to_anchor=(.5, .5, .45, .45))
+    lines += ax2.lines[:1]
+    labs = [l.get_label() for l in lines]
+    ax.legend(lines, labs, loc='best', bbox_to_anchor=(.5, .5, .45, .45))
 
 
 # ax.figure.suptitle('BF={}'.format(unit.best_frequency))

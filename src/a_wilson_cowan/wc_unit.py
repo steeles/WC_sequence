@@ -1,5 +1,6 @@
 # TODO: import WC_class
 import numpy as np
+import copy
 
 from src.a_wilson_cowan.currents import Current, StimCurrent, SFACurrent
 
@@ -26,7 +27,7 @@ def f_activation_builder(k, theta, b_00 = False):
 class KWPars(object):
     """ superclass for objects with a pars dict. The entries in pars will be updated by kwargs, mapped to attributes"""
 
-    pars = {"foo": "bar"}
+    pars0 = {"foo": "bar"}
 
     def __init__(self, **kwargs):
         """ basic pattern:
@@ -36,13 +37,18 @@ class KWPars(object):
             kw = KWPars(answer=42, question=None)
             kw.
         """
-        self.pars.update(kwargs)
-        for k, v in self.pars.items():
+        # don't mutate defaults!
+        pars = copy.copy(self.pars0)
+        pars.update(kwargs)
+        for k, v in pars.iteritems():
             self.__setattr__(k, v)
+        self.pars = pars
+
+
 
 
 class WCUnit(KWPars):
-    pars = dict(
+    pars0 = dict(
         ke=.1, the=.2,  # IO params
         kS=.1, thS=.5,
         r0=0., a0=0., S0=0., stim0=0.,  # time varying values
@@ -108,7 +114,7 @@ class WCUnit(KWPars):
 
     def update(self):
         cvals = [c.value * c.weight for c in self.currents.itervalues()]
-        dr = self.delta_R(self.r[0], sum(cvals), self.f_r, self.gee)
+        dr = self.delta_R(self.r[0], sum(cvals), self.tau, self.f_r, self.gee)
         # dr = 1/self.tau * (-self.r[0] + self.f_r(sum(cvals)))
         # if self.f_r(sum(cvals)): print "fr: " + str(self.f_r(sum(cvals)))
         self.r[0] += dr

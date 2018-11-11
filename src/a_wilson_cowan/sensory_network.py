@@ -33,7 +33,6 @@ class TonotopicNetwork(SensoryWCUnit):
         self.units = []
         # if selectivities:
         ind = 0
-        default_pars = copy.copy(SensoryWCUnit.pars)
         for s in selectivities:
             best_frequency, spread, gain = s
             name = 's({st},{sp},{g})'.format(
@@ -43,9 +42,9 @@ class TonotopicNetwork(SensoryWCUnit):
             if pars_list and pars_list[ind]:
                 pars = pars_list[ind]
             else:
-                pars = default_pars
+                pars = {}
             pars.update(gStim=gain)
-            pname = pars.get("name") if pars else None
+            pname = pars.get("name")
             unit = SensoryWCUnit(best_frequency=best_frequency, spread=spread,
                                  name=(pname or name), **pars)
             unit.add_stim_current(stimulus, weight=gain)

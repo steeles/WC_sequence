@@ -55,7 +55,7 @@ class ABAStimulus(TimeAxis):
         self.iti = iti
         self.a_semitone = a_semitone
         if df:
-            self.b_semitone = a_semitone + df
+            self.b_semitone = a_semitone - df
         elif b_semitone:
             self.b_semitone = b_semitone
         else:
@@ -65,7 +65,7 @@ class ABAStimulus(TimeAxis):
         self.trt = int(self.iti / self.dt)
         self.period = 4 * self.trt
         self.tone_time = int(self.tone_length / self.dt)
-        self.tones = self.repeating_tones()
+        self.tones = self.repeating_tones(self.generate_triplet_tones())
         self.value = self.tones[self.t_i]
         # we also have ttot, tax, t_i
 
@@ -77,16 +77,18 @@ class ABAStimulus(TimeAxis):
         triplet[2 * self.trt:2 * self.trt + self.tone_time] = self.a_semitone
         return triplet
 
-    def repeating_tones(self):
+    def repeating_tones(self, tone_seq):
         """
         create sequence of tones (unit: melopy.key, semitone) on a time grid of dt
+        Args:
+            tone_seq: snippet to repeat
         Returns:
             numpy.array: 1D array of tones
         """
-        triplet = self.generate_triplet_tones()
+        # triplet = self.generate_triplet_tones()
         tones = np.zeros(self.ttot)
         n_cycles = int(np.ceil(self.ttot/self.period))
-        tmp = np.tile(triplet, [1, n_cycles])
+        tmp = np.tile(tone_seq, [1, n_cycles])
         tones[:tmp.shape[1]] = tmp
         return tones
 

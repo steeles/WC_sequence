@@ -7,7 +7,7 @@ from src.stim.stimulus import ABAStimulus, ToneCurrent
 
 class SensoryWCUnit(WCUnit):
     """ unit with frequency selectivity"""
-    pars = dict(
+    pars0 = dict(
         ke=.1, the=.2,  # IO params
         kS=.1, thS=.5,
         r0=0., a0=0., S0=0., stim0=0.,  # time varying values

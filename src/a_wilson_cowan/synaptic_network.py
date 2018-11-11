@@ -94,7 +94,8 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         return dt/tauA * (-A + R)
 
     def get_dR(self):
-        Iapp = self.SFA() + self.Isyn() + self.i_0s + self.rec_exc() + self.gstims * self.stim_currents[:, self.t_i]
+        Iapp = self.SFA() + self.Isyn() + self.i_0s + self.rec_exc() + \
+            self.gstims * self.stim_currents[:, np.clip(self.t_i, 0, max(self.stim_currents.shape)-1)]
         dR = self.delta_R(self.R_var_array[:, self.t_i], Iapp, self.taus, self.f_e, self.dt * 1000)
         return dR
 
@@ -133,8 +134,11 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         """
         out = []
         for unit in self.units:
+            arr = np.zeros(self.ttot)
             tc = unit.tuning_curve
-            out.append([tc[x] for x in self.stimulus.tones])
+            tones = [tc[x] for x in self.stimulus.tones]
+            arr[:len(tones)] = tones
+            out.append(arr)
         return np.array(out)
 
     def unit_traces_to_dict_arrays(self, unit_ind):

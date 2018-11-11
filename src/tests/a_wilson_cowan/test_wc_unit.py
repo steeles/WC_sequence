@@ -86,7 +86,7 @@ def test_add_intrinsic_currents_SFA():
     the logical relationships follow
     """
     eps = .00001
-    u1 = WCUnit(name="u1", tauA=300, gSFA=0.8)
+    u1 = WCUnit(name="u1", tauA=300, gSFA=0.8, gee=0)
     stim = np.ones(10)
     u1.add_stim_current(stimulus=stim, weight=.9)
     for ind in xrange(10):
@@ -94,7 +94,7 @@ def test_add_intrinsic_currents_SFA():
     assert u1.a[0] > 0
     assert u1.currents["SFA"].value > 0
 
-    u2 = WCUnit(tauA=30, gSFA=0.8)
+    u2 = WCUnit(tauA=30, gSFA=0.8, gee=0)
     stim = np.ones(10)
     u2.add_stim_current(stimulus=stim, weight=.9)
     for ind in xrange(10):
@@ -102,7 +102,7 @@ def test_add_intrinsic_currents_SFA():
     # tauA is shorter so there should be more
     assert u2.a[0] > u1.a[0]
 
-    u3 = WCUnit(tauA=30, gSFA=0.5)
+    u3 = WCUnit(tauA=30, gSFA=0.5, gee=0)
     stim = np.ones(10)
     u3.add_stim_current(stimulus=stim, weight=.9)
     for ind in xrange(10):
@@ -124,12 +124,8 @@ def test_no_negative_firing_rates_bugfix():
     assert u1.r > 0
 
 def test_non_default_pars():
-    default_pars = copy.copy(WCUnit.pars)
     pars = {"foos": "bars", "gee": 42}
     u1 = WCUnit(**pars)
-    assert u1.__dict__["gee"] == 42
-    foo=None
-    u2 = WCUnit(**(foo or default_pars))
-    # this mutated the class!
-    # print u2.__dict__
-    assert u2.__dict__['gee'] == .57
+    assert u1.gee == 42
+    u2 = WCUnit()
+    assert u2.gee == .57

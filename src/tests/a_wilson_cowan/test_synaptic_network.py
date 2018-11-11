@@ -14,7 +14,7 @@ def test_build_stimulus_currents():
     # center, spread for each unit, starting at 440 Hz A and 3 semitones up from there
     s_units = [
         Selectivity(music.key_to_frequency(49), 1, 0.6),
-        Selectivity(music.key_to_frequency(52), 1, 0.6)
+        Selectivity(music.key_to_frequency(46), 1, 0.6)
     ]
     stim = ABAStimulus(a_semitone=49, df=3)
     network = SynapticNetwork(selectivities=s_units, stimulus=stim)
