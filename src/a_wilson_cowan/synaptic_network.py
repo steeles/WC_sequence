@@ -153,9 +153,11 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         unit_dict["SFA"] = self.A_var_array[unit_ind] * abs(self.gSFAs[unit_ind]) * -1
         unit_dict["rec_exc"] = self.R_var_array[unit_ind] * self.gees[unit_ind]
         syn_ind = n_units * unit_ind
-        syn_currents = self.point_wise_Isyn[syn_ind:syn_ind + n_units, :]
+        syn_currents = self.point_wise_Isyn[syn_ind:syn_ind + n_units, :self.ttot] #[:self.ttot]
         for s_ind in xrange(syn_currents.shape[0]):
-            syn = syn_currents[unit_ind, :]
+            print s_ind
+            syn = syn_currents[s_ind, :]
+            print(max(syn))
             if any(syn):
                 unit_dict["Isyn_u{}".format(s_ind)] = syn
         return unit_dict

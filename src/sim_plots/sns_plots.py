@@ -17,7 +17,7 @@ cmap_dict = {
 }
 
 
-def plot_more_generic_traces(*args, **kwargs):
+def plot_more_generic_traces(to_plot = ["FR", "SFA"], *args, **kwargs):
 
 
     # cmap_dict = sns.color_palette(n_colors = 7), **kwargs):
@@ -34,8 +34,9 @@ def plot_more_generic_traces(*args, **kwargs):
     """
 
     data = kwargs.pop('data')
+    cols = to_plot + ["tax"]
     # # TODO: iterate these. split resp from curr?
-    df = data[['tax', 'FR', 'SFA']].melt(
+    df = data[cols].melt(
         'tax', var_name='name', value_name='response'
     )
 
