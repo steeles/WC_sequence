@@ -17,7 +17,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from src.sim_plots.make_figures import generic_plot
-from src.sim_plots.sns_plots import plot_more_generic_traces
+# from src.sim_plots.sns_plots import plot_more_generic_traces
 from src.stim.stimulus import ABAStimulus
 from src.a_wilson_cowan.sensory_network import SensoryWCUnit, TonotopicNetwork, Selectivity
 from src.simulation.simulation import Simulation
@@ -26,12 +26,15 @@ from src.stim.intervals import Intervals
 
 plt.close()
 
-i_0 = -.05
+sensory_pars = dict(i_0 = -.05, gee = 0.5, gSFA = 0.5)
+integration_pars = dict(i_0 = -0.05, tau=50, gee=0.3, SFA = 0.3, the = 0.4)
+
+
 pars_list = [
-    {"gee": 0.5, "i_0": i_0},
-{"gee": 0.1, "i_0": i_0}, {"gee": 0.5, "i_0": i_0, "the": 0.4}
+    sensory_pars,
+sensory_pars, integration_pars
 ]
-T = 3.
+T = 1.
 
 # from micheyl
 stim = Intervals(T=T, ITI=125, tone_length=125)
@@ -43,16 +46,24 @@ s_units = [
 ]
 
 weights = np.array([
-    [0, 0, 0], [0, 0, 0], [.39, .39, 0]
+    [0, 0, 0], [0, 0, 0], [.35, .15, 0]
 ])
 
-network = SynapticNetwork(pars_list=pars_list, selectivities=s_units, stimulus=stim, syn_weights=weights, T=T)
+network = SynapticNetwork(pars_list=pars_list, selectivities=s_units, stimulus=stim, syn_weights=weights, T=T, b_00=True)
 network.run()
 data = network.build_unit_dfs()
-g = sns.FacetGrid(data, col='unit', col_wrap=1)
-g.map_dataframe(plot_more_generic_traces)
+
+to_plot = ["FR", "SFA", 'Isyn_u0', 'Isyn_u1', 'rec_exc', 'stim']
+
+plot_df = data[to_plot + ['tax', 'unit']].melt(
+    id_vars=['tax', 'unit'], var_name = 'name', value_name='response'
+)
+
+g = sns.FacetGrid(data=plot_df, hue='name', col='unit', col_wrap=1)
+g.map_dataframe(plt.plot, "tax", "response")
+g.add_legend()
 plt.show()
 dRR = network.get_dR_R(0, bPlot=False)
 dRR["zline"]=0
-# dRR.plot(x="R_ax")
+dRR.plot(x="R_ax")
 

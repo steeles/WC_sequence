@@ -7,7 +7,6 @@ from src.stim.stimulus import ABAStimulus
 class ABInterval(ABAStimulus):
 
     def __init__(self, **kwargs):
-        print("AB")
         ABAStimulus.__init__(self, **kwargs)
         self.tones = self.repeating_tones(self.generate_ab_interval())
 
@@ -22,7 +21,6 @@ class ABInterval(ABAStimulus):
 
 class BAInterval(ABAStimulus):
     def __init__(self, **kwargs):
-        print("BA")
         ABAStimulus.__init__(self, **kwargs)
         self.tones = self.repeating_tones(self.generate_ba_interval())
 

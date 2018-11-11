@@ -64,13 +64,10 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         self.kSs = np.array([x.kS for x in units_array])
         self.thSs = np.array([x.thS for x in units_array])
         self.f_S = self.f_activation_builder(self.kSs, self.thSs, self.b_00)
-        # initialize
-        self.point_wise_Isyn = np.outer(self.syn_weights, self.R_var_array)
 
     def run(self):
         while self.t_i < self.ttot-1:
             self.update_all()
-        self.point_wise_Isyn = np.outer(self.syn_weights, self.R_var_array)
 
     def update_all(self, n=1):
         """ we want to calculate all the deltas first then we can add them """
@@ -152,12 +149,9 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
         unit_dict["stim"] = self.stim_currents[unit_ind] * self.gstims[unit_ind]
         unit_dict["SFA"] = self.A_var_array[unit_ind] * abs(self.gSFAs[unit_ind]) * -1
         unit_dict["rec_exc"] = self.R_var_array[unit_ind] * self.gees[unit_ind]
-        syn_ind = n_units * unit_ind
-        syn_currents = self.point_wise_Isyn[syn_ind:syn_ind + n_units, :self.ttot] #[:self.ttot]
+        syn_currents = (self.R_var_array.transpose() * self.syn_weights[unit_ind]).transpose()
         for s_ind in xrange(syn_currents.shape[0]):
-            print s_ind
             syn = syn_currents[s_ind, :]
-            print(max(syn))
             if any(syn):
                 unit_dict["Isyn_u{}".format(s_ind)] = syn
         return unit_dict
@@ -171,7 +165,7 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
             ndf["unit"] = "u{}".format(ind)
             unit_dfs.append(ndf)
         # TODO: make sure this doesn't clobber columns when u0, 1, etc get involved... i think it shouldn't...
-        return pd.concat(unit_dfs)
+        return pd.concat(unit_dfs) # .fillna(0)
 
     def get_dR_R(self, unit_ind, Iapp=None, bPlot=True):
         """
@@ -187,7 +181,7 @@ class SynapticNetwork(TonotopicNetwork, Simulation):
             Iapp = self.i_0s[unit_ind]
         tau = self.taus[unit_ind]
         gee = self.gees[unit_ind]
-        fe = self.f_activation_builder(self.kes[unit_ind], self.thes[unit_ind])
+        fe = self.f_activation_builder(self.kes[unit_ind], self.thes[unit_ind], b_00=self.b_00)
         r_arr = np.linspace(-.1, 1., 1000)
         dR_arr = self.delta_R(r_arr, Iapp=Iapp, tau=tau, fe=fe, dt=self.dt*1000, gee=gee)
         out = pd.DataFrame({"R_ax": r_arr, "dR": dR_arr})

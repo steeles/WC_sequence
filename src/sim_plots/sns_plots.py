@@ -17,7 +17,7 @@ cmap_dict = {
 }
 
 
-def plot_more_generic_traces(to_plot = ["FR", "SFA"], *args, **kwargs):
+def plot_more_generic_traces(data, *args, **kwargs):
 
 
     # cmap_dict = sns.color_palette(n_colors = 7), **kwargs):
@@ -32,20 +32,27 @@ def plot_more_generic_traces(to_plot = ["FR", "SFA"], *args, **kwargs):
     Returns:
         matplotlib.figure.Figure: the figure
     """
-
-    data = kwargs.pop('data')
+    ax = plt.gca()
+    # data = kwargs.pop('data')
+    to_plot = kwargs.pop('to_plot')
+    print(data.shape)
+    to_plot = list(args) #kwargs.pop('to_plot')
     cols = to_plot + ["tax"]
+    print(cols)
+
     # # TODO: iterate these. split resp from curr?
+    subset = data[cols]
     df = data[cols].melt(
         'tax', var_name='name', value_name='response'
     )
+    print(df.shape)
 
     # df_r = data.query("type == 'FR'")
 
     # current_array = [x.values() for x in data.drop(columns=['tax', 'unit', 'stim']).to_dict().values()]
 
     lines = []
-    ax = sns.lineplot(x='tax', y='response',
+    ax.lineplot(x='tax', y='response',
                       hue='name', data=df,
                       legend=False)  # , **kwargs)
 
