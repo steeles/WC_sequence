@@ -6,12 +6,12 @@
 from pylab import *
 from numpy import *
 from matplotlib.mlab import *
-from repeating_stim_maker import rpt_stim_maker
+
 execfile('repeating_stim_maker.py')
 def SFA_pop(df = 3,ITI = .05,bPlot = False):
 
 	def f(x, k = .1, theta = .3):
-		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k)) # This looks WRONG- just the first half!
+		return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))
 
 	timescale, dt, T_in_seconds = .01, .1, 2.5
 	timesteps = T_in_seconds / timescale
@@ -70,5 +70,3 @@ def SFA_pop(df = 3,ITI = .05,bPlot = False):
 		show(block=False)
 
 	return tax,E,a,Isyn,stim
-
-SFA_pop()

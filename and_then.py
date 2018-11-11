@@ -16,6 +16,7 @@ tax = linspace(dt,t_in_ms,t_tot)
 
 E1 = zeros(t_tot) # excitatory unit receiving the first input
 E2 = zeros(t_tot) # excitatory unit receiving second input
+Ipop = zeros(t_tot)
 Isyn = zeros(t_tot)
 Iext = zeros(t_tot)
 S_NMDA_1 = zeros(t_tot) # synaptic variable activated by unit 1
@@ -64,15 +65,16 @@ for i in xrange(1):
 
 	if bPlot:
 
-		figure()
+		# figure()
+		fig, ax = subplots()
 		title(str(gNMDA) + '; max(Isyn)=' + str(Isyn.max()))
-		plot(tax,Isyn,'c')
-		plot(tax,E2,'b')
-		plot(tax,Iext,'g')
-		plot(tax,gInp1*Inp1,'y')
-		plot(tax,E1,'m')
-
-		plot(tax,S_NMDA_1,'k')
+		ax.plot(tax,Isyn,'c', )
+		# ax.plot(tax,E2,'b')
+		# ax.plot(tax,Iext,'g')
+		# ax.plot(tax,gInp1*Inp1,'y')
+		# ax.plot(tax,E1,'m')
+		# ax.plot(tax,S_NMDA_1,'k')
+		ax.legend()
 		show(block=False)
 bNull = 1 # carry out an analysis of the nullclines?
 if bPlot & bNull:
@@ -85,9 +87,11 @@ if bPlot & bNull:
 	plot(xax,dE(xax,maxInp),'r')
 	plot(xax,dE(xax,minInp),'b')
 	plot(xax,zline,'k')
-	show(block=False)
+	title("dE")
+	legend()
+	show()
 
-if 0:
+if 1:
 	xax=arange(0,1,.01)
 	zline = zeros(len(xax))
 	dSdown = -xax/tau_NMDA

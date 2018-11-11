@@ -1,0 +1,11 @@
+# romeo & juliet
+
+J' = r_on_j*R + j_on_j*J
+R' = r_on_r*R + j_on_r*J
+
+p j_on_r=1, r_on_j=-1, r_on_r=0,j_on_j=0
+
+R(0)=1
+J(0)=1
+
+done

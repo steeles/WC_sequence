@@ -1,0 +1,35 @@
+import unittest
+from WC_class import WC_unit
+
+class WC_assign_tests(unittest.TestCase):
+	def testWC_defaultPars1(self):  # I want to make sure WC default pars get assigned
+		
+		tUnit=WC_unit()
+		assignedPars=tUnit.__dict__
+		
+		self.failUnless(assignedPars==defaultPars)
+
+	def testWC_userPars(self):  # but that the user can change them
+		tUnit=WC_unit(Iapp=0,the=.5)
+		assignedPars=tUnit.__dict__
+		
+		self.failIf(assignedPars==defaultPars)
+
+	def testWC_defaultpars2(self):	# and that the defaults don't get screwed up when user does that
+		tUnit=WC_unit(Iapp=0,the=.5)
+		tUnit2=WC_unit()
+		assignedPars=tUnit2.__dict__
+		self.failUnless(assignedPars==defaultPars)
+
+	#def testWC_update(self):
+
+
+#class WC_integrate_tests(unittest.TestCase):
+	
+
+def main():
+	unittest.main()
+
+if __name__=="__main__":
+	main()
+

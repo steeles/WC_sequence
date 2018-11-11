@@ -1,5 +1,5 @@
 # disinhibition circuit in WC
-from numpy import *
+
 
 def f_exc(x, k = .1, theta = .3):
 	return 1/(1+exp(-(x-theta)/k)) - 1/(1+exp(theta/k))

@@ -1,0 +1,33 @@
+# XJ style synaptic dynamics in mean field
+# starting with XJ's 2 variable WM model, 
+# with only NMDA synaptic dynamics...
+
+#eq's
+
+#gE*s1-gI*s2+gext*u1
+#gE*s2−gI*s1+gext*u2
+
+
+x1 = gE*s1-gI*s2+I_0+gext*u1*(1+c/100)
+x2 = gE*s2-gI*s1+I_0+gext*u2*(1-c/100)
+
+s1'=f(x1)*gam*(1-s1)-s1/tauS
+s2'=f(x2)*gam*(1-s2)-s2/tauS
+
+#FI curve
+
+f(x)=(a*x-b)/(1-exp(-d*(a*x-b)))
+
+# pars
+
+par a=270, b=108, d=.154 
+par gE=.2609, gI=.0497, gext=.00052 
+par u1=30, u2=30, I_0=.3255, c=100
+par gam=.641, tauS=.100
+
+init s1=0, s2=0
+
+aux X1 = x1
+aux X2 = x2
+
+done

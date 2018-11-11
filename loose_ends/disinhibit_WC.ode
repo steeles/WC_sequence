@@ -1,0 +1,19 @@
+# disinhibit_WC.ode
+
+f_exc(x) = 1/(1+exp(-(x-the)/ke)) - 1/(1+exp(the/ke))
+
+f_Iff(x) = 1/(1+exp(-(x-thf)/kf))
+
+par kf=.1, thf=.3, ke=.1, the=.3
+
+par tau_E=.01, tau_a=.500, Inp_e=0, ee=.7 
+par gam=.5, Inp_i=0, ie=.6, ei=.5
+
+I_f' = (-I_f + f_Iff(Inp_i + ei*E2))/tau_E
+E2' = (-E2 + f_exc(Inp_e + ee*E2 -gam*a - ie*I_f))/tau_E
+a' = (-a + E2)/tau_a
+
+done
+
+
+
