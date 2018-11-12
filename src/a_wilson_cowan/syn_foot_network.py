@@ -11,6 +11,7 @@ to define a synaptic footprint according to """
 
 import numpy as np
 from scipy.stats import norm
+import matplotlib.pyplot as plt
 import melopy.utility as music
 
 from src.a_wilson_cowan.synaptic_network import SynapticNetwork, Selectivity
@@ -23,7 +24,7 @@ class Footprint(FrequencyToneAxis):
     def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst=1, **kwargs):
         FrequencyToneAxis.__init__(self, num_tones, center, spread, func, dst, **kwargs)
 
-    def dog(self, x, spread1, spread2, b_positive=True):
+    def dog(self, x, spread1, spread2, b_positive=True, **kwargs):
         """
         difference of gaussians on the fq tone axis
         Args:
@@ -42,7 +43,7 @@ class Footprint(FrequencyToneAxis):
             out = g2 - g1
         return out
 
-    def gauss(self, x):
+    def gauss(self, x, **kwargs):
         return self.tuning_func(x)
 
 stim1 = ABAStimulus()
@@ -55,6 +56,7 @@ for tone in s_layer_tones.tone_ax:
     s_layer_selectivities.append(Selectivity(
         best_frequency=music.key_to_frequency(tone), spread=s_layer_pars["spread"], gain=s_layer_pars["gStim"]
     ))
+s_layer_pars.pop("spread")
 s_layer_footprints = dict(
     s_layer=dict(type="dog", spread1=1, spread2=2, offset=0, gain=0.05),
     i_layer=dict(type="gauss", spread=5, offset=0, gain=0.)
@@ -67,6 +69,7 @@ for tone in i_layer_tones.tone_ax:
     i_layer_selectivities.append(Selectivity(
         best_frequency=music.key_to_frequency(tone), spread=i_layer_pars["spread"], gain=i_layer_pars["gStim"]
     ))
+i_layer_pars.pop("spread")
 i_layer_footprints = dict(
     s_layer=dict(type="gauss", spread=3, offset=0),
     i_layer=dict(type="dog", spread1=2, spread2=4, offset=0)
@@ -90,11 +93,12 @@ class SynFootNetwork(SynapticNetwork):
             foot_funcs = self.get_layer_foot_funcs(unit)
             out = np.zeros(n_units)
             for layer in foot_funcs:
-                out[layers == layer] = self.curve_to_weights(
-                    foot_func=foot_funcs[layer], unit_array=self.units[layers == layer]
+                mask = [x == layer for x in layers]
+                out[mask] = self.curve_to_weights(
+                    foot_func=foot_funcs[layer], unit_array=[k for (k, v) in zip(self.units, mask) if v]
                 )
             weights[ind, :] = out
-            # weights_row = [foot_funcs]
+        self.syn_weights = weights            # weights_row = [foot_funcs]
 
     @staticmethod
     def get_layer_foot_funcs(unit):
@@ -102,7 +106,7 @@ class SynFootNetwork(SynapticNetwork):
         for layer in unit.footprint:
             foot_pars = unit.footprint[layer]
             footprint = Footprint(center_tone=unit.best_tone + foot_pars.get("offset"), **foot_pars)
-            func = getattr(footprint, foot_pars[type])
+            func = getattr(footprint, foot_pars["type"])
             out[layer] = lambda x: func(x, **foot_pars)
         return out
 
@@ -121,7 +125,8 @@ class SynFootNetwork(SynapticNetwork):
 
 if __name__ == "__main__":
     sfn = SynFootNetwork(selectivities=sel, stimulus=stim1, pars_list=pars)
-
+    sfn.run()
+    plt.imshow(sfn.R_var_array)
 
 
 

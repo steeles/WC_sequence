@@ -5,6 +5,10 @@ import seaborn as sns
 from collections import OrderedDict
 import melopy.utility as music
 
+
+from src.a_wilson_cowan.wc_unit import KWPars
+
+from src.simulation.simulation import TimeAxis
 from src.sim_plots.make_figures import generic_plot, plot_triplet_stimuli
 
 
@@ -12,7 +16,7 @@ def fq_to_key(frequency):
     return 12 * np.log(frequency / 440.0) / np.log(2) + 49
 
 
-def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=False, dst=1):
+def fq_tuning_curve(num_tones=128, center=440, spread=3, func=norm.pdf, bPlot=False, dst=1):
     """
     Function to produce the proper raw inputs for frequency-selective neuronal populations.
     We will have tones in terms of frequency, and spread in terms of semitones.
@@ -36,8 +40,10 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
     # melopy uses keys for semitones! easy
     num_steps_below = np.ceil(num_tones / 2)
 
-    semitone = fq_to_key(center_freq) - num_steps_below
-    center_key = fq_to_key(center_freq)
+    center_key = round(fq_to_key(center_freq), 2)
+    semitone = center_key - num_steps_below
+    semitone = round(semitone, 2)
+    center_key = center_key
     tuning_curve = OrderedDict()
 
     while len(tuning_curve) < num_tones:
@@ -55,8 +61,9 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
     return tuning_curve
 
 
-class FrequencyToneAxis:
-    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1, center_tone=49):
+class FrequencyToneAxis(KWPars):
+    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1, center_tone=49, **kwargs):
+        KWPars.__init__(self, **kwargs)
         self.num_tones = num_tones
         # self.center = center
         if center_tone:
@@ -71,7 +78,7 @@ class FrequencyToneAxis:
         # self.tuning_func = lambda x: func(x, center, spread)
         self.tuning_curve = fq_tuning_curve(self.num_tones, self.center, self.spread, self.func, bPlot=False,
                                             dst=self.dst)
-        self.tone_ax = np.array(self.tuning_curve.keys())
+        self.tone_ax = np.array(self.tuning_curve.keys())[:-1]
 
     def tuning_func(self, x):
         return self.func(x, self.center, self.spread)
