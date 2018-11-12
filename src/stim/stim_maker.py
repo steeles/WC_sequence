@@ -8,7 +8,10 @@ import melopy.utility as music
 from src.sim_plots.make_figures import generic_plot, plot_triplet_stimuli
 
 
-def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=False):
+def fq_to_key(frequency):
+    return 12 * np.log(frequency / 440.0) / np.log(2) + 49
+
+def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=False, dst=1):
     """
     Function to produce the proper raw inputs for frequency-selective neuronal populations.
     We will have tones in terms of frequency, and spread in terms of semitones.
@@ -18,6 +21,7 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
         spread (int, float): inverse of selectivity, in terms of semitones to standard deviations
         func (callable): we're using normpdf; we'll expect center and spread to be obvious
         bPlot (bool): whether or not to plot
+        dst (float): step size in semitones; default 1
     Returns:
         OrderedDict: {semitone: response}
 
@@ -28,19 +32,18 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
 
     else:
         center_freq = center
-
     # melopy uses keys for semitones! easy
     num_steps_below = np.ceil(num_tones / 2)
 
-    semitone = music.frequency_to_key(center_freq) - num_steps_below
-    center_key = music.frequency_to_key(center_freq)
+    semitone = fq_to_key(center_freq) - num_steps_below
+    center_key = fq_to_key(center_freq)
     tuning_curve = OrderedDict()
 
     while len(tuning_curve) < num_tones:
         tuning_curve.update(
             {semitone: func(semitone, loc=center_key, scale=spread)}  # , #music.key_to_frequency(semitone)}
         )
-        semitone += 1
+        semitone += dst
 
     max_val = np.max(tuning_curve.values())
     tuning_curve.update((x, y / max_val) for x, y in tuning_curve.items())
@@ -49,6 +52,24 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
         fig = generic_plot(tuning_curve.keys(), tuning_curve.values())
         fig.show()
     return tuning_curve
+
+
+class FrequencyToneAxis:
+    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1):
+        self.num_tones = num_tones
+        self.center = center
+        self.spread = spread
+        self.func = func
+        self.dst = dst
+        self.fq_to_key = fq_to_key
+        self.fq_tuning_curve = fq_tuning_curve
+        # self.tuning_func = lambda x: func(x, center, spread)
+        self.tuning_curve = fq_tuning_curve(self.num_tones, self.center, self.spread, self.func, bPlot=False,
+                                            dst=self.dst)
+        self.tone_ax = np.array(self.tuning_curve.keys())
+
+    def tuning_func(self, x):
+        return self.func(x, self.center, self.spread)
 
 
 TUNE = fq_tuning_curve()

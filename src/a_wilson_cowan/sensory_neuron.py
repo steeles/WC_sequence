@@ -34,10 +34,10 @@ class SensoryWCUnit(WCUnit):
             print("warning- cell's response has been shifted to nearest semitone")
         self.best_frequency = best_frequency
         self.spread = spread
-        self.tuning_curve = self.fq_tuning_curve()
+        self.tuning_curve = self.fq_tuning_curve(self.best_frequency, self.spread)
 
-    #@staticmethod
-    def fq_tuning_curve(self, **kwargs):
+    @staticmethod
+    def fq_tuning_curve(center, spread, **kwargs):
         """
             Function to produce the proper raw inputs for frequency-selective neuronal populations.
             We will have tones in terms of frequency, and spread in terms of semitones.
@@ -50,7 +50,7 @@ class SensoryWCUnit(WCUnit):
             Returns:
                 OrderedDict: {semitone: response}
         """
-        return fq_tuning_curve(center=self.best_frequency, spread=self.spread, **kwargs)
+        return fq_tuning_curve(center=center, spread=spread, **kwargs)
 
 
     def add_stim_current(self, stimulus, weight, name="stim"):

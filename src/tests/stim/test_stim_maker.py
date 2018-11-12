@@ -14,8 +14,11 @@ def test_fq_tuning_curve():
 
 def test_weird_fq_tuning_curve():
     # note: it always goes to the nearest semitone
+    # NOPE FIXED IT
     actual = fq_tuning_curve(num_tones=10, center=442.42)
-    assert actual[49] == 1
+    # assert actual[49] == 1
+    center = actual.keys()[actual.values().index(1)]
+    assert center > 49 and center < 50
     assert music.key_to_frequency(49) == 440
 
 

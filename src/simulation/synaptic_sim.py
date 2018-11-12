@@ -26,8 +26,8 @@ from src.stim.intervals import Intervals
 
 plt.close()
 
-sensory_pars = dict(i_0 = -.05, gee = 0.5, gSFA = 0.5)
-integration_pars = dict(i_0 = -0.05, tau=50, gee=0.3, SFA = 0.3, the = 0.4)
+sensory_pars = dict(i_0 = -.02, gee = 0.45, gSFA = 0.5)
+integration_pars = dict(i_0 = -0.05, tau=50, gee=0.3, SFA = 0.1, the = 0.4)
 
 
 pars_list = [
@@ -40,20 +40,20 @@ T = 1.
 stim = Intervals(T=T, ITI=125, tone_length=125)
 stim.set_ba_ab()
 s_units = [
-    Selectivity(music.key_to_frequency(49), 1, 0.2),
-    Selectivity(music.key_to_frequency(46), 1, 0.2),
+    Selectivity(music.key_to_frequency(49), 1, 0.15),
+    Selectivity(music.key_to_frequency(46), 1, 0.15),
     Selectivity(music.key_to_frequency(46), 1, 0.)
 ]
 
 weights = np.array([
-    [0, 0, 0], [0, 0, 0], [.35, .15, 0]
+    [0, 0, 0], [0, 0, 0], [.25, .15, 0]
 ])
 
 network = SynapticNetwork(pars_list=pars_list, selectivities=s_units, stimulus=stim, syn_weights=weights, T=T, b_00=True)
 network.run()
 data = network.build_unit_dfs()
 
-to_plot = ["FR", "SFA", 'Isyn_u0', 'Isyn_u1', 'rec_exc', 'stim']
+to_plot = ["FR", "SFA", 'Isyn_u0', 'Isyn_u1', 'rec_exc', 'stim', 'S']
 
 plot_df = data[to_plot + ['tax', 'unit']].melt(
     id_vars=['tax', 'unit'], var_name = 'name', value_name='response'
