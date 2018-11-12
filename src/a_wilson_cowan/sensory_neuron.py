@@ -1,7 +1,7 @@
 import numpy as np
 import melopy.utility as music
 from src.a_wilson_cowan.wc_unit import WCUnit
-from src.stim.stim_maker import fq_tuning_curve
+from src.stim.stim_maker import fq_tuning_curve, fq_to_key
 from src.stim.stimulus import ABAStimulus, ToneCurrent
 
 
@@ -33,6 +33,7 @@ class SensoryWCUnit(WCUnit):
         if music.key_to_frequency(key) != best_frequency:
             print("warning- cell's response has been shifted to nearest semitone")
         self.best_frequency = best_frequency
+        self.best_tone = fq_to_key(best_frequency)
         self.spread = spread
         self.tuning_curve = self.fq_tuning_curve(self.best_frequency, self.spread)
 

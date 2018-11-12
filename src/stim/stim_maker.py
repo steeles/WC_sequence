@@ -11,6 +11,7 @@ from src.sim_plots.make_figures import generic_plot, plot_triplet_stimuli
 def fq_to_key(frequency):
     return 12 * np.log(frequency / 440.0) / np.log(2) + 49
 
+
 def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=False, dst=1):
     """
     Function to produce the proper raw inputs for frequency-selective neuronal populations.
@@ -55,9 +56,13 @@ def fq_tuning_curve(num_tones=64, center=440, spread=3, func=norm.pdf, bPlot=Fal
 
 
 class FrequencyToneAxis:
-    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1):
+    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1, center_tone=49):
         self.num_tones = num_tones
-        self.center = center
+        # self.center = center
+        if center_tone:
+            self.center = music.key_to_frequency(center_tone)
+        else:
+            self.center = center
         self.spread = spread
         self.func = func
         self.dst = dst
