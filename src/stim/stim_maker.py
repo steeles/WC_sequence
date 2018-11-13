@@ -38,15 +38,14 @@ def fq_tuning_curve(num_tones=128, center=440, spread=3, func=norm.pdf, bPlot=Fa
     else:
         center_freq = center
     # melopy uses keys for semitones! easy
-    num_steps_below = np.ceil(num_tones / 2)
-
     center_key = round(fq_to_key(center_freq), 2)
-    semitone = center_key - num_steps_below
+    start = center_key - np.ceil(num_tones / 2)
+    semitone = start
     semitone = round(semitone, 2)
     center_key = center_key
     tuning_curve = OrderedDict()
 
-    while len(tuning_curve) < num_tones:
+    while (semitone - start) < num_tones:
         tuning_curve.update(
             {semitone: func(semitone, loc=center_key, scale=spread)}  # , #music.key_to_frequency(semitone)}
         )
@@ -62,14 +61,16 @@ def fq_tuning_curve(num_tones=128, center=440, spread=3, func=norm.pdf, bPlot=Fa
 
 
 class FrequencyToneAxis(KWPars):
-    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1, center_tone=49, **kwargs):
+    def __init__(self, num_tones=64, center=440, spread=3, func=norm.pdf, dst = 1, center_tone=None, **kwargs):
         KWPars.__init__(self, **kwargs)
         self.num_tones = num_tones
         # self.center = center
         if center_tone:
+            self.center_tone = center_tone
             self.center = music.key_to_frequency(center_tone)
         else:
             self.center = center
+            self.center_tone = fq_to_key(center)
         self.spread = spread
         self.func = func
         self.dst = dst
@@ -81,7 +82,7 @@ class FrequencyToneAxis(KWPars):
         self.tone_ax = np.array(self.tuning_curve.keys())[:-1]
 
     def tuning_func(self, x):
-        return self.func(x, self.center, self.spread)
+        return self.func(x, self.center_tone, self.spread)
 
 
 TUNE = fq_tuning_curve()
